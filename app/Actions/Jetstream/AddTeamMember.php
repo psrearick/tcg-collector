@@ -39,41 +39,6 @@ class AddTeamMember implements AddsTeamMembers
     }
 
     /**
-     * Validate the add member operation.
-     *
-     * @param  mixed  $team
-     * @param  string  $email
-     * @param  string|null  $role
-     * @return void
-     */
-    protected function validate($team, string $email, ?string $role)
-    {
-        Validator::make([
-            'email' => $email,
-            'role' => $role,
-        ], $this->rules(), [
-            'email.exists' => __('We were unable to find a registered user with this email address.'),
-        ])->after(
-            $this->ensureUserIsNotAlreadyOnTeam($team, $email)
-        )->validateWithBag('addTeamMember');
-    }
-
-    /**
-     * Get the validation rules for adding a team member.
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return array_filter([
-            'email' => ['required', 'email', 'exists:users'],
-            'role' => Jetstream::hasRoles()
-                            ? ['required', 'string', new Role]
-                            : null,
-        ]);
-    }
-
-    /**
      * Ensure that the user is not already on the team.
      *
      * @param  mixed  $team
@@ -89,5 +54,40 @@ class AddTeamMember implements AddsTeamMembers
                 __('This user already belongs to the team.')
             );
         };
+    }
+
+    /**
+     * Get the validation rules for adding a team member.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return array_filter([
+            'email' => ['required', 'email', 'exists:users'],
+            'role'  => Jetstream::hasRoles()
+                            ? ['required', 'string', new Role]
+                            : null,
+        ]);
+    }
+
+    /**
+     * Validate the add member operation.
+     *
+     * @param  mixed  $team
+     * @param  string  $email
+     * @param  string|null  $role
+     * @return void
+     */
+    protected function validate($team, string $email, ?string $role)
+    {
+        Validator::make([
+            'email' => $email,
+            'role'  => $role,
+        ], $this->rules(), [
+            'email.exists' => __('We were unable to find a registered user with this email address.'),
+        ])->after(
+            $this->ensureUserIsNotAlreadyOnTeam($team, $email)
+        )->validateWithBag('addTeamMember');
     }
 }

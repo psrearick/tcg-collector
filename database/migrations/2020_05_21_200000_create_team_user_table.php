@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateTeamUserTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('team_user');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,15 +32,5 @@ class CreateTeamUserTable extends Migration
 
             $table->unique(['team_id', 'user_id']);
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('team_user');
     }
 }

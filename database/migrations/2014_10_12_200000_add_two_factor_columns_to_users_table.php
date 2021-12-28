@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\Schema;
 class AddTwoFactorColumnsToUsersTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('two_factor_secret', 'two_factor_recovery_codes');
+        });
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -21,18 +33,6 @@ class AddTwoFactorColumnsToUsersTable extends Migration
             $table->text('two_factor_recovery_codes')
                     ->after('two_factor_secret')
                     ->nullable();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('two_factor_secret', 'two_factor_recovery_codes');
         });
     }
 }

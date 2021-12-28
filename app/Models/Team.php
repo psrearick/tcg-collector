@@ -22,16 +22,6 @@ class Team extends JetstreamTeam
     ];
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'personal_team',
-    ];
-
-    /**
      * The event map for the model.
      *
      * @var array
@@ -40,5 +30,15 @@ class Team extends JetstreamTeam
         'created' => TeamCreated::class,
         'updated' => TeamUpdated::class,
         'deleted' => TeamDeleted::class,
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'personal_team',
     ];
 }
