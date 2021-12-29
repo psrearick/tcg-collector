@@ -1,15 +1,15 @@
 <template>
-    <jet-form-section @submitted="updateTeamName">
-        <template #title> Team Name </template>
+    <jet-form-section @submitted="updateGroupName">
+        <template #title> Group Name </template>
 
         <template #description>
-            The team's name and owner information.
+            The group's name and owner information.
         </template>
 
         <template #form>
-            <!-- Team Owner Information -->
+            <!-- Group Owner Information -->
             <div class="col-span-6">
-                <jet-label value="Team Owner" />
+                <jet-label value="Group Owner" />
 
                 <div class="flex items-center mt-2">
                     <img
@@ -27,9 +27,9 @@
                 </div>
             </div>
 
-            <!-- Team Name -->
+            <!-- Group Name -->
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Team Name" />
+                <jet-label for="name" value="Group Name" />
 
                 <jet-input
                     id="name"
@@ -88,7 +88,7 @@ export default defineComponent({
     },
 
     methods: {
-        updateTeamName() {
+        updateGroupName() {
             this.form.put(route("teams.update", this.team), {
                 errorBag: "updateTeamName",
                 preserveScroll: true,

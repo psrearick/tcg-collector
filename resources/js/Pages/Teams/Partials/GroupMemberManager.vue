@@ -3,20 +3,20 @@
         <div v-if="userPermissions.canAddTeamMembers">
             <jet-section-border />
 
-            <!-- Add Team Member -->
+            <!-- Add Group Member -->
             <jet-form-section @submitted="addTeamMember">
-                <template #title> Add Team Member </template>
+                <template #title> Add Group Member </template>
 
                 <template #description>
-                    Add a new team member to your team, allowing them to
-                    collaborate with you.
+                    Add a new member to your group, allowing them to
+                    share collections with you.
                 </template>
 
                 <template #form>
                     <div class="col-span-6">
                         <div class="max-w-xl text-sm text-gray-600">
                             Please provide the email address of the person you
-                            would like to add to this team.
+                            would like to add to this group.
                         </div>
                     </div>
 
@@ -161,17 +161,17 @@
         >
             <jet-section-border />
 
-            <!-- Team Member Invitations -->
+            <!-- Group Member Invitations -->
             <jet-action-section class="mt-10 sm:mt-0">
-                <template #title> Pending Team Invitations </template>
+                <template #title> Pending Group Invitations </template>
 
                 <template #description>
-                    These people have been invited to your team and have been
-                    sent an invitation email. They may join the team by
+                    These people have been invited to your group and have been
+                    sent an invitation email. They may join the group by
                     accepting the email invitation.
                 </template>
 
-                <!-- Pending Team Member Invitation List -->
+                <!-- Pending Group Member Invitation List -->
                 <template #content>
                     <div class="space-y-6">
                         <div
@@ -184,7 +184,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <!-- Cancel Team Invitation -->
+                                <!-- Cancel Group Invitation -->
                                 <button
                                     v-if="userPermissions.canRemoveTeamMembers"
                                     class="
@@ -207,15 +207,15 @@
         <div v-if="team.users.length > 0">
             <jet-section-border />
 
-            <!-- Manage Team Members -->
+            <!-- Manage Group Members -->
             <jet-action-section class="mt-10 sm:mt-0">
-                <template #title> Team Members </template>
+                <template #title> Group Members </template>
 
                 <template #description>
-                    All of the people that are part of this team.
+                    All of the people that are part of this group.
                 </template>
 
-                <!-- Team Member List -->
+                <!-- Group Member List -->
                 <template #content>
                     <div class="space-y-6">
                         <div
@@ -233,7 +233,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <!-- Manage Team Member Role -->
+                                <!-- Manage Group Member Role -->
                                 <button
                                     v-if="
                                         userPermissions.canAddTeamMembers &&
@@ -252,7 +252,7 @@
                                     {{ displayableRole(user.membership.role) }}
                                 </div>
 
-                                <!-- Leave Team -->
+                                <!-- Leave Group -->
                                 <button
                                     v-if="$page.props.user.id === user.id"
                                     class="
@@ -265,7 +265,7 @@
                                     Leave
                                 </button>
 
-                                <!-- Remove Team Member -->
+                                <!-- Remove Group Member -->
                                 <button
                                     v-if="userPermissions.canRemoveTeamMembers"
                                     class="
@@ -390,15 +390,15 @@
             </template>
         </jet-dialog-modal>
 
-        <!-- Leave Team Confirmation Modal -->
+        <!-- Leave Group Confirmation Modal -->
         <jet-confirmation-modal
             :show="confirmingLeavingTeam"
             @close="confirmingLeavingTeam = false"
         >
-            <template #title> Leave Team </template>
+            <template #title> Leave Group </template>
 
             <template #content>
-                Are you sure you would like to leave this team?
+                Are you sure you would like to leave this group?
             </template>
 
             <template #footer>
@@ -417,15 +417,15 @@
             </template>
         </jet-confirmation-modal>
 
-        <!-- Remove Team Member Confirmation Modal -->
+        <!-- Remove Group Member Confirmation Modal -->
         <jet-confirmation-modal
             :show="teamMemberBeingRemoved"
             @close="teamMemberBeingRemoved = null"
         >
-            <template #title> Remove Team Member </template>
+            <template #title> Remove Group Member </template>
 
             <template #content>
-                Are you sure you would like to remove this person from the team?
+                Are you sure you would like to remove this person from the group?
             </template>
 
             <template #footer>

@@ -1,19 +1,19 @@
 <template>
-    <app-layout title="Team Settings">
+    <app-layout title="Group Settings">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Team Settings
+                Group Settings
             </h2>
         </template>
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <update-team-name-form
+                <update-group-name-form
                     :team="team"
                     :permissions="permissions"
                 />
 
-                <team-member-manager
+                <group-member-manager
                     class="mt-10 sm:mt-0"
                     :team="team"
                     :available-roles="availableRoles"
@@ -25,7 +25,7 @@
                 >
                     <jet-section-border />
 
-                    <delete-team-form class="mt-10 sm:mt-0" :team="team" />
+                    <delete-group-form class="mt-10 sm:mt-0" :team="team" />
                 </template>
             </div>
         </div>
@@ -35,18 +35,18 @@
 <script>
 import { defineComponent } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import DeleteTeamForm from "@/Pages/Teams/Partials/DeleteTeamForm.vue";
+import DeleteGroupForm from "@/Pages/Teams/Partials/DeleteGroupForm.vue";
 import JetSectionBorder from "@/Jetstream/SectionBorder.vue";
-import TeamMemberManager from "@/Pages/Teams/Partials/TeamMemberManager.vue";
-import UpdateTeamNameForm from "@/Pages/Teams/Partials/UpdateTeamNameForm.vue";
+import GroupMemberManager from "@/Pages/Teams/Partials/GroupMemberManager.vue";
+import UpdateGroupNameForm from "@/Pages/Teams/Partials/UpdateGroupNameForm.vue";
 
 export default defineComponent({
     components: {
         AppLayout,
-        DeleteTeamForm,
+        DeleteGroupForm,
         JetSectionBorder,
-        TeamMemberManager,
-        UpdateTeamNameForm,
+        GroupMemberManager,
+        UpdateGroupNameForm,
     },
     props: ["team", "availableRoles", "permissions"],
 });

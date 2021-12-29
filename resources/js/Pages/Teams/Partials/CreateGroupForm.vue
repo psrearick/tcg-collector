@@ -1,14 +1,14 @@
 <template>
-    <jet-form-section @submitted="createTeam">
-        <template #title> Team Details </template>
+    <jet-form-section @submitted="createGroup">
+        <template #title> Group Details </template>
 
         <template #description>
-            Create a new team to collaborate with others on projects.
+            Create a new group with which to share collections.
         </template>
 
         <template #form>
             <div class="col-span-6">
-                <jet-label value="Team Owner" />
+                <jet-label value="Group Owner" />
 
                 <div class="flex items-center mt-2">
                     <img
@@ -27,7 +27,7 @@
             </div>
 
             <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Team Name" />
+                <jet-label for="name" value="Group Name" />
                 <jet-input
                     id="name"
                     v-model="form.name"
@@ -76,7 +76,7 @@ export default defineComponent({
     },
 
     methods: {
-        createTeam() {
+        createGroup() {
             this.form.post(route("teams.store"), {
                 errorBag: "createTeam",
                 preserveScroll: true,
