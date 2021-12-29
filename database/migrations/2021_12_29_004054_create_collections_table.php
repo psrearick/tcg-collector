@@ -29,7 +29,7 @@ class CreateCollectionsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('is_public')->nullable()->default(false);
-            $table->foreignId('folder_id')->nullable();
+            $table->string('folder_uuid')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->softDeletes();
             $table->timestamps();

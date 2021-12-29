@@ -114,7 +114,7 @@ export default {
 
     props: {
         folder: {
-            type: Number,
+            type: String,
             default: null,
         },
     },
@@ -124,7 +124,7 @@ export default {
             form: {
                 name: "",
                 description: "",
-                folder_id: this.folder,
+                folder_uuid: this.folder,
                 is_public: false,
             },
         };
@@ -133,7 +133,7 @@ export default {
     computed: {
         cancelLink() {
             if (this.folder) {
-                return route("collection-folder.show", {
+                return route("folders.show", {
                     folder: this.folder,
                 });
             }

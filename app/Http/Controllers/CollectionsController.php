@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Folders\Aggregate\Actions\GetFolders;
+use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Http\Controllers\Controller;
 use GetCollection;
 use GetCollections;
@@ -17,7 +18,7 @@ class CollectionsController extends Controller
     public function create(Request $request) : Response
     {
         return Inertia::render('Collections/Create', [
-            'folder' => $request->get('folder') ? (int) $request->get('folder') : null,
+            'folder' => $request->get('folder') ?? null,
         ]);
     }
 
@@ -31,19 +32,28 @@ class CollectionsController extends Controller
         return Inertia::render('Collections/Edit', ['collection' => $collection]);
     }
 
-    public function index(GetCollections $getCollections, GetFolders $getFolders) : Response
+    public function index() : Response
     {
+        $folderChildren = new FolderChildren("");
         return Inertia::render('Collections/Index', [
-            'collections'   => $getCollections(),
-            'folders'       => $getFolders(),
+            'collections'   => $folderChildren->collections(),
+            'folders'       => $folderChildren->folders(),
         ]);
     }
+
+    public function show(string $uuid, GetCollection $getCollection) : Response
+    {
+        $collection = $getCollection($uuid);
+
+        return Inertia::render('Collections/Show', ['collection' => $collection]);
+    }
+
 
     public function store(Request $request, CreateCollection $createCollection) : RedirectResponse
     {
         $uuid = $createCollection($request->all());
 
-        return redirect()->route('collections.edit', $uuid);
+        return redirect()->route('collections.show', $uuid);
     }
 
     public function update()

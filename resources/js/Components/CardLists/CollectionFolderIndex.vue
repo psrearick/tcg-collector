@@ -22,7 +22,7 @@
                     :key="index"
                     :href="
                         route('folders.show', {
-                            folder: folderItem.id,
+                            folder: folderItem.uuid,
                         })
                     "
                     :menu="getMenu(index, 'folder')"
@@ -55,7 +55,7 @@
                     v-for="(collection, index) in collections"
                     :key="index"
                     :href="
-                        route('collections.show', { collection: collection.id })
+                        route('collections.show', { collection: collection.uuid })
                     "
                     :menu="getMenu(index, 'collection')"
                 >
@@ -80,8 +80,8 @@
                 </card-list-card-with-menu>
             </card-list>
         </div>
-        <div v-if="isEmpty">
-            <p>You have no collections.</p>
+        <div v-if="isEmpty" class="bg-gray-100 p-6 rounded-md shadow-md text-center">
+            <p>You have no collections in this folder.</p>
         </div>
         <edit-collection-panel
             v-model:show="showEditCollectionPanel"
@@ -162,13 +162,11 @@ export default {
                 return "";
             }
 
-            if (!this.folder.parent_id) {
+            if (!this.folder.parent_uuid) {
                 return route("collections.index");
             }
 
-            return route("collection-folder.show", {
-                folder: this.folder.parent_id,
-            });
+            return route("folders.show", this.folder.parent_uuid);
         },
         isEmpty() {
             return this.folders.length === 0 && this.collections.length === 0;

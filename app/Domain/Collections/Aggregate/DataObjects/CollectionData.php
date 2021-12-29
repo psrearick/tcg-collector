@@ -6,7 +6,7 @@ class CollectionData
 {
     public string $description;
 
-    public ?int $folder_id;
+    public ?string $folder_uuid;
 
     public ?int $id;
 
@@ -22,7 +22,7 @@ class CollectionData
     {
         $this->uuid         = $data['uuid'] ?? null;
         $this->id           = $data['id'] ?? null;
-        $this->folder_id    = $data['folder_id'] ?? null;
+        $this->folder_uuid  = $data['folder_uuid'] ?? null;
         $this->name         = $data['name'] ?? '';
         $this->description  = $data['description'] ?? '';
         $this->is_public    = $data['is_public'] ?? false;
@@ -34,7 +34,7 @@ class CollectionData
         return [
             'uuid'          => $this->uuid,
             'id'            => $this->id,
-            'folder_id'     => $this->folder_id,
+            'folder_uuid'   => $this->folder_uuid,
             'name'          => $this->name,
             'description'   => $this->description,
             'user_id'       => $this->user_id,

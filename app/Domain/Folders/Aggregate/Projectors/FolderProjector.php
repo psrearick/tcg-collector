@@ -15,12 +15,11 @@ class FolderProjector extends Projector
     {
         $attributes = $event->folderAttributes;
         $parent = $attributes['parent_uuid'];
-        unset($attributes['parent_uuid']);
 
         $folder = Folder::create($attributes);
 
         if ($parent) {
-            $folder->appendToNode(Folder::where('uuid', '=', $parent)->first());
+            $folder->appendToNode(Folder::where('uuid', '=', $parent)->first())->save();
         }
     }
 
