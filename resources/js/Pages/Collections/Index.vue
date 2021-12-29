@@ -13,14 +13,14 @@
                     Collections
                 </h2>
                 <div class="flex space-x-4">
-                    <Link :href="route('folders.create', payload)">
+                    <Link :href="route('folders.create')">
                         <ui-button
                             text="Create Folder"
                             button-style="primary-dark"
                         />
                     </Link>
 
-                    <Link :href="route('collections.create', payload)">
+                    <Link :href="route('collections.create')">
                         <ui-button
                             text="Create Collection"
                             button-style="primary-dark"

@@ -9,7 +9,7 @@ use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class CollectionAggregateRoot extends AggregateRoot
 {
-    public function createCollection(array $attributes)
+    public function createCollection(array $attributes) : self
     {
         $attributes['user_id'] = Auth::id();
         $attributes['uuid']    = $this->uuid();

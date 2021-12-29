@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Domain\Collections\Aggregate\DataObjects;
+namespace App\Domain\Folders\Aggregate\DataObjects;
 
-class CollectionData
+class FolderData
 {
     public string $description;
 
-    public ?int $folder_id;
-
     public ?int $id;
+
+    public bool $is_public;
+
+    public string $parent_uuid;
 
     public string $name;
 
     public ?int $user_id;
 
-    public ?string $uuid;
-
-    public bool $is_public;
+    public ?string $uuid;    
 
     public function __construct(array $data)
     {
         $this->uuid         = $data['uuid'] ?? null;
         $this->id           = $data['id'] ?? null;
-        $this->folder_id    = $data['folder_id'] ?? null;
+        $this->parent_uuid  = $data['parent_uuid'] ?? '';
         $this->name         = $data['name'] ?? '';
         $this->description  = $data['description'] ?? '';
         $this->is_public    = $data['is_public'] ?? false;
@@ -34,11 +34,11 @@ class CollectionData
         return [
             'uuid'          => $this->uuid,
             'id'            => $this->id,
-            'folder_id'     => $this->folder_id,
+            'parent_uuid'   => $this->parent_uuid,
             'name'          => $this->name,
             'description'   => $this->description,
-            'user_id'       => $this->user_id,
             'is_public'     => $this->is_public,
+            'user_id'       => $this->user_id,
         ];
     }
 }

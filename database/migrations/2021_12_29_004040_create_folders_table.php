@@ -29,6 +29,7 @@ class CreateFoldersTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('user_id');
+            $table->boolean('is_public');
             $table->nestedSet();
             $table->softDeletes();
             $table->timestamps();

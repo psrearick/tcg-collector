@@ -20,6 +20,9 @@ class CollectionsController extends Controller
         ]);
     }
 
+    public function destroy()
+    {}
+
     public function edit(string $uuid, GetCollection $getCollection) : Response
     {
         $collection = $getCollection($uuid);
@@ -38,4 +41,7 @@ class CollectionsController extends Controller
 
         return redirect()->route('collections.edit', $uuid);
     }
+
+    public function update()
+    {}
 }

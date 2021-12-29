@@ -4,6 +4,7 @@ use App\Http\Controllers\CollectionsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\FoldersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Dashboard');
     })->name('dashboard');
 
-    Route::resource('collections', CollectionsController::class);
-    Route::resource('folders', CollectionsController::class);
+    Route::resource('collections', CollectionsController::class)->except('show');
+    Route::resource('folders', FoldersController::class)->except('index');
 });

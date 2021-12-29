@@ -10,7 +10,7 @@
                         py-2
                     "
                 >
-                    Create Collection
+                    Create Folder
                 </h2>
             </div>
         </template>
@@ -29,16 +29,10 @@
                                 sm:grid-cols-6
                             "
                         >
-                            <h3
-                                class="
-                                    text-lg
-                                    leading-6
-                                    font-medium
-                                    text-gray-900
-                                "
-                            >
-                                Collection Details
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                Folder Details
                             </h3>
+
                             <div class="sm:col-span-6">
                                 <ui-input
                                     v-model="form.name"
@@ -46,7 +40,7 @@
                                     field-id="name"
                                     name="name"
                                     type="string"
-                                    placeholder="Name your collection"
+                                    placeholder="Name your folder"
                                     :required="true"
                                 />
                             </div>
@@ -58,7 +52,7 @@
                                     type="textarea"
                                     label="Description"
                                     :required="false"
-                                    placeholder="Write a few sentences about your collection"
+                                    placeholder="Write a few sentences about your folder"
                                     class="mb-4"
                                 />
                             </div>
@@ -85,7 +79,7 @@
                         <ui-button
                             type="button"
                             button-style="primary-dark"
-                            text="Create Collection"
+                            text="Create Folder"
                             @click="submitForm"
                         />
                     </div>
@@ -97,7 +91,7 @@
 
 <script>
 import { Link } from "@inertiajs/inertia-vue3";
-import AppLayout from "@/Layouts/AppLayout.vue";
+import AppLayout from "@/Layouts/AppLayout";
 import UiInput from "@/UI/Form/UIInput";
 import UiButton from "@/UI/UIButton";
 import UiTextArea from "@/UI/Form/UITextArea";
@@ -106,11 +100,11 @@ import UiCheckbox from "@/UI/Form/UICheckbox";
 export default {
     name: "Create",
 
-    components: { UiInput, UiButton, UiTextArea, UiCheckbox, Link, AppLayout },
+    components: { AppLayout, Link, UiInput, UiButton, UiTextArea, UiCheckbox },
 
-    title: "MTG Collector - Create Collection",
+    title: "MTG Collector - Create Folder",
 
-    header: "Create Collection",
+    header: "Create Folder",
 
     props: {
         folder: {
@@ -124,7 +118,7 @@ export default {
             form: {
                 name: "",
                 description: "",
-                folder_id: this.folder,
+                folder: this.folder,
                 is_public: false,
             },
         };
@@ -144,7 +138,7 @@ export default {
 
     methods: {
         submitForm() {
-            this.$inertia.post("/collections", this.form);
+            this.$inertia.post("/folders", this.form);
         },
     },
 };
