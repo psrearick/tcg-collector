@@ -52,7 +52,7 @@ export default {
     computed: {
         style() {
             if (this.buttonStyle === "primary") {
-                return "border border-primary-200 text-gray-700 bg-primary-400 hover:bg-primary-500";
+                return "border border-primary-200 text-gray-200 bg-primary-500 hover:bg-primary-700";
             }
             if (this.buttonStyle === "primary-outline") {
                 return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-primary-800";

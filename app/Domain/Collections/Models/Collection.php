@@ -2,10 +2,10 @@
 
 namespace App\Domain\Collections\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domain\Base\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Collection extends Model
 {
@@ -13,7 +13,7 @@ class Collection extends Model
 
     protected $guarded = [];
 
-    public function user(): BelongsTo
+    public function user() : BelongsTo
     {
         return $this->belongsTo(User::class);
     }

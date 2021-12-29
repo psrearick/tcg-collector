@@ -12,7 +12,7 @@ import UiIcon from "../UI/UIIcon";
 export default defineComponent({
     components: {
         Link,
-        UiIcon
+        UiIcon,
     },
 });
 </script>

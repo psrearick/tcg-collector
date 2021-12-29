@@ -35,6 +35,26 @@
                                 >
                                     Dashboard
                                 </jet-nav-link>
+                                <jet-nav-link
+                                    :href="route('collections.index')"
+                                    :active="
+                                        route().current('collections.index')
+                                    "
+                                >
+                                    Collections
+                                </jet-nav-link>
+                                <jet-nav-link
+                                    :href="route('dashboard')"
+                                    :active="route().current('dashboard')"
+                                >
+                                    Cards
+                                </jet-nav-link>
+                                <jet-nav-link
+                                    :href="route('dashboard')"
+                                    :active="route().current('dashboard')"
+                                >
+                                    Shared
+                                </jet-nav-link>
                             </div>
                         </div>
 
@@ -108,7 +128,7 @@
                                                         text-xs text-gray-400
                                                     "
                                                 >
-                                                    Manage Team
+                                                    Manage Group
                                                 </div>
 
                                                 <!-- Team Settings -->
@@ -121,7 +141,7 @@
                                                         )
                                                     "
                                                 >
-                                                    Team Settings
+                                                    Group Settings
                                                 </jet-dropdown-link>
 
                                                 <jet-dropdown-link
@@ -133,7 +153,7 @@
                                                         route('teams.create')
                                                     "
                                                 >
-                                                    Create New Team
+                                                    Create New Group
                                                 </jet-dropdown-link>
 
                                                 <div
@@ -151,7 +171,7 @@
                                                         text-xs text-gray-400
                                                     "
                                                 >
-                                                    Switch Teams
+                                                    Switch Groups
                                                 </div>
 
                                                 <template
@@ -403,6 +423,24 @@
                         >
                             Dashboard
                         </jet-responsive-nav-link>
+                        <jet-responsive-nav-link
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
+                            Collections
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link
+                            :href="route('collections.index')"
+                            :active="route().current('collections.index')"
+                        >
+                            Cards
+                        </jet-responsive-nav-link>
+                        <jet-responsive-nav-link
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
+                            Shared
+                        </jet-responsive-nav-link>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -470,7 +508,7 @@
                                         text-xs text-gray-400
                                     "
                                 >
-                                    Manage Team
+                                    Manage Group
                                 </div>
 
                                 <!-- Team Settings -->
@@ -483,7 +521,7 @@
                                     "
                                     :active="route().current('teams.show')"
                                 >
-                                    Team Settings
+                                    Group Settings
                                 </jet-responsive-nav-link>
 
                                 <jet-responsive-nav-link
@@ -491,7 +529,7 @@
                                     :href="route('teams.create')"
                                     :active="route().current('teams.create')"
                                 >
-                                    Create New Team
+                                    Create New Group
                                 </jet-responsive-nav-link>
 
                                 <div class="border-t border-gray-200"></div>
@@ -505,7 +543,7 @@
                                         text-xs text-gray-400
                                     "
                                 >
-                                    Switch Teams
+                                    Switch Groups
                                 </div>
 
                                 <template
@@ -556,9 +594,14 @@
                 </div>
             </header>
 
-            <!-- Page Content -->
-            <main>
-                <slot></slot>
+            <main class="mt-8">
+                <div class="max-w-7xl mx-auto pb-12 md:px-6 lg:px-8">
+                    <div
+                        class="bg-white md:rounded-lg shadow px-2 py-6 sm:px-6"
+                    >
+                        <slot></slot>
+                    </div>
+                </div>
             </main>
         </div>
     </div>

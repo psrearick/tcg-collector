@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateFoldersTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('folders');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -23,15 +33,5 @@ class CreateFoldersTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('folders');
     }
 }

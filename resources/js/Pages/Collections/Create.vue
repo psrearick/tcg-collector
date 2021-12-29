@@ -1,79 +1,101 @@
 <template>
-    <div>
-        <form
-            class="space-y-8 divide-y divide-gray-200"
-            @submit.prevent="submitForm"
-        >
-            <div class="space-y-8 divide-y divide-gray-200">
-                <div>
-                    <div
-                        class="
-                            mt-6
-                            grid grid-cols-1
-                            gap-y-6 gap-x-4
-                            sm:grid-cols-6
-                        "
-                    >
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Collection Details
-                        </h3>
-                        <div class="sm:col-span-6">
-                            <ui-input
-                                v-model="form.name"
-                                label="Name"
-                                field-id="name"
-                                name="name"
-                                type="string"
-                                placeholder="Name your collection"
-                                :required="true"
-                            />
-                        </div>
+    <app-layout>
+        <template #header>
+            <div>
+                <h2
+                    class="
+                        font-semibold
+                        text-xl text-gray-800
+                        leading-tight
+                        py-2
+                    "
+                >
+                    Collections
+                </h2>
+            </div>
+        </template>
+        <div>
+            <form
+                class="space-y-8 divide-y divide-gray-200"
+                @submit.prevent="submitForm"
+            >
+                <div class="space-y-8 divide-y divide-gray-200">
+                    <div>
+                        <div
+                            class="
+                                mt-6
+                                grid grid-cols-1
+                                gap-y-6 gap-x-4
+                                sm:grid-cols-6
+                            "
+                        >
+                            <h3
+                                class="
+                                    text-lg
+                                    leading-6
+                                    font-medium
+                                    text-gray-900
+                                "
+                            >
+                                Collection Details
+                            </h3>
+                            <div class="sm:col-span-6">
+                                <ui-input
+                                    v-model="form.name"
+                                    label="Name"
+                                    field-id="name"
+                                    name="name"
+                                    type="string"
+                                    placeholder="Name your collection"
+                                    :required="true"
+                                />
+                            </div>
 
-                        <div class="sm:col-span-6">
-                            <ui-text-area
-                                v-model="form.description"
-                                name="description"
-                                type="textarea"
-                                label="Description"
-                                :required="false"
-                                placeholder="Write a few sentences about your collection"
-                                class="mb-4"
-                            />
-                        </div>
+                            <div class="sm:col-span-6">
+                                <ui-text-area
+                                    v-model="form.description"
+                                    name="description"
+                                    type="textarea"
+                                    label="Description"
+                                    :required="false"
+                                    placeholder="Write a few sentences about your collection"
+                                    class="mb-4"
+                                />
+                            </div>
 
-                        <div class="sm:col-span-6">
-                            <ui-checkbox
-                                v-model:checked="form.is_public"
-                                name="is_public"
-                                label="Public Collection"
-                            />
+                            <div class="sm:col-span-6">
+                                <ui-checkbox
+                                    v-model:checked="form.is_public"
+                                    name="is_public"
+                                    label="Public Collection"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="pt-5">
-                <div class="flex space-x-4 justify-end">
-                    <Link :href="cancelLink">
+                <div class="pt-5">
+                    <div class="flex space-x-4 justify-end">
+                        <Link :href="cancelLink">
+                            <ui-button
+                                type="button"
+                                button-style="white"
+                                text="Cancel"
+                            />
+                        </Link>
                         <ui-button
                             type="button"
-                            button-style="white"
-                            text="Cancel"
+                            button-style="primary-dark"
+                            text="Create Collection"
+                            @click="submitForm"
                         />
-                    </Link>
-                    <ui-button
-                        type="button"
-                        button-style="primary-dark"
-                        text="Create Collection"
-                        @click="submitForm"
-                    />
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </app-layout>
 </template>
 
 <script>
-// import Layout from "@/Layouts/Authenticated";
 import { Link } from "@inertiajs/inertia-vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UiInput from "@/UI/Form/UIInput";
@@ -84,9 +106,7 @@ import UiCheckbox from "@/UI/Form/UICheckbox";
 export default {
     name: "Create",
 
-    components: { UiInput, UiButton, UiTextArea, UiCheckbox, Link },
-
-    layout: AppLayout,
+    components: { UiInput, UiButton, UiTextArea, UiCheckbox, Link, AppLayout },
 
     title: "MTG Collector - Create Collection",
 
@@ -124,9 +144,7 @@ export default {
 
     methods: {
         submitForm() {
-            this.$inertia.post("/collections",
-                this.form,
-            );
+            this.$inertia.post("/collections", this.form);
         },
     },
 };

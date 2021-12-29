@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\CollectionsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\CollectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +31,5 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('collections', CollectionsController::class);
+    Route::resource('folders', CollectionsController::class);
 });
