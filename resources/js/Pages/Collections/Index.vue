@@ -30,22 +30,28 @@
             </div>
         </template>
         <div>
-            <p v-for="(collection, index) in collections" :key="index">
-                {{ collection.name }}
-            </p>
+            <collection-folder-index
+                :collections="collections"
+                :folders="folders"
+            />
         </div>
     </app-layout>
 </template>
 <script>
 import { Link } from "@inertiajs/inertia-vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import CollectionFolderIndex from "@/Components/CardLists/CollectionFolderIndex";
 import UiButton from "@/UI/UIButton";
 export default {
     name: "Index",
 
-    components: { AppLayout, Link, UiButton },
+    components: { AppLayout, Link, UiButton, CollectionFolderIndex },
 
     props: {
+        folders: {
+            type: Object,
+            default: () => {},
+        },
         collections: {
             type: Object,
             default: () => {},

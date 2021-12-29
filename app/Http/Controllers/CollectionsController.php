@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Folders\Aggregate\Actions\GetFolders;
 use App\Http\Controllers\Controller;
 use GetCollection;
 use GetCollections;
@@ -30,9 +31,12 @@ class CollectionsController extends Controller
         return Inertia::render('Collections/Edit', ['collection' => $collection]);
     }
 
-    public function index(GetCollections $getCollections) : Response
+    public function index(GetCollections $getCollections, GetFolders $getFolders) : Response
     {
-        return Inertia::render('Collections/Index', ['collections' => $getCollections()]);
+        return Inertia::render('Collections/Index', [
+            'collections'   => $getCollections(),
+            'folders'       => $getFolders(),
+        ]);
     }
 
     public function store(Request $request, CreateCollection $createCollection) : RedirectResponse

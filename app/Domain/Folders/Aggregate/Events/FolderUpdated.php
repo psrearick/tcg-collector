@@ -4,7 +4,7 @@ namespace App\Domain\Folders\Aggregate\Events;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class FolderCreated extends ShouldBeStored
+class FolderUpdated extends ShouldBeStored
 {
     /** @var array */
     public $folderAttributes;

@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout title="Create Collection">
         <template #header>
             <div>
                 <h2

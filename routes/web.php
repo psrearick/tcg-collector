@@ -31,6 +31,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Dashboard');
     })->name('dashboard');
 
-    Route::resource('collections', CollectionsController::class)->except('show');
+    Route::resource('collections', CollectionsController::class);
     Route::resource('folders', FoldersController::class)->except('index');
 });

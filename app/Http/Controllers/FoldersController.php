@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
+use App\Domain\Folders\Aggregate\Actions\UpdateFolder;
+use App\Domain\Folders\Models\Folder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,6 +33,9 @@ class FoldersController extends Controller
         return redirect()->route('folders.show', $uuid);
     }
 
-    public function update()
-    {}
+    public function update(Request $request, UpdateFolder $updateFolder)
+    {
+        $updateFolder($request->all());
+        return back();
+    }
 }

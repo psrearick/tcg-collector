@@ -26,4 +26,9 @@ class Folder extends Model
     {
         return $this->hasMany(Collection::class);
     }
+
+    public static function uuid(string $uuid) : self
+    {
+        return self::where('uuid', '=', $uuid)->first();
+    }
 }

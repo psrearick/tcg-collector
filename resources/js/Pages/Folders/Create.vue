@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout title="Create Folder">
         <template #header>
             <div>
                 <h2
