@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="hasSearch">
-            <ui-card v-if="!hasResults">
+            <ui-card v-if="!hasResults && !searching">
                 <p>No cards found!</p>
             </ui-card>
             <ui-well v-if="hasResults" class="mt-4">
@@ -30,9 +30,13 @@
                     <div class="flex flex-col justify-between">
                         <div class="text-center">
                             <p>
-                                {{ card.name }} - {{ card.set_name }} ({{
-                                    card.set_code
-                                }})
+                                {{ card.name }}
+                                <span v-if="card.set_name">
+                                    - {{ card.set_name }}
+                                </span>
+                                <span v-if="card.set_code">
+                                    ({{ card.set_code }})
+                                </span>
                             </p>
                             <p class="text-sm text-gray-500">
                                 {{ card.features }}
@@ -43,15 +47,19 @@
                                 v-for="(finish, finishIndex) in card.finishes"
                                 :key="finishIndex"
                                 class="md:mx-4"
-                                :label="finishIndex"
-                                :model-value="card.quantities[finishIndex]"
+                                :label="finish['name']"
+                                :model-value="card.quantities[finish['name']]"
                                 :active="
                                     activeField === index &&
-                                    activeFieldFinish === finishIndex
+                                    activeFieldFinish === finish['name']
                                 "
-                                @activate="activate(index, finishIndex)"
+                                @activate="activate(index, finish['name'])"
                                 @update:model-value="
-                                    updateQuantity($event, card.id, finishIndex)
+                                    updateQuantity(
+                                        $event,
+                                        card.id,
+                                        finish['name']
+                                    )
                                 "
                             />
                         </div>
@@ -104,6 +112,10 @@ export default {
         search: {
             type: Object,
             default: () => {},
+        },
+        searching: {
+            type: Boolean,
+            default: false,
         },
     },
 

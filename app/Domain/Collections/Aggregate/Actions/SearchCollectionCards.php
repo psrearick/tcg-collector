@@ -4,7 +4,7 @@ namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Domain\Cards\Actions\SearchCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchResults;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchResultsData;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchCollectionCards
@@ -13,7 +13,7 @@ class SearchCollectionCards
 
     protected CollectionCardSearchData $collectionCardSearchData;
 
-    public function __invoke(CollectionCardSearchData $collectionCardSearchData) : CollectionCardSearchResults
+    public function __invoke(CollectionCardSearchData $collectionCardSearchData) : CollectionCardSearchResultsData
     {
         $this->collectionCardSearchData = $collectionCardSearchData;
         $searchCards                    = new SearchCards;
@@ -21,22 +21,23 @@ class SearchCollectionCards
         $this->cards                    = $cardSearchResults->builder;
 
         if (!$this->cards) {
-            return new CollectionCardSearchResults([]);
+            return new CollectionCardSearchResultsData([]);
         }
 
         $this->addRelations();
 
-        return new CollectionCardSearchResults(['builder' => $this->cards]);
+        return new CollectionCardSearchResultsData(['builder' => $this->cards]);
     }
 
     private function addRelations() : void
     {
-        $uuid = $this->CollectionCardSearchData->uuid;
+        $uuid = $this->collectionCardSearchData->uuid;
 
-        $this->cards->load([
+        $this->cards->with([
             'collections' => function ($query) use ($uuid) {
                 $query->where('collections.uuid', '=', $uuid);
             },
+            'finishes',
             'frameEffects',
             'set',
             'prices',

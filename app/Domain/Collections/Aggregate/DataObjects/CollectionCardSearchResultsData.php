@@ -2,9 +2,9 @@
 
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
-class CollectionCardSearchResults
+class CollectionCardSearchResultsData
 {
     public ?Builder $builder;
 

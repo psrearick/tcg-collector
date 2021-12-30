@@ -7,6 +7,7 @@ use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Domain\Cards\Actions\FormatCards;
 
 class CollectionsEditSearchController
 {
@@ -17,8 +18,23 @@ class CollectionsEditSearchController
             'search'    => new CardSearchData($request->all()),
         ]);
 
-        $results = $searchCollectionCards($searchData);
+        $builder = $searchCollectionCards($searchData)->builder ?: [];
+    
+        if (!$builder) {
+            return response()->json([]);
+        }
 
-        return response()->json([]);
+        $formatCards    = new FormatCards;
+        $cards          = $formatCards($builder);
+
+        if ($searchData->search->paginator) {
+            $page = $searchData->search->paginator;
+            return response()->json($cards->paginate(
+                $page['per_page'],
+                $page['total'],
+                $page['current_page']
+            ));
+        }
+        return response()->json($cards->paginate(35));
     }
 }

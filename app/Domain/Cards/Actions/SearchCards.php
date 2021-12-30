@@ -3,7 +3,7 @@
 namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\DataObjects\CardSearchData;
-use App\Domain\Cards\DataObjects\CardSearchResults;
+use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,11 +14,11 @@ class SearchCards
 
     protected CardSearchData $cardSearchData;
 
-    public function __invoke(CardSearchData $cardSearchData) : CardSearchResults
+    public function __invoke(CardSearchData $cardSearchData) : CardSearchResultsData
     {
         $this->cardSearchData = $cardSearchData;
         if (!$this->isValidCardSearch()) {
-            return new CardSearchResults([]);
+            return new CardSearchResultsData([]);
         }
 
         $this->cards = Card::with('set');
@@ -35,7 +35,7 @@ class SearchCards
             $this->sort();
         }
 
-        return new CardSearchResults(['builder' => $this->cards]);
+        return new CardSearchResultsData(['builder' => $this->cards]);
     }
 
     public function getSetIds() : array

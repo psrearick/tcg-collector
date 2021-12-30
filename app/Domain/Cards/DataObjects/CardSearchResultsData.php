@@ -4,7 +4,7 @@ namespace App\Domain\Cards\DataObjects;
 
 use Illuminate\Database\Eloquent\Builder;
 
-class CardSearchResults
+class CardSearchResultsData
 {
     public ?Builder $builder;
 

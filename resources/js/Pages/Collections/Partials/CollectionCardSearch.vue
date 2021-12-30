@@ -8,6 +8,7 @@
     <collection-card-search-results
         :paginator="paginator"
         :search="searchTerms"
+        :searching="searching"
         @update:paginator="updatePage"
     />
 </template>
@@ -72,6 +73,7 @@ export default {
     methods: {
         query: _.debounce(function () {
             this.searching = true;
+            this.runSearchResults([]);
             const collectionUuid = this.$store.getters.currentCollection.uuid;
             axios
                 .post("/collections/" + collectionUuid + "/edit/search", {
@@ -81,8 +83,8 @@ export default {
                 })
                 .then((res) => {
                     this.searching = false;
-                    this.runSearchResults(res.data.cards.data);
-                    this.paginator = _.pick(res.data.cards, [
+                    this.runSearchResults(res.data.data);
+                    this.paginator = _.pick(res.data, [
                         "current_page",
                         "from",
                         "last_page",
