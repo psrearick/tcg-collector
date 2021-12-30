@@ -44,7 +44,6 @@ class FoldersController extends Controller
 
     public function update(Request $request, UpdateFolder $updateFolder)
     {
-        dd($request->all());
         $updateFolder($request->all());
 
         return back();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Http\Controllers\Controller;
 use GetCollection;
@@ -55,7 +56,10 @@ class CollectionsController extends Controller
         return redirect()->route('collections.show', $uuid);
     }
 
-    public function update()
+    public function update(Request $request, UpdateCollection $updateCollection) : RedirectResponse
     {
+        $updateCollection($request->all());
+
+        return back();
     }
 }

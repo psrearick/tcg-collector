@@ -2,16 +2,21 @@
     <app-layout title="Collection">
         <template #header>
             <div class="flex flex-wrap justify-between">
-                <h2
-                    class="
-                        font-semibold
-                        text-xl text-gray-800
-                        leading-tight
-                        py-2
-                    "
-                >
-                    {{ collection.name }}
-                </h2>
+                <div>
+                    <h2
+                        class="
+                            font-semibold
+                            text-xl text-gray-800
+                            leading-tight
+                            py-2
+                        "
+                    >
+                        {{ collection.name }}
+                    </h2>
+                    <p class="text-sm text-gray-500">
+                        {{ collection.description }}
+                    </p>
+                </div>
                 <div class="flex space-x-4">
                     <Link :href="route('folders.create')">
                         <ui-button text="Import" button-style="primary-dark" />

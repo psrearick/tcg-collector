@@ -5,6 +5,7 @@ namespace App\Domain\Collections\Aggregate;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionMoved;
+use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use Illuminate\Support\Facades\Auth;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
@@ -19,7 +20,7 @@ class CollectionAggregateRoot extends AggregateRoot
         return $this;
     }
 
-    public function deleteCollection()
+    public function deleteCollection() : self
     {
         $this->recordThat(new CollectionDeleted());
 
@@ -29,6 +30,13 @@ class CollectionAggregateRoot extends AggregateRoot
     public function moveCollection(string $uuid, string $destination, int $userId) : self
     {
         $this->recordThat(new CollectionMoved($uuid, $destination, $userId));
+
+        return $this;
+    }
+
+    public function updateCollection(array $attributes) : self
+    {
+        $this->recordThat(new CollectionUpdated($attributes));
 
         return $this;
     }

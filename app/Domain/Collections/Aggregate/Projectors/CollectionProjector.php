@@ -5,6 +5,7 @@ namespace App\Domain\Collections\Aggregate\Projectors;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionMoved;
+use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use Illuminate\Support\Facades\Log;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -26,5 +27,11 @@ class CollectionProjector extends Projector
         Collection::uuid($event->uuid)->update([
             'folder_uuid' => $event->destination,
         ]);
+    }
+
+    public function onCollectionUpdated(CollectionUpdated $event)
+    {
+        $attributes = $event->collectionAttributes;
+        Collection::uuid($attributes['uuid'])->update($attributes);
     }
 }

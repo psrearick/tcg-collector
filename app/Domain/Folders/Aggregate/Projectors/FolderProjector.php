@@ -44,13 +44,6 @@ class FolderProjector extends Projector
     public function onFolderUpdate(FolderUpdated $event) : void
     {
         $attributes = $event->folderAttributes;
-        $folder     = Folder::uuid($attributes['uuid']);
-        $parent     = $attributes['parent_uuid'] ?? null;
-        unset($attributes['parent_uuid']);
-        $folder->update($attributes);
-
-        if ($parent) {
-            $folder->appendToNode(Folder::uuid($parent));
-        }
+        Folder::uuid($attributes['uuid'])->update($attributes);
     }
 }

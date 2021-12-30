@@ -31,7 +31,7 @@
             />
             <ui-checkbox
                 v-if="type === 'collection'"
-                v-model:checked="form.isPublic"
+                v-model:checked="form.is_public"
                 name="isPublic"
                 label="Public Collection"
             />
@@ -82,7 +82,7 @@ export default {
                 name: "",
                 description: "",
                 id: null,
-                isPublic: false,
+                is_public: false,
             },
             errorMessages: {},
         };
@@ -124,6 +124,7 @@ export default {
                 name: "",
                 description: "",
                 id: null,
+                is_public: false,
             };
             this.errorMessages = {};
         },

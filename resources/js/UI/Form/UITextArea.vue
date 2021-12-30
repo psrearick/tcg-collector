@@ -80,12 +80,30 @@ export default {
 
     emits: ["update:modelValue", "blur"],
 
+    data() {
+        return {
+            fieldText: "",
+        };
+    },
+
     computed: {
-        value() {
-            if (!this.formatter) {
-                return this.modelValue;
-            }
-            return this.formatter(this.modelValue);
+        value: {
+            get() {
+                return this.fieldText;
+            },
+            set(val) {
+                if (!this.formatter) {
+                    this.fieldText = val;
+                    return;
+                }
+                this.fieldText = this.formatter(this.modelValue);
+            },
+        },
+    },
+
+    watch: {
+        modelValue(val) {
+            this.value = val;
         },
     },
 

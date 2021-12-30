@@ -9,7 +9,6 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\DataObjects\FolderData;
 use App\Domain\Folders\Aggregate\Events\FolderCreated;
 use App\Domain\Folders\Aggregate\Events\FolderMoved;
-use App\Domain\Folders\Aggregate\Events\FolderUpdated;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use Spatie\EventSourcing\EventHandlers\Projectors\EventQuery;
@@ -27,7 +26,6 @@ class FolderChildren extends EventQuery
             ->whereIn('event_class', [
                 FolderCreated::class,
                 FolderMoved::class,
-                FolderUpdated::class,
                 CollectionCreated::class,
                 CollectionMoved::class,
             ])
@@ -114,22 +112,6 @@ class FolderChildren extends EventQuery
         } else {
             if (array_key_exists($attributes['uuid'], $this->folders)) {
                 unset($this->folders[$attributes['uuid']]);
-            }
-        }
-    }
-
-    protected function applyFolderUpdated(FolderUpdated $folderUpdated) : void
-    {
-        $attributes = $folderUpdated->folderAttributes;
-        $parent     = $attributes['parent_uuid'] ?? null;
-        $folderUuid = $attributes['uuid'];
-        $userId     = $attributes['user_id'];
-
-        if ($parent == $this->folder && $userId == $this->user_id) {
-            $this->folders[$folderUuid] = $attributes;
-        } else {
-            if (array_key_exists($folderUuid, $this->folders)) {
-                unset($this->folders[$folderUuid]);
             }
         }
     }
