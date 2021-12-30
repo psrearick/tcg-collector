@@ -5,16 +5,15 @@ namespace App\Jobs;
 use App\Actions\DownloadFileAction;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Mappings\Models\ApiMappings;
-use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use pcrov\JsonReader\Exception;
+use pcrov\JsonReader\JsonReader;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
-use pcrov\JsonReader\JsonReader;
+use App\Domain\Prices\Models\PriceProvider;
 
 class ImportCardDataPrices implements ShouldQueue
 {

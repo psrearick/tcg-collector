@@ -17,6 +17,7 @@ use App\Jobs\SetMultiverseIds;
 use App\Jobs\SetPromoTypes;
 use App\Jobs\SetRelatedObjects;
 use App\Jobs\UpdatePricing;
+use App\Jobs\CreatePricing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -149,7 +150,8 @@ class UpdateCard implements ShouldQueue
 
     private function updatePricing(array $cardData, ?Card $card = null) : void
     {
-        UpdatePricing::dispatch($cardData, $card);
+        CreatePricing::dispatch($cardData, $card);
+        // UpdatePricing::dispatch($cardData, $card);
     }
 
     private function updateRelationships(array $cardData, ?Card $card) : void

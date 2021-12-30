@@ -17,6 +17,7 @@ use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Mappings\Models\ApiMappings;
+use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
 use Illuminate\Database\Eloquent\Builder;
@@ -140,6 +141,14 @@ class Card extends Model
     public function multiverseIds() : HasMany
     {
         return $this->hasMany(MultiverseId::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function prices() : HasMany
+    {
+        return $this->hasMany(Price::class, 'card_uuid', 'uuid');
     }
 
     /**

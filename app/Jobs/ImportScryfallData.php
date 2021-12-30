@@ -13,6 +13,7 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
+use Exception as RootException;
 
 class ImportScryfallData implements ShouldQueue
 {
@@ -58,7 +59,7 @@ class ImportScryfallData implements ShouldQueue
 
             try {
                 $this->processCardData($save_file_loc);
-            } catch (InvalidArgumentException | Exception $e) {
+            } catch (InvalidArgumentException | RootException $e) {
             }
         }
 
@@ -107,11 +108,18 @@ class ImportScryfallData implements ShouldQueue
         $reader->read();
         $reader->read();
 
+        $count = 0;
         while ($reader->type() === JsonReader::OBJECT) {
             $cardData = $reader->value();
 
             if ($cardData['object'] == 'card') {
                 UpdateCard::dispatch($cardData, $this->options)->onQueue('long-running-queue');
+            }
+
+            $count += 1;
+
+            if ($count > 4) {
+                break;
             }
 
             $reader->next();
