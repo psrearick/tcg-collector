@@ -22,6 +22,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 
 class UpdateCard implements ShouldQueue
 {
@@ -136,6 +137,12 @@ class UpdateCard implements ShouldQueue
             'imageSmallUri'         => ($cardData['image_uris'] ?? null)
                 ? $cardData['image_uris']['small'] : null,
         ]);
+
+        if (!$card->uuid) {
+            $card->update([
+                'uuid' => Str::uuid(),
+            ]);
+        }
 
         return $card;
     }
