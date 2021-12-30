@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
-use App\Domain\Folders\Aggregate\Actions\GetFolders;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Http\Controllers\Controller;
 use GetCollection;
-use GetCollections;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,7 +21,8 @@ class CollectionsController extends Controller
     }
 
     public function destroy()
-    {}
+    {
+    }
 
     public function edit(string $uuid, GetCollection $getCollection) : Response
     {
@@ -34,7 +33,8 @@ class CollectionsController extends Controller
 
     public function index() : Response
     {
-        $folderChildren = new FolderChildren("");
+        $folderChildren = new FolderChildren('', auth()->id());
+
         return Inertia::render('Collections/Index', [
             'collections'   => $folderChildren->collections(),
             'folders'       => $folderChildren->folders(),
@@ -48,7 +48,6 @@ class CollectionsController extends Controller
         return Inertia::render('Collections/Show', ['collection' => $collection]);
     }
 
-
     public function store(Request $request, CreateCollection $createCollection) : RedirectResponse
     {
         $uuid = $createCollection($request->all());
@@ -57,5 +56,6 @@ class CollectionsController extends Controller
     }
 
     public function update()
-    {}
+    {
+    }
 }

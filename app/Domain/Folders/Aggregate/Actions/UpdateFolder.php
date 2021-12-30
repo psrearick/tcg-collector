@@ -14,7 +14,7 @@ class UpdateFolder
         FolderAggregateRoot::retrieve($uuid)
             ->updateFolder($data)
             ->persist();
-        
+
         return $uuid;
     }
 }

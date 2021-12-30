@@ -38,7 +38,11 @@
                         <div class="grid grid-cols-2 pb-4">
                             <div>
                                 <p class="text-xs text-gray-500">Cards</p>
-                                <p>{{ folderItem.count }}</p>
+                                <p>
+                                    {{
+                                        folderItem.count ? folderItem.count : 0
+                                    }}
+                                </p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
@@ -55,7 +59,9 @@
                     v-for="(collection, index) in collections"
                     :key="index"
                     :href="
-                        route('collections.show', { collection: collection.uuid })
+                        route('collections.show', {
+                            collection: collection.uuid,
+                        })
                     "
                     :menu="getMenu(index, 'collection')"
                 >
@@ -69,7 +75,11 @@
                         <div class="grid grid-cols-2 pb-4">
                             <div>
                                 <p class="text-xs text-gray-500">Cards</p>
-                                <p>{{ collection.count }}</p>
+                                <p>
+                                    {{
+                                        collection.count ? collection.count : 0
+                                    }}
+                                </p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
@@ -80,7 +90,10 @@
                 </card-list-card-with-menu>
             </card-list>
         </div>
-        <div v-if="isEmpty" class="bg-gray-100 p-6 rounded-md shadow-md text-center">
+        <div
+            v-if="isEmpty"
+            class="bg-gray-100 p-6 rounded-md shadow-md text-center"
+        >
             <p>You have no collections in this folder.</p>
         </div>
         <edit-collection-panel
@@ -96,6 +109,7 @@
             v-model:show="showMovePanel"
             :collection="editCollection"
             :folder="folder"
+            :type="editCollectionType"
         />
         <public-link-modal
             v-model:show="showPublicLinkModel"
@@ -106,7 +120,7 @@
 
 <script>
 import CardList from "@/Components/CardLists/CardList";
-import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu"
+import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu";
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import EditCollectionPanel from "@/Components/Panels/EditCollectionPanel";
 import DeleteCollectionPanel from "@/Components/Panels/DeleteCollectionPanel";
@@ -224,6 +238,7 @@ export default {
                         type === "collection"
                             ? this.collections[index]
                             : this.folders[index],
+                    type: type,
                 },
                 {
                     content: "Move",
@@ -232,12 +247,14 @@ export default {
                         type === "collection"
                             ? this.collections[index]
                             : this.folders[index],
+                    type: type,
                 },
                 {
                     content: "Get Public Link",
                     action: "getLink",
                     collection: this.collections[index],
                     restriction: "collection",
+                    type: type,
                 },
             ];
             return menus.filter((menu) => {

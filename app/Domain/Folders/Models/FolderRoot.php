@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Domain\Collections\Models;
+namespace App\Domain\Folders\Models;
 
 use App\Domain\Base\Model;
+use App\Domain\Collections\Models\Collection;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Collection extends Model
+class FolderRoot extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function folder() : BelongsTo
+    public function collections() : HasMany
     {
-        return $this->belongsTo(Folder::class);
+        return $this->hasMany(Collection::class);
     }
 
     public function user() : BelongsTo

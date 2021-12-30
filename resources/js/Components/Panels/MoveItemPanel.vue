@@ -24,7 +24,7 @@
                 name="destination"
                 class="mb-4"
                 :required="true"
-                :options="collectionOptions"
+                :options="getFolders()"
             />
         </form>
     </ui-panel>
@@ -57,17 +57,21 @@ export default {
             type: Object,
             default: () => {},
         },
+        type: {
+            type: String,
+            default: "",
+        },
     },
 
     emits: ["update:show", "close"],
 
     data() {
         return {
-            collectionOptions: [],
+            // collectionOptions: [],
             destinationMenuShow: false,
             form: {
                 destination: null,
-                id: null,
+                uuid: null,
                 type: null,
             },
             list: [],
@@ -78,14 +82,11 @@ export default {
     computed: {
         title() {
             return (
-                "Edit " +
-                (this.collection.type === "collection"
-                    ? "Collection"
-                    : "Folder")
+                "Move " + (this.type === "collection" ? "Collection" : "Folder")
             );
         },
         thisFolder() {
-            if (this.collection.type === "collection") {
+            if (this.type === "collection") {
                 return {};
             }
 
@@ -93,13 +94,18 @@ export default {
                 (folder) => folder.id === this.collection.id
             );
         },
+        moveUrl() {
+            return this.type === "collection"
+                ? "/collections/move"
+                : "/folders/move";
+        },
     },
 
     watch: {
         show: function (value) {
             if (value) {
-                this.form.id = this.collection.id;
-                this.form.type = this.collection.type;
+                this.form.uuid = this.collection.uuid;
+                this.form.type = this.type;
                 this.getFolders();
                 return;
             }
@@ -110,7 +116,7 @@ export default {
     methods: {
         clearForm() {
             this.form = {
-                id: null,
+                uuid: null,
                 destination: null,
                 type: "",
             };
@@ -125,108 +131,23 @@ export default {
             this.clearForm();
             this.close();
         },
-        filterFolderForTopLevelOptions(folder) {
-            if (folder.id === 0) {
-                return false;
-            }
-
-            if (this.collection.type === "collection") {
-                return true;
-            }
-
-            if (folder.id === this.collection.id) {
-                return false;
-            }
-
-            const descendantIds = _.map(this.thisFolder.descendants, "id");
-
-            return descendantIds.indexOf(folder.id) === -1;
-        },
-        filterFolderForNestedOptions(folder) {
-            if (folder.id === this.folder.id) {
-                return false;
-            }
-
-            if (this.collection.type === "collection") {
-                return true;
-            }
-
-            if (folder.id === this.collection.id) {
-                return false;
-            }
-
-            if (folder.id === this.folder.id) {
-                return false;
-            }
-
-            const descendantIds = _.map(this.thisFolder.descendants, "id");
-
-            return descendantIds.indexOf(folder.id) === -1;
-        },
         getFolders() {
-            axios
-                .get("/collections/collections/folders-tree")
-                .then((folders) => {
-                    this.folders.push({
-                        id: 0,
-                        name: "Root",
-                        ancestry: "",
-                    });
-                    folders.data.forEach((folder) => {
-                        this.mapFolder(folder);
-                    });
+            if (!this.collection) {
+                return [];
+            }
+            if (!this.collection.allowed) {
+                return [];
+            }
 
-                    this.collectionOptions = this.folders
-                        .map((folder) => {
-                            return {
-                                parent_id: folder.parent_id,
-                                id: folder.id,
-                                label:
-                                    (folder.ancestry.length
-                                        ? folder.ancestry + " > "
-                                        : "") + folder.name,
-                            };
-                        })
-                        .filter((folder) => {
-                            if (!this.folder) {
-                                return this.filterFolderForTopLevelOptions(
-                                    folder
-                                );
-                            }
-                            return this.filterFolderForNestedOptions(folder);
-                        });
-                });
-        },
-        mapFolder(folder) {
-            folder.ancestry = "";
-            if (folder.parent) {
-                folder.ancestry =
-                    (folder.parent.parent
-                        ? folder.parent.ancestry + " > "
-                        : "") + folder.parent.name;
-            }
-            folder.descendants = this.getFolderDescendants(folder);
-            this.folders.push(folder);
-            folder.children.forEach((child) => {
-                child.parent = folder;
-                this.mapFolder(child);
+            let path = this.collection.allowed.map(function (folder) {
+                return { id: folder.uuid, label: folder.path };
             });
-        },
-        getFolderDescendants(folder) {
-            if (!folder.children) {
-                return [folder];
-            }
-            let descendants = folder.children;
-            folder.children.forEach((child) => {
-                descendants = descendants.concat(
-                    this.getFolderDescendants(child)
-                );
-            });
-            return descendants;
+
+            return path;
         },
         save() {
             let self = this;
-            this.$inertia.visit("/collections/collections/move", {
+            this.$inertia.visit(this.moveUrl, {
                 method: "patch",
                 data: this.form,
                 preserveState: true,

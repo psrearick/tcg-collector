@@ -8,8 +8,8 @@
                 <template #title> Add Group Member </template>
 
                 <template #description>
-                    Add a new member to your group, allowing them to
-                    share collections with you.
+                    Add a new member to your group, allowing them to share
+                    collections with you.
                 </template>
 
                 <template #form>
@@ -425,7 +425,8 @@
             <template #title> Remove Group Member </template>
 
             <template #content>
-                Are you sure you would like to remove this person from the group?
+                Are you sure you would like to remove this person from the
+                group?
             </template>
 
             <template #footer>

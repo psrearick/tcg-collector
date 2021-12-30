@@ -5,11 +5,7 @@
                 <slot name="left"></slot>
             </div>
             <div :class="'col-span-6 ' + mainClasses">
-                <Link
-                    v-if="hasLink"
-                    :href="href"
-                    class="focus:outline-none"
-                >
+                <Link v-if="hasLink" :href="href" class="focus:outline-none">
                     <slot name="main"></slot>
                 </Link>
                 <div v-else>

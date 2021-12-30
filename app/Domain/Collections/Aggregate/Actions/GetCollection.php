@@ -7,6 +7,6 @@ class GetCollection
 {
     public function __invoke(string $uuid)
     {
-        return new CollectionData(Collection::where('uuid', '=', $uuid)->first()->toArray());
+        return new CollectionData(Collection::uuid($uuid)->toArray());
     }
 }

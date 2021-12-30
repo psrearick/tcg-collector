@@ -14,20 +14,20 @@
                 </h2>
                 <div class="flex space-x-4">
                     <Link :href="route('folders.create')">
-                        <ui-button
-                            text="Import"
-                            button-style="primary-dark"
-                        />
+                        <ui-button text="Import" button-style="primary-dark" />
                     </Link>
 
                     <Link :href="route('collections.edit', collection.uuid)">
-                        <ui-button
-                            text="Edit"
-                            button-style="primary-dark"
-                        />
+                        <ui-button text="Edit" button-style="primary-dark" />
                     </Link>
 
-                    <Link :href="collection.folder_uuid ? route('folders.show', collection.folder_uuid)  : route('collections.index')">
+                    <Link
+                        :href="
+                            collection.folder_uuid
+                                ? route('folders.show', collection.folder_uuid)
+                                : route('collections.index')
+                        "
+                    >
                         <ui-button
                             text="Back to Folder"
                             button-style="primary-dark"
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
@@ -49,13 +48,13 @@ import UiButton from "@/UI/UIButton";
 export default {
     name: "Show",
 
+    components: { Link, AppLayout, UiButton },
+
     props: {
         collection: {
             type: Object,
             default: () => {},
         },
     },
-
-    components: { Link, AppLayout, UiButton },
-}
+};
 </script>

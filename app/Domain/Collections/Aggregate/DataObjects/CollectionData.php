@@ -10,13 +10,13 @@ class CollectionData
 
     public ?int $id;
 
+    public bool $is_public;
+
     public string $name;
 
     public ?int $user_id;
 
     public ?string $uuid;
-
-    public bool $is_public;
 
     public function __construct(array $data)
     {

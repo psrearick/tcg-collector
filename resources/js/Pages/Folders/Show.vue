@@ -13,17 +13,25 @@
                     >
                         {{ folder.name }}
                     </h2>
-                    <p class="text-sm text-gray-500">{{ folder.description }}</p>
+                    <p class="text-sm text-gray-500">
+                        {{ folder.description }}
+                    </p>
                 </div>
                 <div class="flex space-x-4">
-                    <Link :href="route('folders.create', {folder: folder.uuid})">
+                    <Link
+                        :href="route('folders.create', { folder: folder.uuid })"
+                    >
                         <ui-button
                             text="Create Folder"
                             button-style="primary-dark"
                         />
                     </Link>
 
-                    <Link :href="route('collections.create', {folder: folder.uuid})">
+                    <Link
+                        :href="
+                            route('collections.create', { folder: folder.uuid })
+                        "
+                    >
                         <ui-button
                             text="Create Collection"
                             button-style="primary-dark"
@@ -55,7 +63,7 @@ export default {
         folder: {
             type: Object,
             default: () => {},
-        }, 
+        },
         folders: {
             type: Object,
             default: () => {},

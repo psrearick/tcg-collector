@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\CollectionsController;
+use App\Http\Controllers\CollectionsMoveController;
+use App\Http\Controllers\FoldersController;
+use App\Http\Controllers\FoldersMoveController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\FoldersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Dashboard');
     })->name('dashboard');
 
+    Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections.move');
     Route::resource('collections', CollectionsController::class);
+    Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
 });

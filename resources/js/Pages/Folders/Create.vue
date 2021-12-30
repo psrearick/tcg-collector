@@ -29,7 +29,14 @@
                                 sm:grid-cols-6
                             "
                         >
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            <h3
+                                class="
+                                    text-lg
+                                    leading-6
+                                    font-medium
+                                    text-gray-900
+                                "
+                            >
                                 Folder Details
                             </h3>
 
@@ -125,10 +132,6 @@ export default {
         };
     },
 
-    mounted() {
-        this.form.parent_uuid = this.folder;
-    },
-
     computed: {
         cancelLink() {
             if (this.folder) {
@@ -139,6 +142,10 @@ export default {
 
             return route("collections.index");
         },
+    },
+
+    mounted() {
+        this.form.parent_uuid = this.folder;
     },
 
     methods: {

@@ -10,13 +10,13 @@ class FolderData
 
     public bool $is_public;
 
-    public string $parent_uuid;
-
     public string $name;
+
+    public string $parent_uuid;
 
     public ?int $user_id;
 
-    public ?string $uuid;    
+    public ?string $uuid;
 
     public function __construct(array $data)
     {

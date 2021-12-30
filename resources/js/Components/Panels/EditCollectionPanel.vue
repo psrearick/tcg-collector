@@ -100,10 +100,7 @@ export default {
         },
         title: function () {
             return (
-                "Edit " +
-                (this.type === "collection"
-                    ? "Collection"
-                    : "Folder")
+                "Edit " + (this.type === "collection" ? "Collection" : "Folder")
             );
         },
     },
