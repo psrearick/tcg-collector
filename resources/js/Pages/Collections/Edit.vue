@@ -27,23 +27,58 @@
                 </div>
             </div>
         </template>
+        <div>
+            <div class="mb-12">
+                <div class="flex justify-between">
+                    <h3
+                        class="text-lg leading-6 font-medium text-gray-900 py-4"
+                    >
+                        Add Cards to Collection
+                    </h3>
+                    <div class="py-4">
+                        <Link
+                            :href="
+                                route('collection-set.edit', [collection.uuid])
+                            "
+                        >
+                            <ui-button
+                                text="Add Cards by Set"
+                                button-style="success-outline"
+                            >
+                            </ui-button>
+                        </Link>
+                    </div>
+                </div>
+                <div class="w-full">
+                    <collection-card-search />
+                </div>
+            </div>
+        </div>
+        <template #lowerMain>Collection Cards</template>
     </app-layout>
 </template>
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import CollectionCardSearch from "@/Pages/Collections/Partials/CollectionCardSearch";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
 
 export default {
     name: "Edit",
 
-    components: { AppLayout, Link, UiButton },
+    components: { AppLayout, CollectionCardSearch, Link, UiButton },
 
     props: {
         collection: {
             type: Object,
             default: () => {},
         },
+    },
+
+    mounted() {
+        this.$store.dispatch("updateCurrentCollection", {
+            collection: this.collection,
+        });
     },
 };
 </script>

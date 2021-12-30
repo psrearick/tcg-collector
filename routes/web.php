@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CollectionsController;
+use App\Http\Controllers\CollectionsEditSearchController;
 use App\Http\Controllers\CollectionsMoveController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
@@ -34,7 +35,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections.move');
+    Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
     Route::resource('collections', CollectionsController::class);
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
+    Route::get('collection-set/{id}/edit')->name('collection-set.edit');
 });

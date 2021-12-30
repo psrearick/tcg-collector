@@ -6,6 +6,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 
 import { closable } from "@/directives";
 
+import store from "./Store";
 import mitt from "mitt";
 const emitter = mitt();
 
@@ -20,6 +21,7 @@ createInertiaApp({
             .use(plugin)
             .mixin({ methods: { route } })
             .directive("closable", closable);
+        vueApp.use(store);
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.mount(el);
     },

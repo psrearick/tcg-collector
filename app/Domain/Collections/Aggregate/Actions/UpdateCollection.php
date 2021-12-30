@@ -2,9 +2,8 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
-use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
-
+use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 
 class UpdateCollection
 {

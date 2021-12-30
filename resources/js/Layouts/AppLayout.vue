@@ -609,6 +609,16 @@
                     </div>
                 </div>
             </main>
+
+            <main v-if="$slots.lowerMain">
+                <div class="max-w-7xl mx-auto pb-12 md:px-6 lg:px-8">
+                    <div
+                        class="bg-white md:rounded-lg shadow px-2 py-6 sm:px-6"
+                    >
+                        <slot name="lowerMain"></slot>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 </template>
@@ -635,7 +645,10 @@ export default defineComponent({
         Link,
     },
     props: {
-        title: String,
+        title: {
+            type: String,
+            default: "",
+        },
     },
 
     data() {
