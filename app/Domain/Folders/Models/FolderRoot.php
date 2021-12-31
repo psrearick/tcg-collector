@@ -18,7 +18,7 @@ class FolderRoot extends Model
 
     public function collections() : HasMany
     {
-        return $this->hasMany(Collection::class);
+        return $this->hasMany(Collection::class, 'folder_uuid', 'uuid');
     }
 
     public function user() : BelongsTo

@@ -4,6 +4,8 @@ namespace App\Domain\Collections\Models;
 
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Models\Summary;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,7 +30,12 @@ class Collection extends Model
 
     public function folder() : BelongsTo
     {
-        return $this->belongsTo(Folder::class);
+        return $this->belongsTo(Folder::class, 'folder_uuid', 'uuid');
+    }
+
+    public function summary() : BelongsTo
+    {
+        return $this->belongsTo(Summary::class, 'uuid', 'uuid');
     }
 
     public function user() : BelongsTo
