@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
+use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Http\Controllers\Controller;
 use GetCollection;
 use Illuminate\Http\RedirectResponse;
@@ -35,10 +36,14 @@ class CollectionsController extends Controller
     public function index() : Response
     {
         $folderChildren = new FolderChildren('', auth()->id());
+        $collections    = $folderChildren->collections();
+        $folders        = $folderChildren->folders();
+        $summary        = (new GetSummaryData)($collections, $folders);
 
         return Inertia::render('Collections/Index', [
-            'collections'   => $folderChildren->collections(),
-            'folders'       => $folderChildren->folders(),
+            'collections'   => $collections,
+            'folders'       => $folders,
+            'totals'        => $summary,
         ]);
     }
 

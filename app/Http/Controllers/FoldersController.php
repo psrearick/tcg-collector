@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\UpdateFolder;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
+use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use GetFolder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,11 +28,15 @@ class FoldersController extends Controller
     {
         $folder         = $getFolder($uuid);
         $folderChildren = new FolderChildren($uuid, auth()->id());
+        $collections    = $folderChildren->collections();
+        $folders        = $folderChildren->folders();
+        $summary        = (new GetSummaryData)($collections, $folders);
 
         return Inertia::render('Folders/Show', [
-            'folder'      => $folder,
-            'folders'     => $folderChildren->folders(),
-            'collections' => $folderChildren->collections(),
+            'folder'        => $folder,
+            'collections'   => $collections,
+            'folders'       => $folders,
+            'totals'        => $summary,
         ]);
     }
 

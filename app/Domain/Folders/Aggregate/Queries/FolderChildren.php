@@ -11,6 +11,7 @@ use App\Domain\Folders\Aggregate\Events\FolderCreated;
 use App\Domain\Folders\Aggregate\Events\FolderMoved;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use Spatie\EventSourcing\EventHandlers\Projectors\EventQuery;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 
@@ -39,6 +40,9 @@ class FolderChildren extends EventQuery
             $collection                 = Collection::uuid($uuid);
             $collectionData             = (new CollectionData($collection->toArray()))->toArray();
             $collectionData['allowed']  = $this->formatAllowed($uuid, 'collection', empty($collection->folder_uuid));
+            $collectionSummary = (new GetSummaryData)([$collectionData]);
+            $collectionData['count']    = $collectionSummary['total_cards'];
+            $collectionData['value']    = $collectionSummary['current_value'];
 
             return $collectionData;
         }, array_keys($this->collections));
@@ -51,6 +55,9 @@ class FolderChildren extends EventQuery
             $folderData             = (new FolderData($folder->toArray()))->toArray();
 
             $folderData['allowed']  = $this->formatAllowed($uuid, 'folder', $folder->isRoot());
+            $folderSummary = (new GetSummaryData)(null, [$folderData]);
+            $folderData['count']    = $folderSummary['total_cards'];
+            $folderData['value']    = $folderSummary['current_value'];
 
             return $folderData;
         })->toArray();

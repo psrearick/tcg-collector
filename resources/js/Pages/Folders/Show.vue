@@ -41,6 +41,7 @@
             </div>
         </template>
         <div>
+            <folder-summary :summary="totals" />
             <collection-folder-index
                 :collections="collections"
                 :folder="folder"
@@ -53,11 +54,18 @@
 import { Link } from "@inertiajs/inertia-vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CollectionFolderIndex from "@/Components/CardLists/CollectionFolderIndex";
+import FolderSummary from "@/Components/CardLists/FolderSummary";
 import UiButton from "@/UI/UIButton";
 export default {
     name: "Index",
 
-    components: { AppLayout, Link, UiButton, CollectionFolderIndex },
+    components: {
+        AppLayout,
+        Link,
+        UiButton,
+        CollectionFolderIndex,
+        FolderSummary,
+    },
 
     props: {
         folder: {
@@ -69,6 +77,10 @@ export default {
             default: () => {},
         },
         collections: {
+            type: Object,
+            default: () => {},
+        },
+        totals: {
             type: Object,
             default: () => {},
         },
