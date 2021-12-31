@@ -15,6 +15,7 @@ use App\Domain\CardAttributes\Models\Legality;
 use App\Domain\CardAttributes\Models\PromoType;
 use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\CardAttributes\Models\Ruling;
+use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Collections\Models\Collection as ModelsCollection;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
@@ -26,7 +27,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use App\Domain\Cards\Actions\GetCardImage;
 
 class Card extends Model
 {
@@ -45,8 +45,11 @@ class Card extends Model
     public function collections() : BelongsToMany
     {
         return $this->belongsToMany(
-            ModelsCollection::class, 'card_collections', 'collection_uuid', 'card_uuid', 'uuid', 'uuid'
-        );
+            ModelsCollection::class, 'card_collections', 'card_uuid', 'collection_uuid', 'uuid', 'uuid'
+        )
+        ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
+        ->whereNull('card_collections.deleted_at')
+        ->withTimestamps();
     }
 
     /**

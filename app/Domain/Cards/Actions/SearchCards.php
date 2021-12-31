@@ -31,6 +31,10 @@ class SearchCards
             $this->filterOnSets();
         }
 
+        if ($this->cardSearchData->uuid) {
+            $this->cards->where('uuid', '=', $this->cardSearchData->uuid);
+        }
+
         if ($this->cardSearchData->sort) {
             $this->sort();
         }
@@ -63,7 +67,7 @@ class SearchCards
 
     protected function isValidCardSearch() : bool
     {
-        return $this->cardSearchData->card || $this->cardSearchData->set;
+        return $this->cardSearchData->card || $this->cardSearchData->set || $this->cardSearchData->uuid;
     }
 
     protected function sort() : void

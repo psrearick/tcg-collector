@@ -60,6 +60,7 @@
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CollectionCardSearch from "@/Pages/Collections/Partials/CollectionCardSearch";
+import UpdateCardQuantityMixin from "@/Pages/Collections/Mixins/UpdateCardQuantityMixin";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
 
@@ -67,6 +68,8 @@ export default {
     name: "Edit",
 
     components: { AppLayout, CollectionCardSearch, Link, UiButton },
+
+    mixins: [UpdateCardQuantityMixin],
 
     props: {
         collection: {

@@ -12,8 +12,11 @@ class CardSearchData
 
     public ?array $sort;
 
+    public ?string $uuid;
+
     public function __construct(array $data)
     {
+        $this->uuid         = $data['uuid'] ?? '';
         $this->card         = $data['card'] ?? '';
         $this->paginator    = $data['paginator'] ?? [];
         $this->set          = $data['set'] ?? '';
@@ -23,6 +26,7 @@ class CardSearchData
     public function toArray() : array
     {
         return [
+            'uuid'          => $this->uuid,
             'card'          => $this->card,
             'paginator'     => $this->paginator,
             'set'           => $this->set,

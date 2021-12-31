@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate;
 
+use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionMoved;
@@ -37,6 +38,13 @@ class CollectionAggregateRoot extends AggregateRoot
     public function updateCollection(array $attributes) : self
     {
         $this->recordThat(new CollectionUpdated($attributes));
+
+        return $this;
+    }
+
+    public function updateCollectionCard(array $attributes) : self
+    {
+        $this->recordThat(new CollectionCardUpdated($attributes));
 
         return $this;
     }

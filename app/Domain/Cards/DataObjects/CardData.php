@@ -14,11 +14,7 @@ class CardData
 
     public int $id;
 
-    public string $uuid;
-
     public string $image;
-
-    public string $setImage;
 
     public string $name;
 
@@ -29,6 +25,10 @@ class CardData
     public string $set_code;
 
     public string $set_name;
+
+    public string $setImage;
+
+    public string $uuid;
 
     public function __construct(array $data)
     {

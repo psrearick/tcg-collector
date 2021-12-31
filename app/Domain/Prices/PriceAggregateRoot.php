@@ -3,8 +3,8 @@
 namespace App\Domain\Prices\Aggregate;
 
 use App\Domain\Prices\Aggregate\Events\PriceCreated;
-use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 use App\Domain\Prices\Aggregate\Events\PriceProviderCreated;
+use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class PriceAggregateRoot extends AggregateRoot
 {

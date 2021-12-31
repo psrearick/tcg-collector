@@ -7,8 +7,8 @@ use App\Domain\Cards\Models\Card;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
 {
@@ -19,8 +19,11 @@ class Collection extends Model
     public function cards() : BelongsToMany
     {
         return $this->belongsToMany(
-            Card::class, 'card_collections', 'card_uuid', 'collection_uuid', 'uuid', 'uuid'
-        );
+            Card::class, 'card_collections', 'collection_uuid', 'card_uuid', 'uuid', 'uuid'
+        )
+        ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'date_added', 'created_at', 'finish'])
+        ->whereNull('card_collections.deleted_at')
+        ->withTimestamps();
     }
 
     public function folder() : BelongsTo

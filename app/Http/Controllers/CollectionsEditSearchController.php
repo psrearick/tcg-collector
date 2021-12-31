@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Cards\Actions\FormatCards;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Domain\Cards\Actions\FormatCards;
 
 class CollectionsEditSearchController
 {
@@ -19,22 +19,24 @@ class CollectionsEditSearchController
         ]);
 
         $builder = $searchCollectionCards($searchData)->builder ?: [];
-    
+
         if (!$builder) {
             return response()->json([]);
         }
 
         $formatCards    = new FormatCards;
-        $cards          = $formatCards($builder);
+        $cards          = $formatCards($builder, $collection);
 
         if ($searchData->search->paginator) {
             $page = $searchData->search->paginator;
+
             return response()->json($cards->paginate(
                 $page['per_page'],
                 $page['total'],
                 $page['current_page']
             ));
         }
+
         return response()->json($cards->paginate(35));
     }
 }

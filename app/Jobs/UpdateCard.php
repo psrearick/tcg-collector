@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
+use App\Jobs\CreatePricing;
 use App\Jobs\SetCardImages;
 use App\Jobs\SetCardSet;
 use App\Jobs\SetColorFields;
@@ -17,7 +18,6 @@ use App\Jobs\SetMultiverseIds;
 use App\Jobs\SetPromoTypes;
 use App\Jobs\SetRelatedObjects;
 use App\Jobs\UpdatePricing;
-use App\Jobs\CreatePricing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

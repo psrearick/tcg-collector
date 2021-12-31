@@ -44,7 +44,7 @@ class CreatePricing implements ShouldQueue
         }
 
         $createPriceProvider = new createPriceProvider;
-        $provider = $createPriceProvider(['name' => 'scryfall']);
+        $provider            = $createPriceProvider(['name' => 'scryfall']);
 
         $card     = $this->card ?: Card::where('cardId', '=', $this->cardData['id'])->first();
 
@@ -54,7 +54,7 @@ class CreatePricing implements ShouldQueue
 
         foreach ($prices as $type => $price) {
             $createPrice = new createPrice;
-            $data = [
+            $data        = [
                 'card_uuid'     => $card->uuid,
                 'provider_uuid' => $provider,
                 'price'         => $price,

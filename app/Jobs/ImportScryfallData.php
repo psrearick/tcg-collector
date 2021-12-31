@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Actions\DownloadFileAWSAction as DownloadFileAction;
+use Exception as RootException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -13,7 +14,6 @@ use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
 use pcrov\JsonReader\JsonReader;
-use Exception as RootException;
 
 class ImportScryfallData implements ShouldQueue
 {

@@ -4,9 +4,9 @@ namespace App\Domain\Prices\Aggregate\DataObjects;
 
 class PriceProviderData
 {
-    public string $uuid;
-
     public string $name;
+
+    public string $uuid;
 
     public function __construct(array $data)
     {

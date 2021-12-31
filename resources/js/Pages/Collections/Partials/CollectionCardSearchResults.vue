@@ -47,18 +47,18 @@
                                 v-for="(finish, finishIndex) in card.finishes"
                                 :key="finishIndex"
                                 class="md:mx-4"
-                                :label="finish['name']"
-                                :model-value="card.quantities[finish['name']]"
+                                :label="finish"
+                                :model-value="card.quantities[finishIndex]"
                                 :active="
                                     activeField === index &&
-                                    activeFieldFinish === finish['name']
+                                    activeFieldFinish === finishIndex
                                 "
-                                @activate="activate(index, finish['name'])"
+                                @activate="activate(index, finishIndex)"
                                 @update:model-value="
                                     updateQuantity(
                                         $event,
-                                        card.id,
-                                        finish['name']
+                                        card.uuid,
+                                        finishIndex
                                     )
                                 "
                             />
@@ -66,7 +66,7 @@
                     </div>
                     <div>
                         <p
-                            v-for="(price, priceIndex) in card.price"
+                            v-for="(price, priceIndex) in card.prices"
                             :key="priceIndex"
                             class="text-center md:text-right md:pr-1"
                         >
@@ -166,7 +166,7 @@ export default {
             this.activeFieldFinish = null;
             let change =
                 value -
-                (this.cards.find((card) => card.id === id)["quantities"][
+                (this.cards.find((card) => card.uuid === id)["quantities"][
                     finish
                 ] || 0);
             if (change === 0) {

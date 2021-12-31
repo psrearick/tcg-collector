@@ -4,18 +4,18 @@ namespace App\Domain\Prices\Aggregate\DataObjects;
 
 class PriceData
 {
-    public ?int $id;
-
     public string $card_uuid;
-
-    public string $provider_uuid;
-
-    public float $price;
 
     public bool $foil;
 
+    public ?int $id;
+
+    public float $price;
+
+    public string $provider_uuid;
+
     public string $type;
-    
+
     public function __construct(array $data)
     {
         $this->id               = $data['id'] ?? null;

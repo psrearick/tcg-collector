@@ -104,7 +104,7 @@ const mutations = {
     },
     updateCardSearchResultsCard(state, card) {
         const srCardId = state.cardSearchResults.findIndex(
-            (srCard) => srCard.id === card.id
+            (srCard) => srCard.uuid === card.uuid
         );
         state.cardSearchResults[srCardId] = card;
     },

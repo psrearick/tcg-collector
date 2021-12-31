@@ -2,9 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
+use App\Domain\Prices\Aggregate\DataObjects\PriceProviderData;
 use App\Domain\Prices\Aggregate\PriceAggregateRoot;
 use Illuminate\Support\Str;
-use App\Domain\Prices\Aggregate\DataObjects\PriceProviderData;
 
 class createPriceProvider
 {
