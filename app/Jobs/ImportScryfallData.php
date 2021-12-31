@@ -108,18 +108,11 @@ class ImportScryfallData implements ShouldQueue
         $reader->read();
         $reader->read();
 
-        $count = 0;
         while ($reader->type() === JsonReader::OBJECT) {
             $cardData = $reader->value();
 
             if ($cardData['object'] == 'card') {
                 UpdateCard::dispatch($cardData, $this->options)->onQueue('long-running-queue');
-            }
-
-            $count += 1;
-
-            if ($count > 4) {
-                break;
             }
 
             $reader->next();

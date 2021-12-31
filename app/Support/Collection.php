@@ -12,7 +12,7 @@ class Collection extends BaseCollection
         $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 
         return new LengthAwarePaginator(
-            $this->forPage($page, $perPage)->toArray(),
+            $this->forPage($page, $perPage)->values()->toArray(),
             $total ?: $this->count(),
             $perPage,
             $page,

@@ -17,9 +17,7 @@
                             placeholder="Search by Card Name"
                             type="search"
                             :value="modelValue"
-                            @input="
-                                $emit('update:modelValue', $event.target.value)
-                            "
+                            @input="searchCards"
                         />
                     </div>
                 </div>
@@ -38,9 +36,7 @@
                             placeholder="Search by Set Name or Code"
                             type="search"
                             :value="setName"
-                            @input="
-                                $emit('update:setName', $event.target.value)
-                            "
+                            @input="searchSets"
                         />
                     </div>
                 </div>
@@ -54,7 +50,9 @@
                 </ui-button>
             </div>
         </div>
-        <p v-if="searching" class="text-xs text-gray-400">Searching...</p>
+        <p v-if="markSearching && searching" class="text-xs text-gray-400">
+            Searching...
+        </p>
     </div>
 </template>
 
@@ -92,9 +90,18 @@ export default {
             type: Boolean,
             default: false,
         },
+        markSearching: {
+            type: Boolean,
+            default: false,
+        },
     },
 
-    emits: ["update:setName", "update:modelValue", "gridConfigurationClick"],
+    emits: [
+        "update:setName",
+        "update:modelValue",
+        "update:searching",
+        "gridConfigurationClick",
+    ],
 
     data() {
         return {
@@ -134,6 +141,17 @@ export default {
                 ? " md:rounded-r-md md:rounded-l-none"
                 : " md:rounded-l-md md:rounded-r-md";
             return this.fieldClasses + setClass;
+        },
+    },
+
+    methods: {
+        searchCards($event) {
+            this.$emit("update:searching", true);
+            this.$emit("update:modelValue", $event.target.value);
+        },
+        searchSets($event) {
+            this.$emit("update:searching", true);
+            this.$emit("update:setName", $event.target.value);
         },
     },
 };

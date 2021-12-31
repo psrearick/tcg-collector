@@ -79,7 +79,7 @@
                 </div>
             </ui-well>
         </div>
-        <data-grid-pagination-no-link
+        <ui-data-grid-pagination-no-link
             v-if="hasResults"
             :pagination="pagination"
             @update:pagination="updatePage"
@@ -89,7 +89,7 @@
 
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
-import DataGridPaginationNoLink from "@/Components/DataGrid/DataGridPaginationNoLink";
+import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
 import VerticalIncrementer from "@/Components/Buttons/VerticalIncrementer";
 import UiCard from "@/UI/UICard";
 import UiWell from "@/UI/UIWell";
@@ -98,7 +98,7 @@ export default {
     name: "CollectionCardSearchResults",
 
     components: {
-        DataGridPaginationNoLink,
+        UiDataGridPaginationNoLink,
         UiCard,
         UiWell,
         VerticalIncrementer,

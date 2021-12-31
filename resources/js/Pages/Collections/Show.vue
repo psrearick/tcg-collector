@@ -41,7 +41,14 @@
                 </div>
             </div>
         </template>
-        Collection Detail
+        <div>
+            <folder-summary :summary="totals" />
+            <collection-show-data-grid
+                :data="list"
+                :collection="collection"
+                :search-terms="search"
+            />
+        </div>
     </app-layout>
 </template>
 
@@ -49,14 +56,34 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
+import FolderSummary from "@/Components/CardLists/FolderSummary";
+import CollectionShowDataGrid from "@/Pages/Collections/Partials/CollectionShowDataGrid";
 
 export default {
     name: "Show",
 
-    components: { Link, AppLayout, UiButton },
+    components: {
+        Link,
+        AppLayout,
+        UiButton,
+        FolderSummary,
+        CollectionShowDataGrid,
+    },
 
     props: {
         collection: {
+            type: Object,
+            default: () => {},
+        },
+        totals: {
+            type: Object,
+            default: () => {},
+        },
+        list: {
+            type: Object,
+            default: () => {},
+        },
+        search: {
             type: Object,
             default: () => {},
         },

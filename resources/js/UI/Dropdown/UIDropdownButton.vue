@@ -12,19 +12,19 @@
                 aria-haspopup="true"
             >
                 {{ label }}
-                <Icon icon="chevron-down" />
+                <ui-icon icon="chevron-down" />
             </button>
         </div>
     </div>
 </template>
 
 <script>
-import Icon from "@/Components/Icon.vue";
+import UiIcon from "@/UI/UIIcon";
 
 export default {
     name: "UiDropdownButton",
 
-    components: { Icon },
+    components: { UiIcon },
 
     props: {
         active: {

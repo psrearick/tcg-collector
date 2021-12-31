@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="w-full text-center pt-32 px-16 pb-16">
-            <Icon
+            <ui-icon
                 icon="collection"
                 size="14rem"
                 classes="text-gray-500 inline-block"
@@ -33,12 +33,12 @@
 
 <script>
 import Layout from "@/Layouts/Layout";
-import Icon from "@/UI/UIIcon";
+import UiIcon from "@/UI/UIIcon";
 import UiButton from "@/UI/UIButton";
 import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
-    components: { Icon, UiButton, Link },
+    components: { UiIcon, UiButton, Link },
     layout: Layout,
     props: {
         auth: { type: Object, default: () => {} },

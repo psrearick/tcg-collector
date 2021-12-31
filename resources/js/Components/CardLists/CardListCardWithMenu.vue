@@ -49,7 +49,7 @@
 <script>
 import { Link } from "@inertiajs/inertia-vue3";
 import UiDropdownMenu from "@/UI/Dropdown/UIDropdownMenu.vue";
-import UiIcon from "@/UI/UIIcon.vue";
+import UiIcon from "@/UI/UIIcon";
 import UiDropdownLink from "@/UI/Dropdown/UIDropdownLink.vue";
 
 export default {

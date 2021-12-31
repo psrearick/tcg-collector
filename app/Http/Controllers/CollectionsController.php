@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\SearchCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\Queries\CollectionCardsSummary;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Http\Controllers\Controller;
@@ -47,11 +51,44 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function show(string $uuid, GetCollection $getCollection) : Response
-    {
-        $collection = $getCollection($uuid);
+    public function show(
+        string $uuid,
+        Request $request,
+        GetCollection $getCollection,
+        GetSummaryData $getSummaryData,
+        SearchCollection $searchCollection
+    ) : Response {
+        $collection      = $getCollection($uuid);
+        $summary         = $getSummaryData([$collection->toArray()]);
+        $collectionCards = (new CollectionCardsSummary($uuid))->list();
 
-        return Inertia::render('Collections/Show', ['collection' => $collection]);
+        $searchData = new CollectionCardSearchData([
+            'data'      => $collectionCards,
+            'uuid'      => $uuid,
+            'search'    => new CardSearchData($request->all()),
+        ]);
+
+        $searchCollection = $searchCollection($searchData)->collection ?: null;
+
+        if ($searchCollection && $searchData->search->paginator) {
+            $page = $searchData->search->paginator;
+            $list = $searchCollection->paginate(
+                $page['per_page'],
+                $page['total'],
+                $page['current_page'],
+            );
+        } elseif ($searchCollection) {
+            $list = $searchCollection->paginate(5);
+        } else {
+            $list = [];
+        }
+
+        return Inertia::render('Collections/Show', [
+            'collection'    => $collection,
+            'totals'        => $summary,
+            'list'          => $list,
+            'search'        => $searchData->search,
+        ]);
     }
 
     public function store(Request $request, CreateCollection $createCollection) : RedirectResponse

@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: "DataGridPaginationButton",
+    name: "UiDataGridPaginationButton",
 
     props: {
         href: {
