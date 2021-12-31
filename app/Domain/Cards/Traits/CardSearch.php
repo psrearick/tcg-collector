@@ -42,21 +42,20 @@ trait CardSearch
 
     protected function isValidCardSearch() : bool
     {
-        return $this->cardSearchData->card || $this->cardSearchData->set || $this->cardSearchData->uuid;
+        return
+            $this->cardSearchData->card
+            || $this->cardSearchData->set
+            || $this->cardSearchData->uuid
+            || $this->cardSearchData->sort;
     }
 
     protected function sort() : void
     {
-        $sort = [];
-        foreach ($this->cardSearchData->sort as $sort) {
-            if (is_string($sort)) {
-                $sort[] = [$sort, 'asc'];
-
-                continue;
-            }
-
-            $sort[] = $sort;
+        $sortBy = [];
+        foreach ($this->cardSearchData->sort as $field => $direction) {
+            $sortBy[] = [$field, $direction];
         }
-        $this->cards->sortBy($sort);
+
+        $this->cards = $this->cards->sortBy($sortBy);
     }
 }

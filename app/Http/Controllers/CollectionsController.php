@@ -78,7 +78,7 @@ class CollectionsController extends Controller
                 $page['current_page'],
             );
         } elseif ($searchCollection) {
-            $list = $searchCollection->paginate(5);
+            $list = $searchCollection->paginate(25);
         } else {
             $list = [];
         }
