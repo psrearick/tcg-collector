@@ -23,7 +23,7 @@ class SearchCards
             return new CardSearchResultsData([]);
         }
 
-        $this->cards = Card::with('set');
+        $this->cards = Card::with('set')->notOnlineOnly();
 
         if ($this->cardSearchData->card) {
             $this->filterOnCards();
