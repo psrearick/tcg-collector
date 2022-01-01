@@ -11,6 +11,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use Carbon\Carbon;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
+use Illuminate\Support\Facades\Cache;
 
 class CollectionProjector extends Projector
 {
@@ -19,6 +20,7 @@ class CollectionProjector extends Projector
         $attributes = $event->collectionCardAttributes;
         $this->updateCollectionCard($attributes);
         $this->updateCollectionCardSummary($attributes);
+        Cache::restoreLock('saving-collection-card', $attributes['lock'])->release();
     }
 
     public function onCollectionCreated(CollectionCreated $event) : void

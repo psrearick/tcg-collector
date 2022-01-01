@@ -8,10 +8,10 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
-use App\Domain\Collections\Aggregate\Queries\CollectionCardsSummary;
-use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 
 class UpdateCollectionCard
 {
@@ -21,20 +21,29 @@ class UpdateCollectionCard
 
     public function __invoke(array $data)
     {
-        $uuid         = $data['uuid'];
-        $this->uuid   = $uuid;
-        $this->change = $data['change'];
-        $updated      = $this->updateQuantity();
-        $eventData    = [
-            'uuid'          => $uuid,
-            'change'        => $data['change'],
-            'updated'       => $updated['collected'],
-            'quantity_diff' => $updated['quantity_diff'],
-        ];
+        $lock = Cache::lock('saving-collection-card', 12);
+        try {
+            $lock->block(5);
 
-        CollectionAggregateRoot::retrieve($uuid)
-            ->updateCollectionCard($eventData)
-            ->persist();
+            $uuid         = $data['uuid'];
+            $this->uuid   = $uuid;
+            $this->change = $data['change'];
+            $updated      = $this->updateQuantity();
+            $eventData    = [
+                'uuid'          => $uuid,
+                'change'        => $data['change'],
+                'updated'       => $updated['collected'],
+                'quantity_diff' => $updated['quantity_diff'],
+                'lock'          => $lock->owner(),
+            ];
+
+            CollectionAggregateRoot::retrieve($uuid)
+                ->updateCollectionCard($eventData)
+                ->persist();
+        
+        } catch (LockTimeoutException $e) {
+            throw $e;
+        }
 
         return $updated['card'];
     }
