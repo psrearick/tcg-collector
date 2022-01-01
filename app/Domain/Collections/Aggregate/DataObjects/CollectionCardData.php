@@ -26,6 +26,10 @@ class CollectionCardData
 
     public string $set;
 
+    public string $set_image;
+
+    public string $set_name;
+
     public string $uuid;
 
     public function __construct(array $data)
@@ -34,6 +38,7 @@ class CollectionCardData
         $this->uuid             = $data['uuid'] ?? null;
         $this->name             = $data['name'] ?? '';
         $this->set              = strtoupper($data['set'] ?? '');
+        $this->set_name         = $data['set_name'] ?? '';
         $this->features         = $data['features'] ?? '';
         $this->price            = $data['price'] ?? 0.0;
         $this->acquired_date    = $data['acquired_date'] ?? '';
@@ -41,7 +46,8 @@ class CollectionCardData
         $this->quantity         = $data['quantity'] ?? 0;
         $this->finish           = $data['finish'] ?? 'nonfoil';
         $this->image            = $data['image'] ?? '';
-        $this->collector_number = $data['collection_number'] ?? '';
+        $this->set_image        = $data['set_image'] ?? '';
+        $this->collector_number = $data['collector_number'] ?? '';
     }
 
     public function toArray() : array
@@ -51,6 +57,7 @@ class CollectionCardData
             'uuid'             => $this->uuid,
             'name'             => $this->name,
             'set'              => $this->set,
+            'set_name'         => $this->set_name,
             'features'         => $this->features,
             'price'            => $this->price,
             'acquired_date'    => $this->acquired_date,
@@ -58,6 +65,7 @@ class CollectionCardData
             'quantity'         => $this->quantity,
             'finish'           => $this->finish,
             'image'            => $this->image,
+            'set_image'        => $this->set_image,
             'collector_number' => $this->collector_number,
         ];
     }

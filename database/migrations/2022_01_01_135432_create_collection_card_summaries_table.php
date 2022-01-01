@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateCollectionCardSummariesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('collection_card_summary');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -28,15 +38,5 @@ class CreateCollectionCardSummariesTable extends Migration
             $table->timestamp('date_added')->nullable();
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('collection_card_summary');
     }
 }

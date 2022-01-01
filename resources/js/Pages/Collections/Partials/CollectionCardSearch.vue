@@ -60,12 +60,24 @@ export default {
     },
 
     watch: {
-        cardSearchTerm() {
+        cardSearchTerm(val) {
             this.paginator = this.default_paginator;
+            if (!val) {
+                this.$store.dispatch("addCardSearchResults", {
+                    searchResults: val,
+                });
+                return;
+            }
             this.query();
         },
-        setSearchTerm() {
+        setSearchTerm(val) {
             this.paginator = this.default_paginator;
+            if (!val) {
+                this.$store.dispatch("addCardSearchResults", {
+                    searchResults: val,
+                });
+                return;
+            }
             this.query();
         },
     },

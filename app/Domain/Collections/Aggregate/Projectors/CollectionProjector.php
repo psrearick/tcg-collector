@@ -68,7 +68,7 @@ class CollectionProjector extends Projector
             ->where('card_uuid', '=', $cardUuid)
             ->where('finish', '=', $finish)
             ->first();
-        
+
         if (!$existingCard) {
             CollectionCardSummary::create([
                 'collection_uuid'       => $attributes['uuid'],

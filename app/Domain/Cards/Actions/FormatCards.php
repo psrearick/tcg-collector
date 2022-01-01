@@ -4,22 +4,42 @@ namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\DataObjects\CardData;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Aggregate\Queries\CollectionCardsSummary;
+use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class FormatCards
 {
-    public function __invoke(Builder $builder, ?string $collection = null)
+    public function __invoke(Builder $builder, ?CollectionCardSearchData $collectionCardSearchData = null)
     {
+        $collection = $collectionCardSearchData->uuid;
+        $search     = $collectionCardSearchData->search;
+
         $collectionMap = [];
         if ($collection) {
-            $collectionMap = (new CollectionCardsSummary($collection))->cards();
+            CollectionCardSummary::where('collection_uuid', '=', $collection)->each(function ($collectionCard) use (&$collectionMap) {
+                if (!isset($collectionMap[$collectionCard->card_uuid])) {
+                    $collectionMap[$collectionCard->card_uuid] = [];
+                }
+                $collectionMap[$collectionCard->card_uuid][$collectionCard['finish']] = $collectionCard['quantity'];
+            });
         }
 
-        return (new Collection($builder->get()))
-            ->map(function ($model) use ($collectionMap) {
+        if ($search->paginator) {
+            $page = $search->paginator;
+
+            $paginated = $builder->paginate(
+                $page['per_page'] ?? 25, ['*'], 'page', $page['current_page'] ?? null
+            );
+        } else {
+            $paginated = $builder->paginate(25);
+        }
+
+        return tap($paginated, function ($paginatedInstance) use ($collectionMap) {
+            return $paginatedInstance->getCollection()->transform(function ($model) use ($collectionMap) {
                 $cardBuilder = new BuildCard($model);
                 $cardBuilt = $cardBuilder
                 ->add('feature')
@@ -46,6 +66,7 @@ class FormatCards
                     'collector_number'  => $card['collectorNumber'] ?? '',
                 ]))->toArray();
             });
+        });
     }
 
     protected function format(Card $card) : array

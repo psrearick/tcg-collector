@@ -7,24 +7,24 @@ use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Traits\CardSearch;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\Collection;
-use App\Support\Collection as SupportCollection;
+use Illuminate\Database\Eloquent\Builder;
 
 class SearchCollection
 {
     use CardSearch;
 
-    protected ?SupportCollection $cards;
+    protected ?Builder $cards;
 
     protected CardSearchData $cardSearchData;
 
-    protected bool $isCollection = true;
+    protected bool $isCollection = false;
 
     protected ?string $uuid;
 
     public function __invoke(CollectionCardSearchData $collectionCardSearchData)
     {
         $this->cardSearchData = $collectionCardSearchData->search;
-        $this->cards          = $collectionCardSearchData->data;
+        $this->cards          = $collectionCardSearchData->builder;
         $this->uuid           = $collectionCardSearchData->uuid;
 
         if (!$this->isValidCardSearch()) {
@@ -55,6 +55,8 @@ class SearchCollection
             $this->sort();
         }
 
-        return new CardSearchResultsData(['collection' => $this->cards]);
+        return new CardSearchResultsData([
+            'builder'       => $this->cards,
+        ]);
     }
 }

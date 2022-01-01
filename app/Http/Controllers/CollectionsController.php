@@ -29,6 +29,7 @@ class CollectionsController extends Controller
     public function edit(string $uuid, Request $request) : Response
     {
         $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
+
         return Inertia::render('Collections/Edit',
         [
             'collection'    => $collections['collection'],
@@ -56,7 +57,7 @@ class CollectionsController extends Controller
         Request $request,
         GetSummaryData $getSummaryData,
     ) : Response {
-        $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
+        $collections     = (new CollectionsPresenter($request->all(), $uuid))->present();
         $summary         = $getSummaryData([$collections['collection']->toArray()]);
 
         return Inertia::render('Collections/Show', [

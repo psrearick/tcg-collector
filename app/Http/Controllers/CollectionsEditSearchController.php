@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Cards\Actions\FormatCollectionCards;
+use App\Domain\Cards\Actions\FormatCards;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
-use App\Support\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -25,10 +24,8 @@ class CollectionsEditSearchController
             return response()->json([]);
         }
 
-        $formatCards    = new FormatCollectionCards;
-        $cards          = $formatCards($builder, 25, $searchData);
+        $cards = (new FormatCards)($builder, $searchData);
 
         return response()->json($cards);
-        // return response()->json(['cards' => $cards]);
     }
 }

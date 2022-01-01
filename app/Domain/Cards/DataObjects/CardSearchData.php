@@ -6,6 +6,8 @@ class CardSearchData
 {
     public ?string $card;
 
+    public ?string $finish;
+
     public ?array $paginator;
 
     public ?string $set;
@@ -21,6 +23,7 @@ class CardSearchData
         $this->paginator    = $data['paginator'] ?? [];
         $this->set          = $data['set'] ?? '';
         $this->sort         = $data['sort'] ?? [];
+        $this->finish       = $data['finish'] ?? '';
     }
 
     public function toArray() : array
@@ -31,6 +34,7 @@ class CardSearchData
             'paginator'     => $this->paginator,
             'set'           => $this->set,
             'sort'          => $this->sort,
+            'finish'        => $this->finish,
         ];
     }
 }

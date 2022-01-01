@@ -13,13 +13,13 @@ class MigrateCollectionCard implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private string $finish;
-
     private string $collectionUuid;
 
-    private string $uuid;
+    private string $finish;
 
     private int $quantity;
+
+    private string $uuid;
 
     /**
      * Create a new job instance.
@@ -29,9 +29,9 @@ class MigrateCollectionCard implements ShouldQueue
     public function __construct($collectionUuid, $uuid, $finish, $quantity)
     {
         $this->finish              = $finish;
-        $this->collectionUuid    = $collectionUuid;
-        $this->uuid              = $uuid;
-        $this->quantity = $quantity;
+        $this->collectionUuid      = $collectionUuid;
+        $this->uuid                = $uuid;
+        $this->quantity            = $quantity;
     }
 
     /**

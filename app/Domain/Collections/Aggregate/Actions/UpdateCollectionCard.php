@@ -4,11 +4,13 @@ namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Domain\Cards\Actions\FormatCards;
 use App\Domain\Cards\DataObjects\CardSearchData;
+use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Aggregate\Queries\CollectionCardsSummary;
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Collections\Models\CollectionCardSummary;
 use Carbon\Carbon;
 
 class UpdateCollectionCard
@@ -40,15 +42,14 @@ class UpdateCollectionCard
     protected function updateQuantity() : array
     {
         $requestedChange = $this->change['change'];
+        $collectionUuid  = $this->uuid;
 
-        $collectionCardSummary = new CollectionCardsSummary($this->uuid);
-        $match                 = $collectionCardSummary->cards()[$this->change['id']] ?? null;
+        $existingCard = CollectionCardSummary::where('collection_uuid', '=', $collectionUuid)
+            ->where('card_uuid', '=', $this->change['id'])
+            ->where('finish', '=', $this->change['finish'])
+            ->first();
 
-        if ($match) {
-            $match = $match[$this->change['finish']] ?? null;
-        }
-
-        $quantity         = $match ?: 0;
+        $quantity         = optional($existingCard)->quantity ?: 0;
         $proposedQuantity = $quantity + $requestedChange;
         $actualChange     = $requestedChange;
         $finalQuantity    = $proposedQuantity;
@@ -59,16 +60,18 @@ class UpdateCollectionCard
 
         $searchData = new CollectionCardSearchData([
             'uuid'      => $this->uuid,
-            'search'    => new CardSearchData(['uuid' => $this->change['id']]),
+            'single'    => true,
+            'search'    => new CardSearchData(
+                [
+                    'uuid'   => $this->change['id'],
+                    'finish' => $this->change['finish'],
+                    'data'   => $existingCard ?? null,
+                ]
+            ),
         ]);
 
-        $searchCollectionCards = new SearchCollectionCards;
-        $builder               = $searchCollectionCards($searchData)->builder ?: [];
-        $formatCards           = new FormatCards;
-        $formattedCards        = $formatCards($builder, $this->uuid);
-        if (!$formatCards) {
-            return [];
-        }
+        $cardBuilder    = Card::where('uuid', '=', $this->change['id']);
+        $formattedCards = (new FormatCards)($cardBuilder, $searchData);
 
         $formattedCard                    = $formattedCards->first();
         $collectionCard                   = $formattedCard;

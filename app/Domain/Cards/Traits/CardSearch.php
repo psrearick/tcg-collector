@@ -15,7 +15,7 @@ trait CardSearch
                 return false !== stristr($card['name_normalized'], $term);
             });
         } else {
-            $this->cards->where('name_normalized', 'like', '%' . $term . '%');
+            $this->cards->where('cards.name_normalized', 'like', '%' . $term . '%');
         }
     }
 
@@ -42,6 +42,8 @@ trait CardSearch
 
     protected function isValidCardSearch() : bool
     {
+        return true;
+
         return
             $this->cardSearchData->card
             || $this->cardSearchData->set
