@@ -125,7 +125,7 @@ class FolderChildren extends EventQuery
 
     protected function formatAllowed(string $uuid, string $type, bool $isRoot) : array
     {
-        $allowed = AllowedDestination::where('type', '=', $type)->where('uuid', '=', $uuid)->pluck('destination')->map(
+        $allowed = AllowedDestination::where('type', '=', $type)->where('uuid', '=', $uuid)->whereNotNull('destination')->pluck('destination')->map(
             function ($destination) {
                 $folder             = Folder::uuid($destination);
                 $data               = (new FolderData($folder->toArray()))->toArray();

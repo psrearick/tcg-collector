@@ -13,7 +13,7 @@ class FolderAggregateRoot extends AggregateRoot
 {
     public function createFolder(array $attributes) : self
     {
-        $attributes['user_id']  = Auth::id();
+        $attributes['user_id']  = $attributes['user_id'] ?? Auth::id();
         $attributes['uuid']     = $this->uuid();
         $this->recordThat(new FolderCreated($attributes));
 
