@@ -42,8 +42,9 @@
             </div>
         </template>
         <div>
-            <folder-summary :summary="totals" />
+            <folder-summary :summary="totals" class="pt-6" />
             <collection-show-data-grid
+                v-if="notEmpty"
                 :data="list"
                 :collection="collection"
                 :search-terms="search"
@@ -86,6 +87,12 @@ export default {
         search: {
             type: Object,
             default: () => {},
+        },
+    },
+
+    computed: {
+        notEmpty() {
+            return this.list.data.length > 0;
         },
     },
 };

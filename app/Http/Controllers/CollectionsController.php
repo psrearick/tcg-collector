@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
-use App\Domain\Collections\Aggregate\Actions\SearchCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
-use App\Domain\Collections\Aggregate\Queries\CollectionCardsSummary;
+use App\Domain\Collections\Presenters\CollectionsPresenter;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Http\Controllers\Controller;
-use GetCollection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,11 +26,15 @@ class CollectionsController extends Controller
     {
     }
 
-    public function edit(string $uuid, GetCollection $getCollection) : Response
+    public function edit(string $uuid, Request $request) : Response
     {
-        $collection = $getCollection($uuid);
-
-        return Inertia::render('Collections/Edit', ['collection' => $collection]);
+        $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
+        return Inertia::render('Collections/Edit',
+        [
+            'collection'    => $collections['collection'],
+            'list'          => $collections['list'],
+            'search'        => $collections['search'],
+        ]);
     }
 
     public function index() : Response
@@ -54,40 +54,16 @@ class CollectionsController extends Controller
     public function show(
         string $uuid,
         Request $request,
-        GetCollection $getCollection,
         GetSummaryData $getSummaryData,
-        SearchCollection $searchCollection
     ) : Response {
-        $collection      = $getCollection($uuid);
-        $summary         = $getSummaryData([$collection->toArray()]);
-        $collectionCards = (new CollectionCardsSummary($uuid))->list();
-
-        $searchData = new CollectionCardSearchData([
-            'data'      => $collectionCards,
-            'uuid'      => $uuid,
-            'search'    => new CardSearchData($request->all()),
-        ]);
-
-        $searchCollection = $searchCollection($searchData)->collection ?: null;
-
-        if ($searchCollection && $searchData->search->paginator) {
-            $page = $searchData->search->paginator;
-            $list = $searchCollection->paginate(
-                $page['per_page'],
-                $page['total'],
-                $page['current_page'],
-            );
-        } elseif ($searchCollection) {
-            $list = $searchCollection->paginate(25);
-        } else {
-            $list = [];
-        }
+        $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
+        $summary         = $getSummaryData([$collections['collection']->toArray()]);
 
         return Inertia::render('Collections/Show', [
-            'collection'    => $collection,
             'totals'        => $summary,
-            'list'          => $list,
-            'search'        => $searchData->search,
+            'collection'    => $collections['collection'],
+            'list'          => $collections['list'],
+            'search'        => $collections['search'],
         ]);
     }
 

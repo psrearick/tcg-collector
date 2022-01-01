@@ -31,7 +31,7 @@ import UiDataTable from "@/UI/DataGrid/UIDataTable";
 import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
 import CardSetSearch from "@/Pages/Cards/Partials/CardSetSearch";
 import UiGridConfigurationPanel from "@/UI/DataGrid/UIGridConfigurationPanel";
-import CollectionsShowTable from "@/Pages/Collections/Mixins/CollectionsShowTable";
+import CollectionsShowTableMixin from "@/Pages/Collections/Mixins/CollectionsShowTableMixin";
 
 export default {
     name: "CollectionShowDataGrid",
@@ -43,7 +43,7 @@ export default {
         UiGridConfigurationPanel,
     },
 
-    mixins: [CollectionsShowTable],
+    mixins: [CollectionsShowTableMixin],
 
     props: {
         data: {

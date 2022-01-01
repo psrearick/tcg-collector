@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Edit Collection">
+    <app-layout title="Edit Collection" :main-slots="slotNames">
         <template #header>
             <div class="flex justify-between">
                 <div>
@@ -27,47 +27,83 @@
                 </div>
             </div>
         </template>
-        <div>
-            <div class="mb-12">
-                <div class="flex justify-between">
-                    <h3
-                        class="text-lg leading-6 font-medium text-gray-900 py-4"
-                    >
-                        Add Cards to Collection
-                    </h3>
-                    <div class="py-4">
-                        <Link
-                            :href="
-                                route('collection-set.edit', [collection.uuid])
+        <template #CollectionDetails>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
+                Collection Details
+            </h3>
+        </template>
+        <template #AddCards>
+            <div>
+                <div class="mb-12">
+                    <div class="flex justify-between">
+                        <h3
+                            class="
+                                text-lg
+                                leading-6
+                                font-medium
+                                text-gray-900
+                                py-4
                             "
                         >
-                            <ui-button
-                                text="Add Cards by Set"
-                                button-style="success-outline"
+                            Add Cards to Collection
+                        </h3>
+                        <div class="py-4">
+                            <Link
+                                :href="
+                                    route('collection-set.edit', [
+                                        collection.uuid,
+                                    ])
+                                "
                             >
-                            </ui-button>
-                        </Link>
+                                <ui-button
+                                    text="Add Cards by Set"
+                                    button-style="success-outline"
+                                >
+                                </ui-button>
+                            </Link>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <collection-card-search />
                     </div>
                 </div>
-                <div class="w-full">
-                    <collection-card-search />
-                </div>
             </div>
-        </div>
-        <template #lowerMain>Collection Cards</template>
+        </template>
+
+        <template #CollectionCards>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
+                Collection Cards
+            </h3>
+            <collections-edit-data-grid
+                v-if="notEmpty"
+                :data="list"
+                :collection="collection"
+                :search-terms="search"
+            />
+            <ui-well v-if="!notEmpty">This Collection is Empty</ui-well>
+        </template>
     </app-layout>
 </template>
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CollectionCardSearch from "@/Pages/Collections/Partials/CollectionCardSearch";
+import CollectionsEditDataGrid from "@/Pages/Collections/Partials/CollectionsEditDataGrid";
 import UpdateCardQuantityMixin from "@/Pages/Collections/Mixins/UpdateCardQuantityMixin";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
+import UiWell from "@/UI/UIWell";
 
 export default {
     name: "Edit",
 
-    components: { AppLayout, CollectionCardSearch, Link, UiButton },
+    components: {
+        AppLayout,
+        CollectionCardSearch,
+        CollectionsEditDataGrid,
+        Link,
+        UiButton,
+        UiWell,
+    },
 
     mixins: [UpdateCardQuantityMixin],
 
@@ -75,6 +111,26 @@ export default {
         collection: {
             type: Object,
             default: () => {},
+        },
+        list: {
+            type: Object,
+            default: () => {},
+        },
+        search: {
+            type: Object,
+            default: () => {},
+        },
+    },
+
+    data() {
+        return {
+            slotNames: ["CollectionDetails", "AddCards", "CollectionCards"],
+        };
+    },
+
+    computed: {
+        notEmpty() {
+            return this.list.data.length > 0;
         },
     },
 

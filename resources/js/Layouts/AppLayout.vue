@@ -599,23 +599,45 @@
                     <slot name="header"></slot>
                 </div>
             </header>
-
-            <main class="mt-8">
-                <div class="max-w-7xl mx-auto pb-12 md:px-6 lg:px-8">
-                    <div
-                        class="bg-white md:rounded-lg shadow px-2 py-6 sm:px-6"
-                    >
-                        <slot></slot>
+            <main class="py-12">
+                <div v-if="$slots.default">
+                    <div class="max-w-7xl mx-auto md:px-6 lg:px-8">
+                        <div
+                            class="
+                                bg-white
+                                md:rounded-lg
+                                shadow
+                                px-2
+                                py-6
+                                sm:px-6
+                            "
+                        >
+                            <slot></slot>
+                        </div>
                     </div>
                 </div>
-            </main>
 
-            <main v-if="$slots.lowerMain">
-                <div class="max-w-7xl mx-auto pb-12 md:px-6 lg:px-8">
+                <div
+                    v-if="mainSlots.length"
+                    :class="$slots.default ? 'pt-6' : ''"
+                >
                     <div
-                        class="bg-white md:rounded-lg shadow px-2 py-6 sm:px-6"
+                        v-for="(card, cardIndex) in mainSlots"
+                        :key="cardIndex"
+                        class="max-w-7xl mx-auto py-6 md:px-6 lg:px-8"
                     >
-                        <slot name="lowerMain"></slot>
+                        <div
+                            class="
+                                bg-white
+                                md:rounded-lg
+                                shadow
+                                px-2
+                                py-6
+                                sm:px-6
+                            "
+                        >
+                            <slot :name="card"></slot>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -648,6 +670,10 @@ export default defineComponent({
         title: {
             type: String,
             default: "",
+        },
+        mainSlots: {
+            type: Array,
+            default: () => [],
         },
     },
 

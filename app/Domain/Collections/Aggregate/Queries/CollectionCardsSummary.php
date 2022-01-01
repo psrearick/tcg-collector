@@ -3,7 +3,6 @@
 namespace App\Domain\Collections\Aggregate\Queries;
 
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
-use App\Domain\Collections\Models\Collection;
 use App\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 use Spatie\EventSourcing\EventHandlers\Projectors\EventQuery;
