@@ -21,9 +21,9 @@ class UpdateCollectionCard
 
     public function __invoke(array $data)
     {
-        $lock = Cache::lock('saving-collection-card', 12);
+        $lock = Cache::lock('saving-collection-card', 20);
         try {
-            $lock->block(5);
+            $lock->block(15);
 
             $uuid         = $data['uuid'];
             $this->uuid   = $uuid;

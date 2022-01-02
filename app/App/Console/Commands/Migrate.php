@@ -6,7 +6,6 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
-use App\Domain\Folders\Aggregate\DataObjects\FolderData;
 use App\Jobs\MigrateCollectionCard;
 use App\Models\User;
 use Illuminate\Console\Command;

@@ -6,5 +6,5 @@ class Model extends \Illuminate\Database\Eloquent\Model
 {
     const USERSCOPE = '';
 
-    // protected $guarded = ['id'];
+    protected $guarded = ['id'];
 }
