@@ -36,7 +36,7 @@ class FolderChildren extends EventQuery
 
     public function collections() : array
     {
-        return array_map(function ($uuid) {
+        return collect(array_keys($this->collections))->map(function ($uuid) {
             $collection                 = Collection::uuid($uuid);
             $collectionData             = (new CollectionData($collection->toArray()))->toArray();
             $collectionData['allowed']  = $this->formatAllowed($uuid, 'collection', empty($collection->folder_uuid));
@@ -45,24 +45,21 @@ class FolderChildren extends EventQuery
             $collectionData['value']    = $collectionSummary['current_value'];
 
             return $collectionData;
-        }, array_keys($this->collections));
+        })->sortBy('name')->values()->toArray();
     }
 
     public function folders() : array
     {
-        $folders = collect(array_keys($this->folders))->map(function ($uuid) {
+        return collect(array_keys($this->folders))->map(function ($uuid) {
             $folder                 = Folder::uuid($uuid);
             $folderData             = (new FolderData($folder->toArray()))->toArray();
-
             $folderData['allowed']  = $this->formatAllowed($uuid, 'folder', $folder->isRoot());
             $folderSummary = (new GetSummaryData)(null, [$folderData]);
             $folderData['count']    = $folderSummary['total_cards'];
             $folderData['value']    = $folderSummary['current_value'];
 
             return $folderData;
-        })->toArray();
-
-        return $folders;
+        })->sortBy('name')->values()->toArray();
     }
 
     protected function applyCollectionCreated(CollectionCreated $collectionCreated) : void

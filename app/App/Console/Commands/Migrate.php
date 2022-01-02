@@ -7,6 +7,7 @@ use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
 use App\Jobs\MigrateCollectionCard;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,13 @@ class Migrate extends Command
                 'updated_at'        => $user->updated_at,
             ]);
 
+            Team::firstOrCreate([
+                'user_id'       => $newUser->id,
+            ], [
+                'name'          => explode(' ', $newUser->name, 2)[0] . "'s Group",
+                'personal_team' => true,
+            ]);
+
             $userIdMap[$user->id] = $newUser->id;
         });
 
@@ -95,20 +103,22 @@ class Migrate extends Command
         });
 
         $collectionUuidMap = [];
-        $collections->get()->each(function ($collection) use ($folderUuidMap, $userIdMap, &$collectionUuidMap) {
-            $createCollection = new CreateCollection;
-            $uuid = $createCollection([
-                'folder_uuid' => $collection->folder_id
-                    ? $folderUuidMap[$collection->folder_id]
-                    : null,
-                'name'          => $collection->name,
-                'description'   => $collection->description,
-                'is_public'     => $collection->is_public,
-                'user_id'       => $userIdMap[$collection->user_id],
-            ]);
+        $collections
+            ->whereNull('deleted_at')
+            ->get()->each(function ($collection) use ($folderUuidMap, $userIdMap, &$collectionUuidMap) {
+                $createCollection = new CreateCollection;
+                $uuid = $createCollection([
+                    'folder_uuid' => $collection->folder_id
+                        ? $folderUuidMap[$collection->folder_id]
+                        : null,
+                    'name'          => $collection->name,
+                    'description'   => $collection->description,
+                    'is_public'     => $collection->is_public,
+                    'user_id'       => $userIdMap[$collection->user_id],
+                ]);
 
-            $collectionUuidMap[$collection->id] = $uuid;
-        });
+                $collectionUuidMap[$collection->id] = $uuid;
+            });
 
         $card_collections->where('quantity', '>', 0)->get()
             ->each(function ($card) use ($collectionUuidMap, $conn) {

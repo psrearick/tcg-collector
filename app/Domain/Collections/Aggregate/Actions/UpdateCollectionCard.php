@@ -10,8 +10,8 @@ use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateCollectionCard
 {
@@ -22,6 +22,7 @@ class UpdateCollectionCard
     public function __invoke(array $data)
     {
         $lock = Cache::lock('saving-collection-card', 20);
+
         try {
             $lock->block(15);
 
@@ -40,7 +41,6 @@ class UpdateCollectionCard
             CollectionAggregateRoot::retrieve($uuid)
                 ->updateCollectionCard($eventData)
                 ->persist();
-        
         } catch (LockTimeoutException $e) {
             throw $e;
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
 use App\Domain\Collections\Presenters\CollectionsPresenter;
+use App\Domain\Folders\Aggregate\Actions\GetChildren;
 use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Http\Controllers\Controller;
@@ -38,12 +39,12 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function index() : Response
+    public function index(GetSummaryData $getSummaryData, GetChildren $getChildren) : Response
     {
-        $folderChildren = new FolderChildren('', auth()->id());
-        $collections    = $folderChildren->collections();
-        $folders        = $folderChildren->folders();
-        $summary        = (new GetSummaryData)($collections, $folders);
+        $folderChildren = $getChildren(null, auth()->id());
+        $collections    = $folderChildren['collections'];
+        $folders        = $folderChildren['folders'];
+        $summary        = $getSummaryData($collections, $folders, false);
 
         return Inertia::render('Collections/Index', [
             'collections'   => $collections,
@@ -58,7 +59,7 @@ class CollectionsController extends Controller
         GetSummaryData $getSummaryData,
     ) : Response {
         $collections     = (new CollectionsPresenter($request->all(), $uuid))->present();
-        $summary         = $getSummaryData([$collections['collection']->toArray()]);
+        $summary         = $getSummaryData(collect([$collections['collection']]), null, false);
 
         return Inertia::render('Collections/Show', [
             'totals'        => $summary,

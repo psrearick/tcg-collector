@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Domain\Folders\Aggregate\Actions;
+
 use App\Domain\Folders\Aggregate\DataObjects\FolderData;
 use App\Domain\Folders\Models\Folder;
 

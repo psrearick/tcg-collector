@@ -3,10 +3,13 @@
 namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Prices\Models\Summary;
+use Illuminate\Support\Collection;
+use App\Domain\Collections\Models\Collection as DomainCollection;
+use App\Domain\Folders\Models\Folder;
 
 class GetSummaryData
 {
-    public function __invoke(?array $collections = null, ?array $folders = null)
+    public function __invoke(?Collection $collections = null, ?Collection $folders = null, bool $hasSummary = true)
     {
         $totals = [
             'total_cards'       => 0,
@@ -15,29 +18,33 @@ class GetSummaryData
         ];
 
         if ($collections) {
-            foreach ($collections as $collection) {
-                $collectionSummary = Summary::where('uuid', '=', $collection['uuid'])
-                    ->where('type', '=', 'collection')
-                    ->first();
-                if ($collectionSummary) {
-                    $totals['total_cards'] += $collectionSummary->total_cards;
-                    $totals['current_value'] += $collectionSummary->current_value;
-                    $totals['acquired_value'] += $collectionSummary->acquired_value;
-                }
+            if (!$hasSummary) {
+                $collections = DomainCollection::whereIn('uuid', $collections->pluck('uuid'))->with('summary')->get();
             }
+            $collections->each(function ($collection) use (&$totals) {
+                $summary = $collection->summary;
+                if ($summary) {
+                    $totals['total_cards'] += $summary->total_cards;
+                    $totals['current_value'] += $summary->current_value;
+                    $totals['acquired_value'] += $summary->acquired_value;
+                }
+            // }
+            });
         }
 
         if ($folders) {
-            foreach ($folders as $folder) {
-                $folderSummary = Summary::where('uuid', '=', $folder['uuid'])
-                    ->where('type', '=', 'folder')
-                    ->first();
-                if ($folderSummary) {
-                    $totals['total_cards'] += $folderSummary->total_cards;
-                    $totals['current_value'] += $folderSummary->current_value;
-                    $totals['acquired_value'] += $folderSummary->acquired_value;
-                }
+            if (!$hasSummary) {
+                $folders = Folder::whereIn('uuid', $folders->pluck('uuid'))->with('summary')->get();
             }
+
+            $folders->each(function ($folder) use (&$totals) {
+                $summary = $folder->summary;
+                if ($summary) {
+                    $totals['total_cards'] += $summary->total_cards;
+                    $totals['current_value'] += $summary->current_value;
+                    $totals['acquired_value'] += $summary->acquired_value;
+                }
+            });
         }
 
         $gainLoss        = $totals['current_value'] - $totals['acquired_value'];

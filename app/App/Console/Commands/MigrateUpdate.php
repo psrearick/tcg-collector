@@ -5,6 +5,7 @@ namespace App\App\Console\Commands;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 use App\Jobs\MigrateCollectionCard;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -50,23 +51,18 @@ class MigrateUpdate extends Command
 
         $userIdMap = [];
         $users->get()->each(function ($user) use (&$userIdMap) {
-            $newUser = User::firstOrCreate([
-                'email' => $user->email,
-            ], [
-                'name'              => $user->name,
-                'email_verified_at' => $user->email_verified_at,
-                'password'          => Hash::make('password'),
-                'created_at'        => $user->created_at,
-                'updated_at'        => $user->updated_at,
-            ]);
+            $newUser = $this->createUser($user);
+
+            $this->createTeam($newUser);
 
             $userIdMap[$user->id] = $newUser->id;
         });
 
+        return;
+
         $collectionUuidMap = [];
         $collections->get()->each(function ($collection) use ($userIdMap, &$collectionUuidMap) {
-            $record = Collection
-                ::where('name', '=', $collection->name)
+            $record = Collection::where('name', '=', $collection->name)
                 ->where('description', 'like', DB::raw('"' . $collection->description . '"'))
                 ->where('is_public', '=', $collection->is_public)
                 ->where('user_id', '=', $userIdMap[$collection->user_id])
@@ -87,15 +83,44 @@ class MigrateUpdate extends Command
                     ->wherePivot('finish', '=', $card->finish)
                     ->first();
 
-                    if ($colCard) {
-                        return;
-                    }
+                if ($colCard) {
+                    return;
+                }
 
-                    print $localCard->name;
-                
+                print $localCard->name;
+
                 MigrateCollectionCard::dispatch($colUuid, $localCard->uuid, $card->finish, $card->quantity);
             });
 
         return Command::SUCCESS;
+    }
+
+    protected function createTeam(User $user) : void
+    {
+        $teamData = [
+            'user_id'       => $user->id,
+            'name'          => explode(' ', $user->name, 2)[0] . "'s Group",
+            'personal_team' => true,
+        ];
+
+        $team = Team::where('user_id', '=', $teamData['user_id'])->where('name', '=', $teamData['name'])->first();
+        if ($team) {
+            return;
+        }
+
+        $user->ownedTeams()->save(Team::forceCreate($teamData));
+    }
+
+    protected function createUser(object $user) : User
+    {
+        return User::firstOrCreate([
+            'email' => $user->email,
+        ], [
+            'name'              => $user->name,
+            'email_verified_at' => $user->email_verified_at,
+            'password'          => Hash::make('password'),
+            'created_at'        => $user->created_at,
+            'updated_at'        => $user->updated_at,
+        ]);
     }
 }

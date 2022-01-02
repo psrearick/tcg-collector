@@ -10,8 +10,8 @@ use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use Carbon\Carbon;
-use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 use Illuminate\Support\Facades\Cache;
+use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionProjector extends Projector
 {

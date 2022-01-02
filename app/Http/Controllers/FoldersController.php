@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
+use App\Domain\Folders\Aggregate\Actions\GetChildren;
+use App\Domain\Folders\Aggregate\Actions\GetFolder;
 use App\Domain\Folders\Aggregate\Actions\UpdateFolder;
-use App\Domain\Folders\Aggregate\Queries\FolderChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
-use GetFolder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,13 +24,13 @@ class FoldersController extends Controller
     {
     }
 
-    public function show(string $uuid, GetFolder $getFolder) : Response
+    public function show(string $uuid, GetFolder $getFolder, GetChildren $getChildren, GetSummaryData $getSummaryData) : Response
     {
         $folder         = $getFolder($uuid);
-        $folderChildren = new FolderChildren($uuid, auth()->id());
-        $collections    = $folderChildren->collections();
-        $folders        = $folderChildren->folders();
-        $summary        = (new GetSummaryData)($collections, $folders);
+        $folderChildren = $getChildren($uuid);
+        $collections    = $folderChildren['collections'];
+        $folders        = $folderChildren['folders'];
+        $summary        = $getSummaryData($collections, $folders, false);
 
         return Inertia::render('Folders/Show', [
             'folder'        => $folder,

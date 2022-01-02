@@ -4,12 +4,14 @@ namespace App\Domain\Collections\Models;
 
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
@@ -17,6 +19,11 @@ class Collection extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function allowedDestinations() : HasMany
+    {
+        return $this->hasMany(AllowedDestination::class, 'uuid', 'uuid');
+    }
 
     public function cards() : BelongsToMany
     {
