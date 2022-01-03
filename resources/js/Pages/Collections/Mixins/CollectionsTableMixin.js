@@ -59,6 +59,14 @@ export default {
         this.emitter.on("trigger-collection-search", () => {
             this.search();
         });
+        this.emitter.on("move_to_collection", (data) => {
+            this.moveToCollectionPanelData = data;
+            this.moveToCollectionPanelShow = true;
+        });
+        this.emitter.on("remove_from_collection", (data) => {
+            this.removeFromCollectionPanelData = data;
+            this.removeFromCollectionPanelShow = true;
+        });
     },
     methods: {
         setSort() {

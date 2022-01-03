@@ -60,12 +60,23 @@ export default {
                     {
                         visible: true,
                         sortable: true,
-                        type: "text",
+                        type: "component",
+                        component: "HorizontalIncrementer",
                         label: "Quantity",
                         key: "quantity",
                     },
                 ],
                 gridName: "collection-edit",
+                selectMenu: [
+                    {
+                        content: "Move to Collection",
+                        action: "move_to_collection",
+                    },
+                    {
+                        content: "Remove from Collection",
+                        action: "remove_from_collection",
+                    },
+                ],
             },
         };
     },
@@ -73,5 +84,22 @@ export default {
         searchUrl() {
             return "/collections/" + this.collection.uuid + "/edit/list-search";
         },
+    },
+
+    created() {
+        this.emitter.on("incrementQuantity", (card) => {
+            this.emitter.emit("updateCardQuantity", {
+                change: 1,
+                id: card.uuid,
+                finish: card.finish,
+            });
+        });
+        this.emitter.on("decrementQuantity", (card) => {
+            this.emitter.emit("updateCardQuantity", {
+                change: -1,
+                id: card.uuid,
+                finish: card.finish,
+            });
+        });
     },
 };

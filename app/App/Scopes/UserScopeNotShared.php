@@ -18,7 +18,7 @@ class UserScopeNotShared implements Scope
     public function apply(Builder $builder, Model $model)
     {
         $builder
-            ->where('collections.user_id', session()->get('user_id'))
+            ->where('collections.user_id', auth()->id())
             ->orWhere('collections.is_public', '=', 1);
     }
 }

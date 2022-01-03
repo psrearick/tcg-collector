@@ -10,6 +10,7 @@ use App\Http\Controllers\FoldersMoveController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\CollectionsListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('Dashboard/Dashboard');
     })->name('dashboard');
 
+    Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections.move');
     Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
     Route::post('collections/{collection}/edit/list-search', [CollectionsEditListSearchController::class, 'store'])->name('collection-edit-list-search.store');

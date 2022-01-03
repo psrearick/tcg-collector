@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Models;
 
+use App\Traits\BelongsToUser;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Folders\Models\AllowedDestination;
@@ -16,9 +17,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToUser;
 
     protected $guarded = [];
+
+    const USERSCOPE = 'notShared';
 
     public function allowedDestinations() : HasMany
     {
@@ -43,11 +46,6 @@ class Collection extends Model
     public function summary() : BelongsTo
     {
         return $this->belongsTo(Summary::class, 'uuid', 'uuid');
-    }
-
-    public function user() : BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public static function uuid(string $uuid) : self
