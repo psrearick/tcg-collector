@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class CollectionsEditSearchController
 {
-    public function store(string $collection, Request $request, SearchCollectionCards $searchCollectionCards) : JsonResponse
+    public function store(string $collection, Request $request, SearchCollectionCards $searchCollectionCards, FormatCards $formatCards) : JsonResponse
     {
         $searchData = new CollectionCardSearchData([
             'uuid'      => $collection,
@@ -24,7 +24,7 @@ class CollectionsEditSearchController
             return response()->json([]);
         }
 
-        $cards = (new FormatCards)($builder, $searchData);
+        $cards = $formatCards($builder, $searchData);
 
         return response()->json($cards);
     }

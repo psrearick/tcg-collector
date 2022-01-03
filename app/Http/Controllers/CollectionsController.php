@@ -53,11 +53,8 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function show(
-        string $uuid,
-        Request $request,
-        GetSummaryData $getSummaryData,
-    ) : Response {
+    public function show(string $uuid, Request $request, GetSummaryData $getSummaryData) : Response
+    {
         $collections     = (new CollectionsPresenter($request->all(), $uuid))->present();
         $summary         = $getSummaryData(collect([$collections['collection']]), null, false);
 

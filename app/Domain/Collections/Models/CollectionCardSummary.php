@@ -14,4 +14,9 @@ class CollectionCardSummary extends Model
     {
         return $this->belongsTo(Card::class, 'card_uuid', 'uuid');
     }
+
+    public function collection() : BelongsTo
+    {
+        return $this->belongsTo(Collection::class, 'collection_uuid', 'uuid');
+    }
 }

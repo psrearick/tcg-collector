@@ -2,10 +2,10 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
-use App\Domain\Prices\Models\Summary;
-use Illuminate\Support\Collection;
 use App\Domain\Collections\Models\Collection as DomainCollection;
 use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Models\Summary;
+use Illuminate\Support\Collection;
 
 class GetSummaryData
 {
@@ -28,7 +28,7 @@ class GetSummaryData
                     $totals['current_value'] += $summary->current_value;
                     $totals['acquired_value'] += $summary->acquired_value;
                 }
-            // }
+                // }
             });
         }
 

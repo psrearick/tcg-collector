@@ -29,17 +29,14 @@ class CollectionsPresenter implements PresenterInterface
 
     public function present() : array
     {
-        $getCards        = new GetCollectionCards;
-        $collectionCards = $getCards($this->uuid);
+        $collectionCards = (new GetCollectionCards)($this->uuid);
         $searchData      = new CollectionCardSearchData([
-            'builder'      => $collectionCards,
-            'uuid'         => $this->uuid,
-            'search'       => new CardSearchData($this->request),
+            'data'      => $collectionCards,
+            'uuid'      => $this->uuid,
+            'search'    => new CardSearchData($this->request),
         ]);
-        $searchCollection      = new SearchCollection;
-        $searchResults         = $searchCollection($searchData)->builder;
-        $formatCollectionCards = new FormatCollectionCards;
-        $list                  = $formatCollectionCards($searchResults, $searchData);
+        $searchResults    = (new SearchCollection)($searchData)->collection;
+        $list             = (new FormatCollectionCards)($searchResults, $searchData);
 
         return [
             'collection'    => $this->collection,

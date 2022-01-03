@@ -3,6 +3,8 @@
 namespace App\Domain\Collections\Aggregate\Queries;
 
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
+use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
+use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 use App\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 use Spatie\EventSourcing\EventHandlers\Projectors\EventQuery;
@@ -41,21 +43,9 @@ class CollectionCardsSummary extends EventQuery
         }
 
         $collection = (new SupportCollection($cards));
-        $uuids      = $collection->pluck('uuid')->toArray();
-        $prices     = DB::table('prices as p1')
-            ->select(['p1.*', 'cards.name_normalized', 'cards.set_id'])
-            ->leftJoin('prices as p2', function ($join) {
-                $join->on('p1.card_uuid', '=', 'p2.card_uuid')
-                    ->on('p1.type', '=', 'p2.type')
-                    ->on('p1.created_at', '<', 'p2.created_at');
-            })
-            ->leftJoin('cards', 'cards.uuid', '=', 'p1.card_uuid')
-        ->whereIn('p1.card_uuid', $uuids)
-        ->whereNull('p2.id')
-        ->get();
-
+        $prices     = (new GetLatestPrices)($collection->pluck('uuid')->toArray());
         $collection = $collection->map(function ($card) use ($prices) {
-            $type = $this->matchFinish($card['finish']);
+            $type = (new MatchFinish)($card['finish']);
             $price = $prices
                 ->where('type', '=', $type)
                 ->where('card_uuid', '=', $card['uuid'])
@@ -98,15 +88,5 @@ class CollectionCardsSummary extends EventQuery
         $currentList                                               = $this->collectionCardsList[$cardUuid][$finish];
         $this->collectionCardsList[$cardUuid][$finish]['quantity'] = $currentList['quantity'] + $change;
         $this->collectionCardsList[$cardUuid][$finish]['price']    = $attributes['updated']['price'];
-    }
-
-    protected function matchFinish(string $finish) : string
-    {
-        return match ($finish) {
-            'nonfoil'       => 'usd',
-                'foil'      => 'usd_foil',
-                'etched'    => 'usd_etched',
-                default     => '',
-        };
     }
 }

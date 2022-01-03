@@ -4,27 +4,26 @@ namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
-use App\Domain\Cards\Traits\CardSearch;
+use App\Domain\Cards\Traits\CardSearchCollection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\Collection;
+use App\Support\Collection as SupportCollection;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchCollection
 {
-    use CardSearch;
+    use CardSearchCollection;
 
-    protected ?Builder $cards;
+    protected SupportCollection $cards;
 
     protected CardSearchData $cardSearchData;
 
-    protected bool $isCollection = false;
-
     protected ?string $uuid;
 
-    public function __invoke(CollectionCardSearchData $collectionCardSearchData)
+    public function __invoke(CollectionCardSearchData $collectionCardSearchData) : CardSearchResultsData
     {
         $this->cardSearchData = $collectionCardSearchData->search;
-        $this->cards          = $collectionCardSearchData->builder;
+        $this->cards          = $collectionCardSearchData->data;
         $this->uuid           = $collectionCardSearchData->uuid;
 
         if (!$this->isValidCardSearch()) {
@@ -56,7 +55,7 @@ class SearchCollection
         }
 
         return new CardSearchResultsData([
-            'builder'       => $this->cards,
+            'collection'       => $this->cards,
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Actions\NormalizeString;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\CreatePricing;
@@ -117,6 +118,7 @@ class UpdateCard implements ShouldQueue
             'loyalty'             => $cardData['loyalty'] ?? null,
             'manaCost'            => $cardData['mana_cost'] ?? null,
             'name'                => $cardData['name'] ?? null,
+            'name_normalized'     => (new NormalizeString)($cardData['name'] ?? ''),
             'hasNonFoil'          => $cardData['nonfoil'] ?? null,
             'oracleText'          => $cardData['oracle_text'] ?? null,
             'isOversized'         => $cardData['oversized'] ?? null,

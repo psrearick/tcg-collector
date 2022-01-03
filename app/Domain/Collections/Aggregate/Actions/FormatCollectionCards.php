@@ -5,14 +5,16 @@ namespace App\Domain\Collections\Aggregate\Actions;
 use App\Domain\Cards\Actions\BuildCard;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
+use App\Domain\Prices\Aggregate\Actions\MatchFinish;
+use App\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class FormatCollectionCards
 {
-    public function __invoke(Builder $builder, CollectionCardSearchData $collectionCardSearchData) : LengthAwarePaginator
+    public function __invoke(Collection $builder, CollectionCardSearchData $collectionCardSearchData) : LengthAwarePaginator
     {
         $search = $collectionCardSearchData->search;
 
@@ -20,7 +22,7 @@ class FormatCollectionCards
             $page = $search->paginator;
 
             $paginated = $builder->paginate(
-                $page['per_page'] ?? 25, ['*'], 'page', $page['current_page'] ?? null
+                $page['per_page'] ?? 25, null, $page['current_page'] ?? null, 'page'
             );
         }
 
@@ -32,13 +34,15 @@ class FormatCollectionCards
             return (new Collection([]))->paginate(25);
         }
 
-        $prices = $this->getPriceMap($paginated->pluck('card_uuid')->toArray());
+        return $paginated;
+
+        $prices = (new GetLatestPrices)(collect($paginated->items())->pluck('card_uuid')->toArray());
 
         return tap($paginated, function ($paginatedInstance) use ($prices) {
             return $paginatedInstance->getCollection()->transform(function ($model) use ($prices) {
                 $card = $model->card;
                 $finish = $model->finish;
-                $type = $this->matchFinish($finish);
+                $type = (new MatchFinish)($finish);
                 $price = $prices
                         ->where('type', '=', $type)
                         ->where('card_uuid', '=', $card['uuid'])
@@ -69,30 +73,5 @@ class FormatCollectionCards
                 ]))->toArray();
             });
         });
-    }
-
-    protected function matchFinish(string $finish) : string
-    {
-        return match ($finish) {
-            'nonfoil'       => 'usd',
-                'foil'      => 'usd_foil',
-                'etched'    => 'usd_etched',
-                default     => '',
-        };
-    }
-
-    private function getPriceMap($uuids) : Collection
-    {
-        return DB::table('prices as p1')
-            ->select(['p1.*', 'cards.name_normalized', 'cards.set_id'])
-            ->leftJoin('prices as p2', function ($join) {
-                $join->on('p1.card_uuid', '=', 'p2.card_uuid')
-                    ->on('p1.type', '=', 'p2.type')
-                    ->on('p1.created_at', '<', 'p2.created_at');
-            })
-            ->leftJoin('cards', 'cards.uuid', '=', 'p1.card_uuid')
-        ->whereIn('p1.card_uuid', $uuids)
-        ->whereNull('p2.id')
-        ->get();
     }
 }

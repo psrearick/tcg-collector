@@ -5,12 +5,12 @@ namespace App\Domain\Cards\Actions;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Cards\Traits\CardSearch;
+use App\Domain\Cards\Traits\CardSearchBuilder;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchCards
 {
-    use CardSearch;
+    use CardSearchBuilder;
 
     protected Builder $cards;
 
@@ -37,9 +37,9 @@ class SearchCards
             $this->cards->where('uuid', '=', $this->cardSearchData->uuid);
         }
 
-        if ($this->cardSearchData->sort) {
-            $this->sort();
-        }
+        // if ($this->cardSearchData->sort) {
+        // $this->sort();
+        // }
 
         return new CardSearchResultsData(['builder' => $this->cards]);
     }

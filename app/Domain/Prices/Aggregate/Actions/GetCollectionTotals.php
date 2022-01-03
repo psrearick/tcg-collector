@@ -3,6 +3,7 @@
 namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 
 class GetCollectionTotals
 {
@@ -18,7 +19,7 @@ class GetCollectionTotals
             $count = $card->pivot->quantity;
             $last  = $card
                 ->prices
-                ->where('type', '=', $this->matchFinish($card->pivot->finish))
+                ->where('type', '=', (new MatchFinish)($card->pivot->finish))
                 ->sortByDesc('created_at')
                 ->take(1)
                 ->first();
@@ -39,15 +40,5 @@ class GetCollectionTotals
         $totals['gain_loss_percent'] = $gainLossPercent;
 
         return $totals;
-    }
-
-    protected function matchFinish(string $finish) : string
-    {
-        return match ($finish) {
-            'nonfoil'   => 'usd',
-            'foil'      => 'usd_foil',
-            'etched'    => 'usd_etched',
-            default     => '',
-        };
     }
 }

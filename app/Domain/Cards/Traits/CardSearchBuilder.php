@@ -4,29 +4,18 @@ namespace App\Domain\Cards\Traits;
 
 use App\Domain\Sets\Models\Set;
 
-trait CardSearch
+trait CardSearchBuilder
 {
     protected function filterOnCards() : void
     {
         $term = preg_replace('/[^A-Za-z0-9]/', '', $this->cardSearchData->card);
-
-        if ($this->isCollection ?? null) {
-            $this->cards = $this->cards->filter(function ($card) use ($term) {
-                return false !== stristr($card['name_normalized'], $term);
-            });
-        } else {
-            $this->cards->where('cards.name_normalized', 'like', '%' . $term . '%');
-        }
+        $this->cards->where('cards.name_normalized', 'like', '%' . $term . '%');
     }
 
     protected function filterOnSets() : void
     {
         $sets = $this->getSetIds();
-        if ($this->isCollection ?? null) {
-            $this->cards = $this->cards->whereIn('set_id', $sets);
-        } else {
-            $this->cards->whereIn('cards.set_id', $sets);
-        }
+        $this->cards->whereIn('cards.set_id', $sets);
     }
 
     protected function getSetIds() : array
@@ -53,11 +42,8 @@ trait CardSearch
 
     protected function sort() : void
     {
-        $sortBy = [];
         foreach ($this->cardSearchData->sort as $field => $direction) {
-            $sortBy[] = [$field, $direction];
+            $this->cards->orderBy($field, $direction);
         }
-
-        $this->cards = $this->cards->sortBy($sortBy);
     }
 }
