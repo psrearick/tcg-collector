@@ -33,7 +33,7 @@
                 "
                 tabindex="0"
                 @blur="doneEditQuantity(value)"
-                @keyup.enter.prevent="doneEditQuantity(value)"
+                @keyup.enter.prevent="$event.target.blur()"
                 @keyup.esc.prevent="cancelEditQuantity()"
             />
             <p v-else @click="editQuantity(value)">

@@ -4,6 +4,7 @@ namespace App\Domain\Collections\Presenters;
 
 use App\App\Contracts\PresenterInterface;
 use App\Domain\Cards\DataObjects\CardSearchData;
+use App\Domain\Collections\Aggregate\Actions\CalculateSummary;
 use App\Domain\Collections\Aggregate\Actions\FormatCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\GetCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\SearchCollection;
@@ -37,11 +38,13 @@ class CollectionsPresenter implements PresenterInterface
         ]);
         $searchResults    = (new SearchCollection)($searchData)->collection;
         $list             = (new FormatCollectionCards)($searchResults, $searchData);
+        $summary          = (new CalculateSummary)($searchResults);
 
         return [
             'collection'    => $this->collection,
             'list'          => $list,
             'search'        => $searchData->search,
+            'summary'       => $summary,
         ];
     }
 }

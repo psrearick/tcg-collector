@@ -4,7 +4,6 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Collections\Models\Collection as DomainCollection;
 use App\Domain\Folders\Models\Folder;
-use App\Domain\Prices\Models\Summary;
 use Illuminate\Support\Collection;
 
 class GetSummaryData

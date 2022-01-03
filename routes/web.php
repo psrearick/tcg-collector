@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CollectionCardsController;
 use App\Http\Controllers\CollectionsController;
+use App\Http\Controllers\CollectionsEditListSearchController;
 use App\Http\Controllers\CollectionsEditSearchController;
 use App\Http\Controllers\CollectionsMoveController;
 use App\Http\Controllers\FoldersController;
@@ -37,6 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections.move');
     Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
+    Route::post('collections/{collection}/edit/list-search', [CollectionsEditListSearchController::class, 'store'])->name('collection-edit-list-search.store');
     Route::post('collections/{collection}/edit/add', [CollectionCardsController::class, 'store'])->name('collection-cards.store');
     Route::resource('collections', CollectionsController::class);
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');

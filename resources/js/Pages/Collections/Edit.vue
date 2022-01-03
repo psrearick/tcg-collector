@@ -31,6 +31,7 @@
             <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
                 Collection Details
             </h3>
+            <update-collection-details-form :collection="collection" />
         </template>
         <template #AddCards>
             <div>
@@ -74,24 +75,23 @@
             <h3 class="text-lg leading-6 font-medium text-gray-900 py-4">
                 Collection Cards
             </h3>
-            <collections-edit-data-grid
-                v-if="notEmpty"
-                :data="list"
+            <collections-data-grid
                 :collection="collection"
-                :search-terms="search"
+                :table="table"
+                :search-url="searchUrl"
             />
-            <ui-well v-if="!notEmpty">This Collection is Empty</ui-well>
         </template>
     </app-layout>
 </template>
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CollectionCardSearch from "@/Pages/Collections/Partials/CollectionCardSearch";
-import CollectionsEditDataGrid from "@/Pages/Collections/Partials/CollectionsEditDataGrid";
+import CollectionsDataGrid from "@/Pages/Collections/Partials/CollectionsDataGrid";
 import UpdateCardQuantityMixin from "@/Pages/Collections/Mixins/UpdateCardQuantityMixin";
+import CollectionsEditTableMixin from "@/Pages/Collections/Mixins/CollectionsEditTableMixin";
+import UpdateCollectionDetailsForm from "@/Pages/Collections/Partials/UpdateCollectionDetailsForm";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
-import UiWell from "@/UI/UIWell";
 
 export default {
     name: "Edit",
@@ -99,45 +99,47 @@ export default {
     components: {
         AppLayout,
         CollectionCardSearch,
-        CollectionsEditDataGrid,
+        CollectionsDataGrid,
         Link,
         UiButton,
-        UiWell,
+        UpdateCollectionDetailsForm,
     },
 
-    mixins: [UpdateCardQuantityMixin],
+    mixins: [UpdateCardQuantityMixin, CollectionsEditTableMixin],
 
     props: {
         collection: {
             type: Object,
             default: () => {},
         },
-        list: {
-            type: Object,
-            default: () => {},
-        },
-        search: {
-            type: Object,
-            default: () => {},
-        },
+        // list: {
+        //     type: Object,
+        //     default: () => {},
+        // },
+        // search: {
+        //     type: Object,
+        //     default: () => {},
+        // },
     },
 
     data() {
         return {
             slotNames: ["CollectionDetails", "AddCards", "CollectionCards"],
+            form: {
+                name: "",
+                description: "",
+                id: null,
+                is_public: false,
+            },
         };
-    },
-
-    computed: {
-        notEmpty() {
-            return this.list.data.length > 0;
-        },
     },
 
     mounted() {
         this.$store.dispatch("updateCurrentCollection", {
             collection: this.collection,
         });
+
+        this.form = _.cloneDeep(this.collection);
     },
 };
 </script>

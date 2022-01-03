@@ -130,7 +130,12 @@ export default defineComponent({
         JetSecondaryButton,
     },
 
-    props: ["user"],
+    props: {
+        user: {
+            type: Object,
+            default: () => {},
+        },
+    },
 
     data() {
         return {

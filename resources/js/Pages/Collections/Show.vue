@@ -42,12 +42,12 @@
             </div>
         </template>
         <div>
-            <folder-summary :summary="totals" class="pt-6" />
-            <collection-show-data-grid
-                v-if="notEmpty"
-                :data="list"
+            <folder-summary v-if="loaded" :summary="totals" class="pt-6" />
+            <collections-data-grid
                 :collection="collection"
-                :search-terms="search"
+                :table="table"
+                :search-url="searchUrl"
+                @searched="updateData"
             />
         </div>
     </app-layout>
@@ -58,7 +58,8 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import UiButton from "@/UI/UIButton";
 import FolderSummary from "@/Components/CardLists/FolderSummary";
-import CollectionShowDataGrid from "@/Pages/Collections/Partials/CollectionShowDataGrid";
+import CollectionsDataGrid from "@/Pages/Collections/Partials/CollectionsDataGrid";
+import CollectionsShowTableMixin from "@/Pages/Collections/Mixins/CollectionsShowTableMixin";
 
 export default {
     name: "Show",
@@ -68,31 +69,29 @@ export default {
         AppLayout,
         UiButton,
         FolderSummary,
-        CollectionShowDataGrid,
+        CollectionsDataGrid,
     },
+
+    mixins: [CollectionsShowTableMixin],
 
     props: {
         collection: {
             type: Object,
             default: () => {},
         },
-        totals: {
-            type: Object,
-            default: () => {},
-        },
-        list: {
-            type: Object,
-            default: () => {},
-        },
-        search: {
-            type: Object,
-            default: () => {},
-        },
     },
 
-    computed: {
-        notEmpty() {
-            return this.list.data.length > 0;
+    data() {
+        return {
+            totals: {},
+            loaded: false,
+        };
+    },
+
+    methods: {
+        updateData(data) {
+            this.totals = data.totals;
+            this.loaded = true;
         },
     },
 };

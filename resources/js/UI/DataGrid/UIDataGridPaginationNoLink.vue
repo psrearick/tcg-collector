@@ -78,7 +78,7 @@
                     "
                     aria-label="Pagination"
                 >
-                    <ui-data-grid-pagination-button
+                    <ui-data-grid-pagination-button-no-link
                         v-for="(page, index) in pagination.links"
                         :key="index"
                         href="#"
@@ -96,7 +96,7 @@
                         <span v-else>
                             {{ page.label }}
                         </span>
-                    </ui-data-grid-pagination-button>
+                    </ui-data-grid-pagination-button-no-link>
                 </nav>
             </div>
         </div>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import UiDataGridPaginationButton from "@/UI/DataGrid/UIDataGridPaginationButton";
+import UiDataGridPaginationButtonNoLink from "@/UI/DataGrid/UIDataGridPaginationButtonNoLink";
 import UiIcon from "@/UI/UIIcon";
 
 export default {
@@ -112,7 +112,7 @@ export default {
 
     components: {
         UiIcon,
-        UiDataGridPaginationButton,
+        UiDataGridPaginationButtonNoLink,
     },
 
     props: {

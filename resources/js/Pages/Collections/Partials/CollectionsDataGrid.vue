@@ -7,21 +7,25 @@
             :mark-searching="true"
             :configure-table="true"
         />
-        <ui-data-table
-            v-if="showData"
-            class="mt-4"
-            :data="data.data"
-            :fields="table.fields"
-            :grid-name="gridName"
-        />
-        <ui-data-grid-pagination-no-link
-            :pagination="paginator"
-            @update:pagination="updatePagination"
-        />
+        <div v-if="loaded && notEmpty">
+            <ui-data-table
+                v-if="showData"
+                class="mt-4"
+                :data="data.data"
+                :fields="table.fields"
+                :grid-name="table.gridName"
+            />
+            <ui-data-grid-pagination-no-link
+                :pagination="paginator"
+                @update:pagination="updatePagination"
+            />
+        </div>
+        <ui-well v-if="loaded && !notEmpty">This Collection is Empty</ui-well>
+        <ui-well v-if="!loaded">Loading...</ui-well>
         <ui-grid-configuration-panel
             v-model:show="gridConfigurationPanelShow"
             :fields="table.fields"
-            :grid-name="gridName"
+            :grid-name="table.gridName"
         />
     </div>
 </template>
@@ -31,34 +35,38 @@ import UiDataTable from "@/UI/DataGrid/UIDataTable";
 import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
 import CardSetSearch from "@/Pages/Cards/Partials/CardSetSearch";
 import UiGridConfigurationPanel from "@/UI/DataGrid/UIGridConfigurationPanel";
-import CollectionsShowTableMixin from "@/Pages/Collections/Mixins/CollectionsShowTableMixin";
+import CollectionsTableMixin from "@/Pages/Collections/Mixins/CollectionsTableMixin";
+import UiWell from "@/UI/UIWell";
 
 export default {
-    name: "CollectionShowDataGrid",
+    name: "CollectionsDataGrid",
 
     components: {
         CardSetSearch,
         UiDataTable,
         UiDataGridPaginationNoLink,
         UiGridConfigurationPanel,
+        UiWell,
     },
 
-    mixins: [CollectionsShowTableMixin],
+    mixins: [CollectionsTableMixin],
 
     props: {
-        data: {
-            type: Object,
-            default: () => {},
-        },
-        searchTerms: {
-            type: Object,
-            default: () => {},
-        },
         collection: {
             type: Object,
             default: () => {},
         },
+        table: {
+            type: Object,
+            default: () => {},
+        },
+        searchUrl: {
+            type: String,
+            default: "",
+        },
     },
+
+    emits: ["searched"],
 
     data() {
         return {
@@ -67,6 +75,12 @@ export default {
             setSearchTerm: "",
             gridConfigurationPanelShow: false,
             searching: false,
+            data: {
+                data: [],
+                paginator: {},
+            },
+            searchData: {},
+            loaded: false,
         };
     },
 
@@ -79,6 +93,9 @@ export default {
                 return false;
             }
             return true;
+        },
+        notEmpty() {
+            return this.data.data.length > 0;
         },
     },
 
@@ -100,17 +117,7 @@ export default {
     },
 
     mounted() {
-        this.paginator = _.pick(this.data, [
-            "current_page",
-            "from",
-            "last_page",
-            "per_page",
-            "to",
-            "total",
-            "links",
-        ]);
-        this.cardSearchTerm = this.searchTerms.card;
-        this.setSearchTerm = this.searchTerms.set;
+        this.search();
     },
 
     methods: {
@@ -118,24 +125,37 @@ export default {
             this.paginator = pagination;
             this.search();
         },
+        processData(res) {
+            this.data = res.list;
+            this.searchData = res.search;
+            this.paginator = _.pick(this.data, [
+                "current_page",
+                "from",
+                "last_page",
+                "per_page",
+                "to",
+                "total",
+                "links",
+            ]);
+            this.cardSearchTerm = this.searchData.card;
+            this.setSearchTerm = this.searchData.set;
+        },
         search: _.debounce(function () {
-            this.$inertia.get(
-                "/collections/" + this.collection.uuid,
-                {
+            axios
+                .post(this.searchUrl, {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                     paginator: this.paginator,
                     sort: this.sortFields,
                     sortOrder: this.sortOrder,
                     filters: this.filters,
-                },
-                {
-                    preserveState: true,
-                    onSuccess: () => {
-                        this.searching = false;
-                    },
-                }
-            );
+                })
+                .then((res) => {
+                    this.searching = false;
+                    this.loaded = true;
+                    this.processData(res.data);
+                    this.$emit("searched", res.data);
+                });
         }, 1200),
     },
 };

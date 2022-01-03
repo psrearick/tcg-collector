@@ -33,6 +33,7 @@ export default {
                     }
 
                     this.$store.dispatch("updateCardSearchResultsCard", data);
+                    this.emitter.emit("trigger-collection-search");
 
                     this.$inertia.reload({
                         only: ["page"],

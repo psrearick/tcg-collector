@@ -77,6 +77,7 @@ class CollectionProjector extends Projector
                 'card_uuid'             => $cardUuid,
                 'price_when_added'      => $price,
                 'price_when_updated'    => $price,
+                'current_price'         => $price,
                 'quantity'              => $change,
                 'finish'                => $finish,
                 'date_added'            => Carbon::now(),
@@ -87,6 +88,7 @@ class CollectionProjector extends Projector
 
         $existingCard->update([
             'price_when_updated'    => $price,
+            'current_price'         => $price,
             'quantity'              => $existingCard->quantity + $change,
         ]);
     }

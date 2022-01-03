@@ -2,13 +2,14 @@
 
 namespace App\Domain\Cards\Traits;
 
+use App\Actions\NormalizeString;
 use App\Domain\Sets\Models\Set;
 
 trait CardSearchCollection
 {
     protected function filterOnCards() : void
     {
-        $term = preg_replace('/[^A-Za-z0-9]/', '', $this->cardSearchData->card);
+        $term = (new NormalizeString)($this->cardSearchData->card);
 
         $this->cards = $this->cards->filter(function ($card) use ($term) {
             return false !== stristr($card['name_normalized'], $term);
@@ -17,19 +18,14 @@ trait CardSearchCollection
 
     protected function filterOnSets() : void
     {
-        $sets        = $this->getSetIds();
-        $this->cards = $this->cards->whereIn('set_id', $sets);
-    }
+        $term = (new NormalizeString)($this->cardSearchData->set);
 
-    protected function getSetIds() : array
-    {
-        $searchTerm  = '%' . $this->cardSearchData->set . '%';
+        $this->cards = $this->cards->filter(function ($card) use ($term) {
+            $set_name = (new NormalizeString)($card['set_name']);
 
-        return Set::where('sets.name', 'like', $searchTerm)
-            ->orWhere('sets.code', 'like', $searchTerm)
-            ->get()
-            ->pluck('id')
-            ->toArray();
+            return (false !== stristr($card['set'], $term))
+                || (false !== stristr($set_name, $term));
+        });
     }
 
     protected function isValidCardSearch() : bool

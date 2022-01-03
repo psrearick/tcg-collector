@@ -55,7 +55,7 @@ export default {
                 return "border border-primary-200 text-gray-200 bg-primary-500 hover:bg-primary-700";
             }
             if (this.buttonStyle === "primary-outline") {
-                return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-primary-800";
+                return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-primary-800 disabled:bg-gray-200";
             }
             if (this.buttonStyle === "primary-dark") {
                 return "border border-transparent focus:border-blue-900 hover:bg-blue-900 text-white bg-blue-600";

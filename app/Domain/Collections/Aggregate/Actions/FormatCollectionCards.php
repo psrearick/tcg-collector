@@ -34,44 +34,6 @@ class FormatCollectionCards
             return (new Collection([]))->paginate(25);
         }
 
-        return $paginated;
-
-        $prices = (new GetLatestPrices)(collect($paginated->items())->pluck('card_uuid')->toArray());
-
-        return tap($paginated, function ($paginatedInstance) use ($prices) {
-            return $paginatedInstance->getCollection()->transform(function ($model) use ($prices) {
-                $card = $model->card;
-                $finish = $model->finish;
-                $type = (new MatchFinish)($finish);
-                $price = $prices
-                        ->where('type', '=', $type)
-                        ->where('card_uuid', '=', $card['uuid'])
-                        ->first();
-
-                $cardBuilder = new BuildCard($card);
-                $build = $cardBuilder
-                    ->add('feature')
-                    ->add('image_url')
-                    ->add('set_image_url')
-                    ->get();
-
-                return (new CollectionCardData([
-                    'id'                => $build->id,
-                    'uuid'              => $build->uuid,
-                    'name'              => $build->name,
-                    'set'               => optional($build->set)->code,
-                    'set_name'          => optional($build->set)->name,
-                    'features'          => $build->feature,
-                    'price'             => optional($price)->price,
-                    'acquired_date'     => $model->date_added ?? null,
-                    'acquired_price'    => $model->price_when_added ?? null,
-                    'quantity'          => $model->quantity ?? null,
-                    'finish'            => $model->finish ?? null,
-                    'image'             => $build->image_url,
-                    'set_image'         => $build->set_image_url,
-                    'collector_number'  => $build->collectorNumber,
-                ]))->toArray();
-            });
-        });
+        return $paginated->withQueryString();
     }
 }

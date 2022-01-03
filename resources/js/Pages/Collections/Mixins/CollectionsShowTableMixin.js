@@ -65,89 +65,13 @@ export default {
                         key: "quantity",
                     },
                 ],
-            },
-            gridName: "collection-show",
-            default_paginator: {
-                current_page: null,
-                from: null,
-                last_page: null,
-                per_page: 15,
-                to: null,
-                total: null,
-                links: [],
-            },
-            paginator: {
-                current_page: null,
-                from: null,
-                last_page: null,
-                per_page: 15,
-                to: null,
-                total: null,
-                links: [],
+                gridName: "collection-show",
             },
         };
     },
     computed: {
-        sortOrder() {
-            let fields = this.$store.getters.sortOrder;
-            if (fields) {
-                return fields[this.gridName];
-            }
-
-            return {};
-        },
-        sortFields() {
-            let fields = this.$store.getters.sortFields;
-            if (fields) {
-                return fields[this.gridName];
-            }
-
-            return {};
-        },
-        filters() {
-            let filters = this.$store.getters.filters;
-            if (filters) {
-                return filters[this.gridName];
-            }
-
-            return {};
-        },
-    },
-    created() {
-        this.emitter.on("collection_card_name_click", (card) => {
-            this.$inertia.get(`/cards/${card.uuid}`);
-        });
-        this.emitter.on("sort", (gridName) => {
-            if (gridName === this.gridName) {
-                this.search();
-            }
-        });
-    },
-    methods: {
-        setSort() {
-            this.$store.dispatch("setSortFields", {
-                gridName: this.gridName,
-                fields: this.getObjectValue(this.search.sortQuery),
-            });
-            this.$store.dispatch("setSortOrder", {
-                gridName: this.gridName,
-                order: this.getObjectValue(this.search.sortOrder),
-            });
-            this.$store.dispatch("setFilters", {
-                gridName: this.gridName,
-                filters: this.getObjectValue(this.search.filters),
-            });
-        },
-        getObjectValue(value) {
-            if (!value) {
-                return {};
-            }
-
-            if (Array.isArray(value)) {
-                return {};
-            }
-
-            return value;
+        searchUrl() {
+            return "/collections/" + this.collection.uuid + "/edit/list-search";
         },
     },
 };

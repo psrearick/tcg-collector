@@ -19,13 +19,21 @@
                         mb-2
                     "
                 >
-                    <div class="h-48 px-4 text-center">
+                    <div class="h-48 px-4 text-center flex">
                         <img
                             v-if="card.image.length"
                             :src="card.image"
                             :alt="card.name"
                             class="h-full inline"
                         />
+                        <div class="ml-8 py-16">
+                            <img
+                                v-if="card.set_image.length"
+                                :src="card.set_image"
+                                :alt="card.set"
+                                class="h-16"
+                            />
+                        </div>
                     </div>
                     <div class="flex flex-col justify-between">
                         <div class="text-center">
