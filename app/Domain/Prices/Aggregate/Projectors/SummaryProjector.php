@@ -4,6 +4,7 @@ namespace App\Domain\Prices\Aggregate\Projectors;
 
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Folders\Aggregate\Events\FolderMoved;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
@@ -11,7 +12,7 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class SummaryProjector extends Projector
 {
-    public function onCollectionCardUpdated(CollectionCardUpdated $collectionCardUpdated)
+    public function onCollectionCardUpdated(CollectionCardUpdated $collectionCardUpdated) : void
     {
         $attributes         = $collectionCardUpdated->collectionCardAttributes;
         $collection         = Collection::uuid($attributes['uuid']);
@@ -58,7 +59,7 @@ class SummaryProjector extends Projector
         ]);
     }
 
-    protected function updateFolderWithCollectionCard(Folder $folder, int $quantity, float $change)
+    protected function updateFolderWithCollectionCard(Folder $folder, int $quantity, float $change) : void
     {
         $folderTotals = optional($folder->summary)->toArray();
         if (!$folderTotals) {
@@ -74,7 +75,7 @@ class SummaryProjector extends Projector
         $folderGainLossPercent = $folderGainLoss == 0 ? 0 : 1;
         $folderGainLossPercent = $folderAcquiredValue != 0 ? $folderGainLoss / $folderAcquiredValue : $folderGainLossPercent;
 
-        $f = $folder->summary()->updateOrCreate([
+        $folder->summary()->updateOrCreate([
             'uuid'              => $folder->uuid,
         ], [
             'type'              => 'folder',

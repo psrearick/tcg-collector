@@ -104,6 +104,7 @@
         <delete-collection-panel
             v-model:show="showDeleteCollectionPanel"
             :collection="editCollection"
+            :type="editCollectionType"
         />
         <move-item-panel
             v-model:show="showMovePanel"

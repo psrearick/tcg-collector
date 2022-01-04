@@ -10,8 +10,8 @@
         @close="closePanel"
         @save="save"
     >
-        <p>Do you really want to delete the following {{ collection.type }}?</p>
-        <p v-if="collection.type === 'folder'" class="my-4">
+        <p>Do you really want to delete the following {{ type }}?</p>
+        <p v-if="type === 'folder'" class="my-4">
             This action will also delete all folders and collections in this
             folder.
         </p>
@@ -37,10 +37,6 @@ export default {
     },
 
     props: {
-        show: {
-            type: Boolean,
-            default: false,
-        },
         collection: {
             type: Object,
             default: () => {},
@@ -49,17 +45,23 @@ export default {
             type: Object,
             default: () => {},
         },
+        show: {
+            type: Boolean,
+            default: false,
+        },
+        type: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     emits: ["update:show", "close"],
 
     computed: {
         saveUrl: function () {
-            return (
-                "/collections/collections/" +
-                (this.collection.type === "collection" ? "" : "folders/") +
-                this.collection.id
-            );
+            return this.type === "collection"
+                ? route("collections.destroy", this.collection.uuid)
+                : route("folders.destroy", this.collection.uuid);
         },
         saveMethod: function () {
             return "delete";
@@ -67,9 +69,7 @@ export default {
         title: function () {
             return (
                 "Delete " +
-                (this.collection.type === "collection"
-                    ? "Collection"
-                    : "Folder")
+                (this.type === "collection" ? "Collection" : "Folder")
             );
         },
     },

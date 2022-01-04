@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
 use App\Domain\Collections\Presenters\CollectionsPresenter;
 use App\Domain\Folders\Aggregate\Actions\GetChildren;
@@ -23,8 +24,11 @@ class CollectionsController extends Controller
         ]);
     }
 
-    public function destroy()
+    public function destroy(string $uuid, DeleteCollection $deleteCollection) : RedirectResponse
     {
+        $deleteCollection($uuid);
+
+        return redirect()->back();
     }
 
     public function edit(string $uuid, Request $request) : Response

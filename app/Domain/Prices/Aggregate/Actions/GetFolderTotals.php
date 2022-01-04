@@ -26,7 +26,7 @@ class GetFolderTotals
             $totals['acquired_value'] += $collectionTotals['acquired_value'];
         });
 
-        $folder->descendants->each(function ($descenant) use (&$totals, $forceUpdate) {
+        $folder->children->each(function ($descenant) use (&$totals, $forceUpdate) {
             $descentantTotals = optional($descenant->summary)->toArray();
             if ($forceUpdate || !$descentantTotals) {
                 $getFolderTotals = new GetFolderTotals;

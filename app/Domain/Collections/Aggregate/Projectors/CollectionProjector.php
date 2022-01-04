@@ -9,6 +9,9 @@ use App\Domain\Collections\Aggregate\Events\CollectionMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
+use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
+use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -30,14 +33,35 @@ class CollectionProjector extends Projector
 
     public function onCollectionDeleted(CollectionDeleted $event) : void
     {
-        Collection::uuid($event->collectionUuid)->delete();
+        $collection = Collection::uuid($event->aggregateRootUuid());
+        $folderUuid = $collection->folder_uuid;
+        $collection->delete();
+
+        if ($folderUuid) {
+            $folder = Folder::uuid($folderUuid);
+            if ($folder) {
+                (new UpdateFolderAncestryTotals)($folder);
+            }
+        }
     }
 
     public function onCollectionMoved(CollectionMoved $event) : void
     {
-        Collection::uuid($event->uuid)->update([
-            'folder_uuid' => $event->destination,
+        $collection         = Collection::uuid($event->uuid);
+        $destinationUuid    = $event->destination;
+        $originalParentUuid = $collection->folder_uuid;
+
+        $collection->update([
+            'folder_uuid' => $destinationUuid,
         ]);
+
+        if ($destinationUuid) {
+            (new UpdateFolderAncestryTotals)(Folder::uuid($destinationUuid));
+        }
+
+        if ($originalParentUuid) {
+            (new UpdateFolderAncestryTotals)(Folder::uuid($originalParentUuid));
+        }
     }
 
     public function onCollectionUpdated(CollectionUpdated $event) : void

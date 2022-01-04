@@ -26,7 +26,7 @@ class FolderRoot extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function uuid(string $uuid) : self
+    public static function uuid(string $uuid) : ?self
     {
         return self::where('uuid', '=', $uuid)->first();
     }
