@@ -36,7 +36,7 @@
             v-model:show="moveToCollectionPanelShow"
             :data="moveToCollectionPanelData"
             :collection="collection"
-            @saved="clearDataGrid"
+            @saved="itemMoved"
             @close="clearPanelData"
         />
         <remove-from-collection-panel
@@ -152,6 +152,10 @@ export default {
         },
         clearPanelData() {
             this.moveToCollectionPanelData = {};
+        },
+        itemMoved() {
+            this.clearDataGrid();
+            this.search();
         },
         updatePagination(pagination) {
             this.paginator = pagination;

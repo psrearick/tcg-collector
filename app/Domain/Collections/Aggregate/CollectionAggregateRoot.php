@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate;
 
+use App\Domain\Collections\Aggregate\Events\CollectionCardsMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
@@ -31,6 +32,13 @@ class CollectionAggregateRoot extends AggregateRoot
     public function moveCollection(string $uuid, string $destination, int $userId) : self
     {
         $this->recordThat(new CollectionMoved($uuid, $destination, $userId));
+
+        return $this;
+    }
+
+    public function moveCollectionCards(string $uuid, string $destination, array $cards) : self
+    {
+        $this->recordThat(new CollectionCardsMoved($uuid, $destination, $cards));
 
         return $this;
     }

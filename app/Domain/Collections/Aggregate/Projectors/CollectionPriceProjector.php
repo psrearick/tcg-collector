@@ -9,7 +9,7 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionPriceProjector extends Projector
 {
-    public function onPriceProviderCreated(PriceCreated $priceCreated) : void
+    public function onPriceCreated(PriceCreated $priceCreated) : void
     {
         $attributes = $priceCreated->priceAttributes;
 

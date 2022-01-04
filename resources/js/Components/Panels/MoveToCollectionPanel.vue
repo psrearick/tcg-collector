@@ -74,10 +74,7 @@ export default {
 
     computed: {
         saveUrl: function () {
-            return "/collections/cards/move-collection";
-        },
-        saveMethod: function () {
-            return "post";
+            return `/collections/${this.form.originalCollection}/cards/move`;
         },
     },
 
@@ -87,7 +84,7 @@ export default {
         },
         show: function (value) {
             if (value) {
-                this.form.originalCollection = this.collection.id;
+                this.form.originalCollection = this.collection.uuid;
                 this.form.collection = null;
                 this.form.items = this.getItems();
                 return;
@@ -120,14 +117,9 @@ export default {
         },
         save() {
             let self = this;
-            this.$inertia.visit(this.saveUrl, {
-                method: this.saveMethod,
-                data: this.form,
-                preserveState: true,
-                onSuccess: () => {
-                    this.$emit("saved");
-                    self.closePanel();
-                },
+            axios.post(this.saveUrl, this.form).then(() => {
+                this.$emit("saved");
+                self.closePanel();
             });
         },
         getCollections() {
@@ -135,12 +127,12 @@ export default {
                 this.collectionOptions = collections.data
                     .map((collection) => {
                         return {
-                            id: collection.id,
+                            id: collection.uuid,
                             label: collection.name,
                         };
                     })
                     .filter((collection) => {
-                        return collection.id !== this.collection.id;
+                        return collection.uuid !== this.collection.uuid;
                     });
             });
         },

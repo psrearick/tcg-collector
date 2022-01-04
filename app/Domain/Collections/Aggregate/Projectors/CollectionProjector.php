@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate\Projectors;
 
+use App\Domain\Collections\Aggregate\Events\CollectionCardsMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
@@ -10,7 +11,7 @@ use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Folders\Models\Folder;
-use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
+use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -18,6 +19,66 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionProjector extends Projector
 {
+    public function onCollectionCardsMoved(CollectionCardsMoved $event) : void
+    {
+        $cards           = $event->cards;
+        $originUuid      = $event->uuid;
+        $origin          = Collection::uuid($originUuid);
+        $destinationUuid = $event->destination;
+        $destination     = Collection::uuid($destinationUuid);
+
+        foreach ($cards as $card) {
+
+            // Update pivot values
+            $collectionCards = $origin->cards()
+                ->where('uuid', '=', $card['uuid'])
+                ->wherePivot('finish', '=', $card['finish'])
+                ->get();
+
+            foreach ($collectionCards as $collectionCard) {
+                $collectionCard->collections()
+                    ->updateExistingPivot($origin, ['collection_uuid' => $destinationUuid], true);
+            }
+
+            // move card summary data
+            $originCard = CollectionCardSummary::where('collection_uuid', '=', $originUuid)
+                ->where('card_uuid', '=', $card['uuid'])
+                ->where('finish', '=', $card['finish'])
+                ->first();
+
+            $destinationCard = CollectionCardSummary::where('collection_uuid', '=', $destinationUuid)
+                ->where('card_uuid', '=', $card['uuid'])
+                ->where('finish', '=', $card['finish'])
+                ->first();
+
+            if ($destinationCard) {
+                $destinationCard->update([
+                    'quantity' => $destinationCard->quantity + $card['quantity'],
+                ]);
+
+                $originCard->delete();
+            } else {
+                $originCard->update([
+                    'collection_uuid' => $destinationUuid,
+                ]);
+            }
+        }
+
+        $destinationTotals = (new GetCollectionTotals)($destination);
+        $destination->summary->update($destinationTotals);
+        $destinationFolder = $destination->folder;
+        if ($destinationFolder) {
+            (new UpdateFolderAncestryTotals)($destinationFolder);
+        }
+
+        $originTotals = (new GetCollectionTotals)($origin);
+        $origin->summary->update($originTotals);
+        $originFolder = $origin->folder;
+        if ($originFolder) {
+            (new UpdateFolderAncestryTotals)($originFolder);
+        }
+    }
+
     public function onCollectionCardUpdated(CollectionCardUpdated $event) : void
     {
         $attributes = $event->collectionCardAttributes;
