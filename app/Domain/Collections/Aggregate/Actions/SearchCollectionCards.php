@@ -40,8 +40,6 @@ class SearchCollectionCards
             'finishes',
             'frameEffects',
             'set',
-            'prices',
-            'prices.priceProvider',
         ]);
     }
 }

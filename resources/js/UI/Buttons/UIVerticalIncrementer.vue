@@ -54,7 +54,7 @@
 
 <script>
 export default {
-    name: "VerticalIncrementer",
+    name: "UiVerticalIncrementer",
 
     props: {
         modelValue: {

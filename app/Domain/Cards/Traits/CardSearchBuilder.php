@@ -3,6 +3,7 @@
 namespace App\Domain\Cards\Traits;
 
 use App\Domain\Sets\Models\Set;
+use Illuminate\Support\Facades\DB;
 
 trait CardSearchBuilder
 {
@@ -43,7 +44,11 @@ trait CardSearchBuilder
     protected function sort() : void
     {
         foreach ($this->cardSearchData->sort as $field => $direction) {
-            $this->cards->orderBy($field, $direction);
+            if ($field == 'collectorNumber') {
+                $this->cards->orderByRaw('CAST(`collectorNumber` AS UNSIGNED) ASC');
+            } else {
+                $this->cards->orderBy($field, $direction);
+            }
         }
     }
 }

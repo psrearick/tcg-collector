@@ -51,7 +51,7 @@
                         <div class="py-4">
                             <Link
                                 :href="
-                                    route('collection-set.edit', [
+                                    route('collection-set.show', [
                                         collection.uuid,
                                     ])
                                 "
@@ -112,14 +112,6 @@ export default {
             type: Object,
             default: () => {},
         },
-        // list: {
-        //     type: Object,
-        //     default: () => {},
-        // },
-        // search: {
-        //     type: Object,
-        //     default: () => {},
-        // },
     },
 
     data() {

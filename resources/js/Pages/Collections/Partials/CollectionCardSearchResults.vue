@@ -26,12 +26,12 @@
                             :alt="card.name"
                             class="h-full inline"
                         />
-                        <div class="ml-8 py-16">
+                        <div class="ml-8" style="margin-top: 5rem">
                             <img
                                 v-if="card.set_image.length"
                                 :src="card.set_image"
                                 :alt="card.set"
-                                class="h-16"
+                                class="h-8"
                             />
                         </div>
                     </div>
@@ -51,23 +51,19 @@
                             </p>
                         </div>
                         <div class="flex justify-center py-4">
-                            <vertical-incrementer
+                            <ui-vertical-incrementer
                                 v-for="(finish, finishIndex) in card.finishes"
                                 :key="finishIndex"
                                 class="md:mx-4"
                                 :label="finish"
-                                :model-value="card.quantities[finishIndex]"
+                                :model-value="card.quantities[finish]"
                                 :active="
                                     activeField === index &&
-                                    activeFieldFinish === finishIndex
+                                    activeFieldFinish === finish
                                 "
-                                @activate="activate(index, finishIndex)"
+                                @activate="activate(index, finish)"
                                 @update:model-value="
-                                    updateQuantity(
-                                        $event,
-                                        card.uuid,
-                                        finishIndex
-                                    )
+                                    updateQuantity($event, card.uuid, finish)
                                 "
                             />
                         </div>
@@ -79,7 +75,7 @@
                             class="text-center md:text-right md:pr-1"
                         >
                             <span class="text-sm text-gray-500 mr-2">{{
-                                card.finishes[priceIndex]
+                                capitalizeFirstLetter(priceIndex)
                             }}</span>
                             <span>{{ price ? format(price) : "N/A" }}</span>
                         </p>
@@ -98,7 +94,7 @@
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
-import VerticalIncrementer from "@/Components/Buttons/VerticalIncrementer";
+import UiVerticalIncrementer from "@/UI/Buttons/UIVerticalIncrementer";
 import UiCard from "@/UI/UICard";
 import UiWell from "@/UI/UIWell";
 
@@ -109,7 +105,7 @@ export default {
         UiDataGridPaginationNoLink,
         UiCard,
         UiWell,
-        VerticalIncrementer,
+        UiVerticalIncrementer,
     },
 
     props: {
@@ -169,7 +165,10 @@ export default {
         updatePage(page) {
             this.$emit("update:paginator", page);
         },
-        updateQuantity: function (value, id, finish) {
+        capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        updateQuantity(value, id, finish) {
             this.activeField = null;
             this.activeFieldFinish = null;
             let change =

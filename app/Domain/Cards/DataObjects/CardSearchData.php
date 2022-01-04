@@ -12,6 +12,8 @@ class CardSearchData
 
     public ?string $set;
 
+    public ?int $set_id;
+
     public ?array $sort;
 
     public ?string $uuid;
@@ -22,6 +24,7 @@ class CardSearchData
         $this->card         = $data['card'] ?? '';
         $this->paginator    = $data['paginator'] ?? [];
         $this->set          = $data['set'] ?? '';
+        $this->set_id       = $data['set_id'] ?? null;
         $this->sort         = $data['sort'] ?? [];
         $this->finish       = $data['finish'] ?? '';
     }
@@ -33,6 +36,7 @@ class CardSearchData
             'card'          => $this->card,
             'paginator'     => $this->paginator,
             'set'           => $this->set,
+            'set_id'        => $this->set_id,
             'sort'          => $this->sort,
             'finish'        => $this->finish,
         ];

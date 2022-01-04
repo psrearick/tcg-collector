@@ -2,6 +2,7 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
+use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -9,6 +10,8 @@ class GetLatestPrices
 {
     public function __invoke(array $uuids) : Collection
     {
+        $acceptableTypes = ['usd', 'usd_foil', 'usd_etched'];
+
         return DB::table('prices as p1')
             ->select(['p1.*', 'cards.name_normalized', 'cards.set_id'])
             ->leftJoin('prices as p2', function ($join) {
@@ -18,6 +21,7 @@ class GetLatestPrices
             })
             ->leftJoin('cards', 'cards.uuid', '=', 'p1.card_uuid')
         ->whereIn('p1.card_uuid', $uuids)
+        ->whereIn('p1.type', $acceptableTypes)
         ->whereNull('p2.id')
         ->get();
     }

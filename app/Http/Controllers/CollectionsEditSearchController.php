@@ -13,9 +13,13 @@ class CollectionsEditSearchController
 {
     public function store(string $collection, Request $request, SearchCollectionCards $searchCollectionCards, FormatCards $formatCards) : JsonResponse
     {
+        $search                         = $request->all();
+        $search['sort']['name']         = 'asc';
+        $search['sort']['releaseDate']  = 'desc';
+
         $searchData = new CollectionCardSearchData([
             'uuid'      => $collection,
-            'search'    => new CardSearchData($request->all()),
+            'search'    => new CardSearchData($search),
         ]);
 
         $builder = $searchCollectionCards($searchData)->builder ?: [];

@@ -2,13 +2,13 @@
 
 namespace App\Domain\Collections\Models;
 
-use App\Traits\BelongsToUser;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\User;
+use App\Traits\BelongsToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,9 +19,9 @@ class Collection extends Model
 {
     use HasFactory, SoftDeletes, BelongsToUser;
 
-    protected $guarded = [];
-
     const USERSCOPE = 'notShared';
+
+    protected $guarded = [];
 
     public function allowedDestinations() : HasMany
     {

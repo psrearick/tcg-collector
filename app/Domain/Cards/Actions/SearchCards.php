@@ -33,13 +33,17 @@ class SearchCards
             $this->filterOnSets();
         }
 
+        if ($this->cardSearchData->set_id) {
+            $this->cards->where('set_id', '=', $this->cardSearchData->set_id);
+        }
+
         if ($this->cardSearchData->uuid) {
             $this->cards->where('uuid', '=', $this->cardSearchData->uuid);
         }
 
-        // if ($this->cardSearchData->sort) {
-        // $this->sort();
-        // }
+        if ($this->cardSearchData->sort) {
+            $this->sort();
+        }
 
         return new CardSearchResultsData(['builder' => $this->cards]);
     }

@@ -4,13 +4,15 @@ use App\Http\Controllers\CollectionCardsController;
 use App\Http\Controllers\CollectionsController;
 use App\Http\Controllers\CollectionsEditListSearchController;
 use App\Http\Controllers\CollectionsEditSearchController;
+use App\Http\Controllers\CollectionsListController;
 use App\Http\Controllers\CollectionsMoveController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
+use App\Http\Controllers\SetCollectionsController;
+use App\Http\Controllers\SetCollectionsSearchController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\CollectionsListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +47,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('collections', CollectionsController::class);
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
-    Route::get('collection-set/{id}/edit')->name('collection-set.edit');
+    Route::resource('collection-set', SetCollectionsController::class)->only(['show', 'edit']);
+    Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
 });
