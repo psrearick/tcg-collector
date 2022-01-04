@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate;
 
+use App\Domain\Collections\Aggregate\Events\CollectionCardsDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionCardsMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
@@ -25,6 +26,13 @@ class CollectionAggregateRoot extends AggregateRoot
     public function deleteCollection() : self
     {
         $this->recordThat(new CollectionDeleted());
+
+        return $this;
+    }
+
+    public function deleteCollectionCards(string $uuid, array $cards) : self
+    {
+        $this->recordThat(new CollectionCardsDeleted($uuid, $cards));
 
         return $this;
     }

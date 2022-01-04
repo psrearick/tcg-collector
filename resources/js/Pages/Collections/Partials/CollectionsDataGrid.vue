@@ -43,7 +43,7 @@
             v-model:show="removeFromCollectionPanelShow"
             :data="removeFromCollectionPanelData"
             :collection="collection"
-            @saved="clearDataGrid"
+            @saved="itemRemoved"
         />
     </div>
 </template>
@@ -148,12 +148,19 @@ export default {
 
     methods: {
         clearDataGrid() {
-            this.emitter.emit("clear_data_grid_selections", this.gridName);
+            this.emitter.emit(
+                "clear_data_grid_selections",
+                this.table.gridName
+            );
         },
         clearPanelData() {
             this.moveToCollectionPanelData = {};
         },
         itemMoved() {
+            this.clearDataGrid();
+            this.search();
+        },
+        itemRemoved() {
             this.clearDataGrid();
             this.search();
         },

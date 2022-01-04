@@ -67,7 +67,7 @@ export default {
         },
     },
 
-    emits: ["update:show", "close"],
+    emits: ["update:show", "close", "saved"],
 
     data() {
         return {
@@ -81,7 +81,7 @@ export default {
 
     computed: {
         saveUrl: function () {
-            return "/collections/cards/remove-card";
+            return `/collections/${this.form.collection}/cards/delete`;
         },
         saveMethod: function () {
             return "delete";
@@ -94,7 +94,7 @@ export default {
         },
         show: function (value) {
             if (value) {
-                this.form.collection = this.collection.id;
+                this.form.collection = this.collection.uuid;
                 this.form.items = this.getItems();
                 return;
             }
@@ -130,15 +130,9 @@ export default {
             this.close();
         },
         save() {
-            let self = this;
-            this.$inertia.visit(this.saveUrl, {
-                method: this.saveMethod,
-                data: this.form,
-                preserveState: true,
-                onSuccess: () => {
-                    self.$emit("saved");
-                    self.closePanel();
-                },
+            axios.post(this.saveUrl, this.form).then(() => {
+                this.$emit("saved");
+                this.closePanel();
             });
         },
         getItems() {

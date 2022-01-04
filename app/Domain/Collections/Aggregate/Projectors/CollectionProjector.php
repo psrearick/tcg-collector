@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate\Projectors;
 
+use App\Domain\Collections\Aggregate\Events\CollectionCardsDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionCardsMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
@@ -12,6 +13,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
+use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -19,6 +21,27 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionProjector extends Projector
 {
+    public function onCollectionCardsDeleted(CollectionCardsDeleted $event) : void
+    {
+        $cards          = $event->cards;
+        $collectionUuid = $event->uuid;
+        $collection     = Collection::uuid($collectionUuid);
+
+        foreach ($cards as $card) {
+            $collection->cards()
+                ->where('uuid', '=', $card['uuid'])
+                ->wherePivot('finish', '=', $card['finish'])
+                ->detach();
+
+            CollectionCardSummary::where('collection_uuid', '=', $collectionUuid)
+                ->where('card_uuid', '=', $card['uuid'])
+                ->where('finish', '=', $card['finish'])
+                ->delete();
+        }
+
+        (new UpdateCollectionAncestryTotals)($collection);
+    }
+
     public function onCollectionCardsMoved(CollectionCardsMoved $event) : void
     {
         $cards           = $event->cards;
