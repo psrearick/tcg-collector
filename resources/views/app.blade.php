@@ -6,6 +6,8 @@
 
         <title inertia>{{ config('app.name', 'TCG Collector') }}</title>
 
+        <link rel="shortcut icon" sizes="64x64" href="{{ URL::asset( '/favicon.svg' ) }}">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
