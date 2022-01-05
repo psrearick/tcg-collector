@@ -44,11 +44,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect(route('collections.index'));
     })->name('dashboard');
 
-    Route::middleware('isPublic')->group(function () {
-        Route::resource('collections', CollectionsController::class)->except(['index']);
-    });
-
-    Route::resource('collections', CollectionsController::class)->only(['index']);
     Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections-move.update');
     Route::post('collections/{collection}/cards/move', [CollectionCardsMoveController::class, 'update'])->name('collection-cards-move.update');
@@ -61,5 +56,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
     Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');
-    Route::get('group', [GroupsController::class, 'show'])->name('groups.show');
+    Route::get('group/{uuid}', [GroupsController::class, 'show'])->name('groups.show');
+    Route::get('group', [GroupsController::class, 'index'])->name('groups.index');
+        // Route::resource('collections', CollectionsController::class);
+    Route::middleware('isPublic')->group(function () {
+        Route::resource('collections', CollectionsController::class)->except(['index']);
+    });
+
+    Route::resource('collections', CollectionsController::class)->only(['index']);
 });

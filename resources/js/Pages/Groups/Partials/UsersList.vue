@@ -12,10 +12,10 @@
             <div class="flex justify-between px-8">
                 <div>
                     <p class="text-sm font-medium text-gray-500 truncate">
-                        Folders
+                        Value
                     </p>
                     <p class="text-center">
-                        {{ user.folder_count }}
+                        {{ format(user.current_value) }}
                     </p>
                 </div>
                 <div>
@@ -33,6 +33,7 @@
 <script>
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
+import { formatCurrency } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "UsersList",
@@ -54,6 +55,9 @@ export default {
     methods: {
         filterCollections(userId) {
             this.$emit("updateUserId", userId);
+        },
+        format(value) {
+            return value ? formatCurrency(value) : "N/A";
         },
     },
 };

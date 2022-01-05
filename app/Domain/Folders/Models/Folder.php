@@ -10,6 +10,8 @@ use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Builder;
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 
 class Folder extends FolderRoot
 {
@@ -25,9 +27,21 @@ class Folder extends FolderRoot
         return $this->hasMany(AllowedDestination::class, 'uuid', 'uuid');
     }
 
+    public function groupCollections() : HasMany
+    {
+        return $this->collections()->inCurrentGroup();
+    }
+
+    public function groupDescendants()
+    {
+        return $this->descendants()->inCurrentGroup();
+    }
+
     public function scopeInCurrentGroup($query) : Builder
     {
-        return $query->join('folder_teams', 'folders.uuid', '=', 'folder_teams.folder_uuid')
+        return $query
+            ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
+            ->join('folder_teams', 'folders.uuid', '=', 'folder_teams.folder_uuid')
             ->where('folder_teams.team_id', '=', auth()->user()->currentTeam->id);
         
     }

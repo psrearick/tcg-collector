@@ -1,65 +1,64 @@
 <template>
-    <app-layout title="Collections">
-        <template #header>
+    <app-layout title="User">
+        <div>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight py-2">
-                {{ $page.props.auth.user.current_team.name }}
+                {{ collection.name }}
             </h2>
-        </template>
-        <div class="mb-8">
-            <div>
-                <h3 class="font-semibold text-lg text-gray-800 my-4">Users</h3>
-            </div>
-            <users-list :users="users" @updateUserId="userId = $event" />
-            <ui-button
-                v-if="userId"
-                text="Clear"
-                button-style="success-outline"
-                class="my-4"
-                @click.prevent="userId = null"
-            />
+            <p class="text-sm text-gray-500">
+                {{ collection.description }}
+            </p>
         </div>
-        <div class="mt-8">
-            <h3 class="font-semibold text-lg text-gray-800 py-2">
-                Collections
-            </h3>
-            <group-collections-data-grid
-                :collections="collections"
-                :user-id="userId"
+        <div>
+            <folder-summary v-if="loaded" :summary="totals" class="pt-6" />
+            <collections-data-grid
+                :collection="collection"
+                :table="table"
+                :search-url="searchUrl"
+                @searched="updateData"
             />
         </div>
     </app-layout>
 </template>
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import UsersList from "@/Pages/Groups/Partials/UsersList";
-import GroupCollectionsDataGrid from "@/Pages/Groups/Partials/GroupCollectionsDataGrid";
-import UiButton from "@/UI/UIButton";
+import FolderSummary from "@/Components/CardLists/FolderSummary";
+import CollectionsDataGrid from "@/Pages/Collections/Partials/CollectionsDataGrid";
+import CollectionsShowTableMixin from "@/Pages/Collections/Mixins/CollectionsShowTableMixin";
 
 export default {
     name: "Show",
 
     components: {
         AppLayout,
-        UsersList,
-        GroupCollectionsDataGrid,
-        UiButton,
+        FolderSummary,
+        CollectionsDataGrid,
     },
 
+    mixins: [CollectionsShowTableMixin],
+
     props: {
-        collections: {
+        collection: {
             type: Object,
             default: () => {},
         },
-        users: {
-            type: Array,
-            default: () => [],
+        groupUser: {
+            type: Object,
+            default: () => {},
         },
     },
 
     data() {
         return {
-            userId: null,
+            totals: {},
+            loaded: false,
         };
+    },
+
+    methods: {
+        updateData(data) {
+            this.totals = data.totals;
+            this.loaded = true;
+        },
     },
 };
 </script>

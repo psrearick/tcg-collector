@@ -75,7 +75,7 @@ class Migrate extends Command
         });
 
         $folderUuidMap = [];
-        $foldersMapped = $folders->get()->collect()
+        $foldersMapped = $folders->whereNull('deleted_at')->get()->collect()
             ->each(function ($folder) use ($userIdMap, &$folderUuidMap) {
                 $createFolder = new CreateFolder;
                 $uuid = $createFolder(
@@ -120,7 +120,7 @@ class Migrate extends Command
                 $collectionUuidMap[$collection->id] = $uuid;
             });
 
-        $card_collections->where('quantity', '>', 0)->get()
+        $card_collections->whereNull('deleted_at')->where('quantity', '>', 0)->get()
             ->each(function ($card) use ($collectionUuidMap, $conn) {
                 $sourceCard = DB::connection($conn)->table('cards')->find($card->card_id);
                 $scryfallId = $sourceCard->cardId;

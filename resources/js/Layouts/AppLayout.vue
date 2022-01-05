@@ -56,8 +56,8 @@
                                     Cards
                                 </jet-nav-link> -->
                                 <jet-nav-link
-                                    :href="route('groups.show')"
-                                    :active="route().current('groups.show')"
+                                    :href="route('groups.index')"
+                                    :active="route().current('groups.index')"
                                 >
                                     Group
                                 </jet-nav-link>
@@ -442,8 +442,8 @@
                             Cards
                         </jet-responsive-nav-link> -->
                         <jet-responsive-nav-link
-                            :href="route('groups.show')"
-                            :active="route().current('groups.show')"
+                            :href="route('groups.index')"
+                            :active="route().current('groups.index')"
                         >
                             Groups
                         </jet-responsive-nav-link>

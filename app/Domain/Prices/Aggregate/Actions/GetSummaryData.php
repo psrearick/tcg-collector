@@ -18,8 +18,11 @@ class GetSummaryData
 
         if ($collections) {
             if (!$hasSummary) {
-                $collections = DomainCollection::whereIn('uuid', $collections->pluck('uuid'))->with('summary')->get();
+                $collections = DomainCollection::whereIn('uuid', $collections->pluck('uuid'))->with('summary');
+                
+                $collections = $collections->get();
             }
+
             $collections->each(function ($collection) use (&$totals) {
                 $summary = $collection->summary;
                 if ($summary) {

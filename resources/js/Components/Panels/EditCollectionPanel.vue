@@ -115,7 +115,7 @@ export default {
         saveUrl: function () {
             return (
                 (this.type === "collection" ? "/collections/" : "/folders/") +
-                this.collection.id
+                this.collection.uuid
             );
         },
         saveMethod: function () {

@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 
 class Collection extends Model
 {
@@ -56,8 +58,16 @@ class Collection extends Model
 
     public function scopeInCurrentGroup($query) : Builder
     {
-        return $query->join('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
-            ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id);
+        $folders = [];
+        Folder::inCurrentGroup()->get()->each(function ($folder) use (&$folders) {
+            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
+        });
+
+        return $query
+            ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
+            ->leftJoin('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
+            ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id)
+            ->orWhereIn('collections.folder_uuid', $folders);
     }
 
     public static function uuid(string $uuid) : ?self

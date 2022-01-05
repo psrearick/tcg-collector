@@ -28,6 +28,10 @@ export default {
             type: Object,
             default: () => {},
         },
+        pageUser: {
+            type: Number,
+            default: null,
+        },
         userId: {
             type: Number,
             default: null,
@@ -36,6 +40,7 @@ export default {
 
     data() {
         return {
+            user: null,
             collectionList: [],
             paginator: {},
             table: {
@@ -92,18 +97,17 @@ export default {
 
     watch: {
         userId(val) {
-            const collectionsClone = _.cloneDeep(this.collections.data);
-            if (!val) {
-                this.collectionList = collectionsClone;
-            } else {
-                this.collectionList = collectionsClone.filter(
-                    (collection) => collection.user_id === val
-                );
+            if (val === this.pageUser) {
+                return;
             }
+            this.paginator = null;
+            this.user = this.userId;
+            this.search();
         },
     },
 
     mounted() {
+        this.user = this.pageUser;
         this.collectionList = _.cloneDeep(this.collections.data);
         this.paginator = _.pick(this.collections, [
             "current_page",
@@ -114,6 +118,9 @@ export default {
             "total",
             "links",
         ]);
+        this.emitter.on("group_collection_name_click", (collection) => {
+            this.$inertia.get(route("groups.show", { uuid: collection.uuid }));
+        });
     },
 
     methods: {
@@ -122,7 +129,10 @@ export default {
             this.search();
         },
         search() {
-            //
+            this.$inertia.get("/group", {
+                paginate: this.paginator,
+                userId: this.user,
+            });
         },
     },
 };
