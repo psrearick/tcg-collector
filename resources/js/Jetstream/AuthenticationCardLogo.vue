@@ -1,6 +1,10 @@
 <template>
     <Link :href="'/'">
-        <ui-icon icon="collection" size="6rem" />
+        <ui-icon
+            icon="collection"
+            size="6rem"
+            class="text-primary-500 hover:text-primary-700"
+        />
     </Link>
 </template>
 
@@ -12,7 +16,7 @@ import UiIcon from "../UI/UIIcon";
 export default defineComponent({
     components: {
         Link,
-        UiIcon
+        UiIcon,
     },
 });
 </script>

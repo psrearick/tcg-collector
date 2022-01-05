@@ -14,7 +14,13 @@
                             <div class="shrink-0 flex items-center">
                                 <Link :href="route('dashboard')">
                                     <jet-application-mark
-                                        class="block h-9 w-auto"
+                                        class="
+                                            block
+                                            h-9
+                                            w-auto
+                                            text-primary-500
+                                            hover:text-primary-700
+                                        "
                                     />
                                 </Link>
                             </div>
@@ -29,11 +35,31 @@
                                     sm:flex
                                 "
                             >
-                                <jet-nav-link
+                                <!-- <jet-nav-link
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
+                                </jet-nav-link> -->
+                                <jet-nav-link
+                                    :href="route('collections.index')"
+                                    :active="
+                                        route().current('collections.index')
+                                    "
+                                >
+                                    Collections
+                                </jet-nav-link>
+                                <!-- <jet-nav-link
+                                    :href="route('dashboard')"
+                                    :active="route().current('dashboard')"
+                                >
+                                    Cards
+                                </jet-nav-link> -->
+                                <jet-nav-link
+                                    :href="route('groups.index')"
+                                    :active="route().current('groups.index')"
+                                >
+                                    Group
                                 </jet-nav-link>
                             </div>
                         </div>
@@ -108,7 +134,7 @@
                                                         text-xs text-gray-400
                                                     "
                                                 >
-                                                    Manage Team
+                                                    Manage Group
                                                 </div>
 
                                                 <!-- Team Settings -->
@@ -121,7 +147,7 @@
                                                         )
                                                     "
                                                 >
-                                                    Team Settings
+                                                    Group Settings
                                                 </jet-dropdown-link>
 
                                                 <jet-dropdown-link
@@ -133,7 +159,7 @@
                                                         route('teams.create')
                                                     "
                                                 >
-                                                    Create New Team
+                                                    Create New Group
                                                 </jet-dropdown-link>
 
                                                 <div
@@ -151,7 +177,7 @@
                                                         text-xs text-gray-400
                                                     "
                                                 >
-                                                    Switch Teams
+                                                    Switch Groups
                                                 </div>
 
                                                 <template
@@ -397,11 +423,29 @@
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link
+                        <!-- <jet-responsive-nav-link
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </jet-responsive-nav-link> -->
+                        <jet-responsive-nav-link
+                            :href="route('collections.index')"
+                            :active="route().current('collections.index')"
+                        >
+                            Collections
+                        </jet-responsive-nav-link>
+                        <!-- <jet-responsive-nav-link
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
+                            Cards
+                        </jet-responsive-nav-link> -->
+                        <jet-responsive-nav-link
+                            :href="route('groups.index')"
+                            :active="route().current('groups.index')"
+                        >
+                            Groups
                         </jet-responsive-nav-link>
                     </div>
 
@@ -470,7 +514,7 @@
                                         text-xs text-gray-400
                                     "
                                 >
-                                    Manage Team
+                                    Manage Group
                                 </div>
 
                                 <!-- Team Settings -->
@@ -483,7 +527,7 @@
                                     "
                                     :active="route().current('teams.show')"
                                 >
-                                    Team Settings
+                                    Group Settings
                                 </jet-responsive-nav-link>
 
                                 <jet-responsive-nav-link
@@ -491,7 +535,7 @@
                                     :href="route('teams.create')"
                                     :active="route().current('teams.create')"
                                 >
-                                    Create New Team
+                                    Create New Group
                                 </jet-responsive-nav-link>
 
                                 <div class="border-t border-gray-200"></div>
@@ -505,7 +549,7 @@
                                         text-xs text-gray-400
                                     "
                                 >
-                                    Switch Teams
+                                    Switch Groups
                                 </div>
 
                                 <template
@@ -555,10 +599,47 @@
                     <slot name="header"></slot>
                 </div>
             </header>
+            <main class="py-12">
+                <div v-if="$slots.default">
+                    <div class="max-w-7xl mx-auto md:px-6 lg:px-8">
+                        <div
+                            class="
+                                bg-white
+                                md:rounded-lg
+                                shadow
+                                px-2
+                                py-6
+                                sm:px-6
+                            "
+                        >
+                            <slot></slot>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Page Content -->
-            <main>
-                <slot></slot>
+                <div
+                    v-if="mainSlots.length"
+                    :class="$slots.default ? 'pt-6' : ''"
+                >
+                    <div
+                        v-for="(card, cardIndex) in mainSlots"
+                        :key="cardIndex"
+                        class="max-w-7xl mx-auto py-6 md:px-6 lg:px-8"
+                    >
+                        <div
+                            class="
+                                bg-white
+                                md:rounded-lg
+                                shadow
+                                px-2
+                                py-6
+                                sm:px-6
+                            "
+                        >
+                            <slot :name="card"></slot>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
@@ -586,7 +667,14 @@ export default defineComponent({
         Link,
     },
     props: {
-        title: String,
+        title: {
+            type: String,
+            default: "",
+        },
+        mainSlots: {
+            type: Array,
+            default: () => [],
+        },
     },
 
     data() {

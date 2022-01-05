@@ -1,5 +1,5 @@
 <template>
-        <ui-icon icon="collection" size="2.5rem" />
+    <ui-icon icon="collection" size="2.5rem" />
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import UiIcon from "../UI/UIIcon";
 
 export default defineComponent({
     components: {
-        UiIcon
+        UiIcon,
     },
 });
 </script>
