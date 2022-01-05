@@ -1,10 +1,10 @@
 <template>
-    <card-list classes="lg:grid-cols-4 mb:8">
+    <card-list classes="lg:grid-cols-4">
         <card-list-card
             v-for="(user, userIndex) in users"
             :key="userIndex"
             :link="true"
-            :href="route('group-users.show', user.id)"
+            @click.prevent="filterCollections(user.id)"
         >
             <p class="mt-1 text-center text-xl font-semibold text-gray-900">
                 {{ user.name }}
@@ -46,6 +46,14 @@ export default {
         users: {
             type: Array,
             default: () => [],
+        },
+    },
+
+    emits: ["updateUserId"],
+
+    methods: {
+        filterCollections(userId) {
+            this.$emit("updateUserId", userId);
         },
     },
 };

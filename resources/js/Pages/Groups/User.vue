@@ -19,6 +19,10 @@ export default {
     },
 
     props: {
+        collections: {
+            type: Array,
+            default: () => [],
+        },
         groupUser: {
             type: Object,
             default: () => {},

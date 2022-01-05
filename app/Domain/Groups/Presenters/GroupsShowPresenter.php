@@ -8,15 +8,22 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use App\Domains\Users\DataObjects\UserData;
+use App\Support\Collection;
 
 class GroupsShowPresenter implements PresenterInterface
 {
+    private ?array $pagination;
+
+    public function __construct(?array $pagination = [])
+    {
+        $this->pagination = $pagination;
+    }
+
     public function present(): array
     {
         $currentGroup   = auth()->user()->currentTeam;
         $collections    = $currentGroup->collections;
         $folders        = $currentGroup->folders;
-
         
         $collectionsMerged = [];
 
@@ -55,8 +62,16 @@ class GroupsShowPresenter implements PresenterInterface
             $collection->summary_data = new SummaryData($summaryData);
         });
 
+        $collectionPaginated = (new Collection($collectionsMerged));
+        if ($this->pagination) {
+            $page = $this->pagination;
+            $collectionPaginated = $collectionPaginated->paginate($page['per_page'], $page['total'], $page['current_page'], $page['page_name']);
+        } else {
+            $collectionPaginated = $collectionPaginated->paginate(35);
+        }
+
         return [
-            'collections'   => $collectionsMerged,
+            'collections'   => $collectionPaginated,
             'users'         => $users,
         ];
     }
