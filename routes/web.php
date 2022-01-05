@@ -11,6 +11,7 @@ use App\Http\Controllers\CollectionsMoveController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\GroupUsersController;
 use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
 use Illuminate\Foundation\Application;
@@ -43,6 +44,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect(route('collections.index'));
     })->name('dashboard');
 
+    Route::middleware('isPublic')->group(function () {
+        Route::resource('collections', CollectionsController::class)->except(['index']);
+    });
+
+    Route::resource('collections', CollectionsController::class)->only(['index']);
     Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections-move.update');
     Route::post('collections/{collection}/cards/move', [CollectionCardsMoveController::class, 'update'])->name('collection-cards-move.update');
@@ -50,10 +56,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('collections/{collection}/edit/search', [CollectionsEditSearchController::class, 'store'])->name('collection-edit-search.store');
     Route::post('collections/{collection}/edit/list-search', [CollectionsEditListSearchController::class, 'store'])->name('collection-edit-list-search.store');
     Route::post('collections/{collection}/edit/add', [CollectionCardsController::class, 'store'])->name('collection-cards.store');
-    Route::resource('collections', CollectionsController::class);
-    Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
-    Route::resource('folders', FoldersController::class)->except('index');
     Route::resource('collection-set', SetCollectionsController::class)->only(['show', 'edit']);
     Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
+    Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
+    Route::resource('folders', FoldersController::class)->except('index');
+    Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');
     Route::get('group', [GroupsController::class, 'show'])->name('groups.show');
 });

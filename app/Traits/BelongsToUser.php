@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
-use App\Domain\Users\Models\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToUser

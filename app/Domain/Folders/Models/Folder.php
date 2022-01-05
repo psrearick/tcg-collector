@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kalnoy\Nestedset\NodeTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Builder;
 
 class Folder extends FolderRoot
 {
@@ -22,6 +23,13 @@ class Folder extends FolderRoot
     public function allowedDestinations() : HasMany
     {
         return $this->hasMany(AllowedDestination::class, 'uuid', 'uuid');
+    }
+
+    public function scopeInCurrentGroup($query) : Builder
+    {
+        return $query->join('folder_teams', 'folders.uuid', '=', 'folder_teams.folder_uuid')
+            ->where('folder_teams.team_id', '=', auth()->user()->currentTeam->id);
+        
     }
 
     public function summary() : BelongsTo

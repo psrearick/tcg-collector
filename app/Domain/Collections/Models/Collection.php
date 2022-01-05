@@ -8,8 +8,8 @@ use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
-use App\Models\User;
 use App\Traits\BelongsToUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -54,7 +54,13 @@ class Collection extends Model
         return $this->belongsToMany(Team::class, 'collection_teams', 'collection_uuid', 'team_id', 'uuid', 'id');
     }
 
-    public static function uuid(string $uuid) : self
+    public function scopeInCurrentGroup($query) : Builder
+    {
+        return $query->join('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
+            ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id);
+    }
+
+    public static function uuid(string $uuid) : ?self
     {
         return self::where('uuid', '=', $uuid)->first();
     }

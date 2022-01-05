@@ -10,6 +10,9 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Domain\Collections\Models\Collection;
+use App\Domain\Folders\Models\Folder;
 
 class User extends Authenticatable
 {
@@ -58,4 +61,14 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_secret',
     ];
+
+    public function collections() : HasMany
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+    public function folders() : HasMany
+    {
+        return $this->hasMany(Folder::class);
+    }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
+use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
+use App\Domains\Users\DataObjects\UserData;
+
 class CollectionData
 {
     public string $description;
@@ -20,6 +23,10 @@ class CollectionData
 
     public array $groups;
 
+    public ?UserData $user;
+
+    public ?SummaryData $summary_data;
+
     public function __construct(array $data)
     {
         $this->uuid         = $data['uuid'] ?? null;
@@ -30,6 +37,8 @@ class CollectionData
         $this->is_public    = $data['is_public'] ?? false;
         $this->user_id      = $data['user_id'] ?? null;
         $this->groups       = $data['groups'] ?? [];
+        $this->user         = $data['user'] ?? null;
+        $this->summary_data = $data['summary_data'] ?? null;
     }
 
     public function toArray() : array
@@ -43,6 +52,8 @@ class CollectionData
             'user_id'       => $this->user_id,
             'is_public'     => $this->is_public,
             'groups'        => $this->groups,
+            'user'          => $this->user,
+            'summary_data'  => $this->summary_data,
         ];
     }
 }
