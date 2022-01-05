@@ -54,6 +54,10 @@ class SearchCollection
             $this->sort();
         }
 
+        if ($this->cardSearchData->filters) {
+            $this->filter();
+        }
+
         return new CardSearchResultsData([
             'collection'       => $this->cards,
         ]);

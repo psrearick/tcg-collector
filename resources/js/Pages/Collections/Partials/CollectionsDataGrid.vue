@@ -6,6 +6,7 @@
             v-model:searching="searching"
             :mark-searching="true"
             :configure-table="true"
+            @grid-configuration-click="gridConfigurationPanelShow = true"
         />
         <div v-if="loaded && notEmpty">
             <ui-data-table

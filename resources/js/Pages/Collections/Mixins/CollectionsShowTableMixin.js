@@ -52,6 +52,7 @@ export default {
                         type: "currency",
                         label: "Current",
                         key: "price",
+                        queryComponent: "MinMax",
                         uiComponent: "ui-min-max",
                         uiComponentOptions: {
                             type: "currency",

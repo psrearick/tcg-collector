@@ -7,6 +7,20 @@ use App\Domain\Sets\Models\Set;
 
 trait CardSearchCollection
 {
+    protected function filter() : void
+    {
+        $filters = $this->cardSearchData->filters;
+        foreach ($filters as $filter) {
+            if (!isset($filter['query_component'])) {
+                continue;
+            }
+
+            $this->cards =
+                app('App\\QueryFilters\\' . $filter['query_component'])
+                ->query($this->cards, $filter);
+        }
+    }
+
     protected function filterOnCards() : void
     {
         $term = (new NormalizeString)($this->cardSearchData->card);
@@ -41,9 +55,20 @@ trait CardSearchCollection
 
     protected function sort() : void
     {
-        $sortBy = [];
-        foreach ($this->cardSearchData->sort as $field => $direction) {
-            $sortBy[] = [$field, $direction];
+        $sortOrder = collect($this->cardSearchData->sort_order)->sort();
+        $sort      = $this->cardSearchData->sort;
+        $sortBy    = [];
+
+        if ($sortOrder->count()) {
+            $sortOrder->each(function ($order, $key) use (&$sortBy, $sort) {
+                if (isset($sort[$key])) {
+                    $sortBy[] = [$key, $sort[$key]];
+                }
+            });
+        } else {
+            foreach ($sort as $field => $direction) {
+                $sortBy[] = [$field, $direction];
+            }
         }
 
         $this->cards = $this->cards->sortBy($sortBy);

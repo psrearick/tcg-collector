@@ -59,22 +59,25 @@
                 </div>
             </div>
         </div>
-        <p
-            v-if="filterableFields.length > 0"
-            class="text-gray-500 text-sm mt-8 mb-4 font-bold"
-        >
-            Filter Fields
-        </p>
-        <div>
-            <form>
-                <div v-for="(field, index) in filterableFields" :key="index">
-                    <component
-                        :is="field.uiComponent"
-                        v-model="form[field.key]"
-                        :field="field"
-                    />
-                </div>
-            </form>
+        <div v-if="filterableFields">
+            <p class="text-gray-500 text-sm mt-8 mb-4 font-bold">
+                Filter Fields
+            </p>
+            <div>
+                <form>
+                    <div
+                        v-for="(field, index) in filterableFields"
+                        :key="index"
+                    >
+                        <component
+                            :is="field.uiComponent"
+                            v-if="filters[field.key]"
+                            v-model="filters[field.key]"
+                            :field="field"
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
     </ui-panel>
 </template>
@@ -86,6 +89,9 @@ import UiInput from "@/UI/Form/UIInput";
 import UiMinMax from "@/UI/Form/UIMinMax";
 import UiPanel from "@/UI/UIPanel";
 import UiTextArea from "@/UI/Form/UITextArea";
+import sortConfigurationFields from "@/UI/Composables/sortConfigurationFields";
+import filterConfigurationFields from "@/UI/Composables/filterConfigurationFields";
+import { toRefs } from "vue";
 
 export default {
     name: "UiGridConfigurationPanel",
@@ -100,10 +106,6 @@ export default {
     },
 
     props: {
-        errors: {
-            type: Object,
-            default: () => {},
-        },
         fields: {
             type: Array,
             default: () => [],
@@ -120,57 +122,44 @@ export default {
 
     emits: ["update:show", "close"],
 
-    data() {
+    setup(props) {
+        const { fields, gridName } = toRefs(props);
+
+        const {
+            sortFields,
+            sortOrder,
+            sortableFields,
+            getCurrentSortFields,
+            getCurrentSortOrder,
+            updateSort,
+            moveUp,
+            moveDown,
+        } = sortConfigurationFields(fields, gridName);
+
+        const { filterableFields, getCurrentFilters, filters } =
+            filterConfigurationFields(fields, gridName);
+
         return {
-            form: {},
-            errorMessages: {},
-            sortFields: {},
-            sortOrder: {},
+            filterableFields,
+            getCurrentFilters,
+            filters,
+            sortFields,
+            sortOrder,
+            sortableFields,
+            getCurrentSortFields,
+            getCurrentSortOrder,
+            updateSort,
+            moveUp,
+            moveDown,
         };
     },
 
-    computed: {
-        filterableFields() {
-            return this.fields.filter((field) => {
-                return field.filterable;
-            });
-        },
-        saveMethod() {
-            return "patch";
-        },
-        sortableFields() {
-            let fields = this.fields
-                .filter((field) => {
-                    return field.sortable && field.visible;
-                })
-                .map((field) => {
-                    field.sortDirection = null;
-                    if (this.sortFields) {
-                        if (field.key in this.sortFields) {
-                            field.sortDirection = this.sortFields[field.key];
-                        }
-                    }
-
-                    field.sortOrder = this.sortOrder[field.key];
-
-                    return field;
-                });
-
-            return _.sortBy(fields, (field) => {
-                return field.sortOrder;
-            });
-        },
-    },
-
     watch: {
-        errors: function (value) {
-            this.errorMessages = value;
-        },
         show: function (value) {
             if (value) {
-                this.sortFields = this.getCurrentSortFields();
-                this.sortOrder = this.getCurrentSortOrder();
-                this.form = this.getCurrentFilters();
+                this.getCurrentSortFields();
+                this.getCurrentSortOrder();
+                this.getCurrentFilters();
                 return;
             }
             this.clearForm();
@@ -179,63 +168,9 @@ export default {
 
     methods: {
         clearForm() {
-            // this.form = {};
-        },
-        getCurrentFilters() {
-            let filters = this.$store.getters.filters;
-            if (filters) {
-                return _.cloneDeep(filters[this.gridName]);
-            }
-
-            return {};
-        },
-        getCurrentSortFields() {
-            let fields = this.$store.getters.sortFields;
-            if (fields) {
-                return _.cloneDeep(fields[this.gridName]);
-            }
-
-            return {};
-        },
-        getCurrentSortOrder() {
-            const storeOrder = _.cloneDeep(this.$store.getters.sortOrder) || {};
-            let order = {};
-            if (this.gridName in storeOrder) {
-                order = storeOrder[this.gridName];
-            }
-
-            let fields = _.map(
-                this.fields.filter((field) => {
-                    return field.sortable && field.visible;
-                }),
-                "key"
-            );
-
-            fields.sort((a, b) => {
-                let aPos = a in order ? order[a] : -1;
-                let bPos = b in order ? order[b] : -1;
-
-                if (aPos === bPos) {
-                    return 0;
-                }
-
-                if (aPos === -1) {
-                    return 1;
-                }
-
-                if (bPos === -1) {
-                    return -1;
-                }
-
-                return bPos < aPos ? 1 : -1;
-            });
-
-            let fieldsOrdered = {};
-            fields.forEach((field, index) => {
-                fieldsOrdered[field] = index;
-            });
-
-            return fieldsOrdered;
+            this.filters = {};
+            this.sortFields = {};
+            this.sortOrder = {};
         },
         close() {
             this.$emit("close");
@@ -245,72 +180,7 @@ export default {
             this.clearForm();
             this.close();
         },
-        updateSort(field) {
-            let fieldname = field["key"];
-            let direction = "asc";
-
-            if (fieldname in this.sortFields) {
-                direction = "desc";
-                if (this.sortFields[fieldname] === "desc") {
-                    delete this.sortFields[fieldname];
-                    direction = null;
-                }
-            }
-
-            if (direction) {
-                this.sortFields[fieldname] = direction;
-            }
-        },
-        moveUp(field) {
-            let currentPosition = field.sortOrder;
-            let newPosition = currentPosition - 1;
-
-            let changed = [];
-            Object.keys(this.sortOrder).forEach((key) => {
-                if (
-                    this.sortOrder[key] === currentPosition &&
-                    changed.indexOf(key) === -1
-                ) {
-                    this.sortOrder[key] = newPosition;
-                    changed.push(key);
-                    return;
-                }
-                if (
-                    this.sortOrder[key] === newPosition &&
-                    changed.indexOf(key) === -1
-                ) {
-                    this.sortOrder[key] = currentPosition;
-                    changed.push(key);
-                    return;
-                }
-            });
-        },
-        moveDown(field) {
-            let currentPosition = field.sortOrder;
-            let newPosition = currentPosition + 1;
-
-            let changed = [];
-            Object.keys(this.sortOrder).forEach((key) => {
-                if (
-                    this.sortOrder[key] === currentPosition &&
-                    changed.indexOf(key) === -1
-                ) {
-                    this.sortOrder[key] = newPosition;
-                    changed.push(key);
-                    return;
-                }
-                if (
-                    this.sortOrder[key] === newPosition &&
-                    changed.indexOf(key) === -1
-                ) {
-                    this.sortOrder[key] = currentPosition;
-                    changed.push(key);
-                    return;
-                }
-            });
-        },
         save() {
-            let self = this;
             this.$store.dispatch("setSortOrder", {
                 order: this.sortOrder,
                 gridName: this.gridName,
@@ -320,11 +190,11 @@ export default {
                 gridName: this.gridName,
             });
             this.$store.dispatch("setFilters", {
-                filters: this.form,
+                filters: this.filters,
                 gridName: this.gridName,
             });
             this.emitter.emit("sort", this.gridName);
-            self.closePanel();
+            this.closePanel();
         },
     },
 };

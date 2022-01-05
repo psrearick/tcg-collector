@@ -6,6 +6,8 @@ class CardSearchData
 {
     public ?string $card;
 
+    public array $filters;
+
     public ?string $finish;
 
     public ?array $paginator;
@@ -14,7 +16,9 @@ class CardSearchData
 
     public ?int $set_id;
 
-    public ?array $sort;
+    public array $sort;
+
+    public array $sort_order;
 
     public ?string $uuid;
 
@@ -26,7 +30,9 @@ class CardSearchData
         $this->set          = $data['set'] ?? '';
         $this->set_id       = $data['set_id'] ?? null;
         $this->sort         = $data['sort'] ?? [];
+        $this->sort_order   = $data['sort_order'] ?? [];
         $this->finish       = $data['finish'] ?? '';
+        $this->filters      = $data['filters'] ?? [];
     }
 
     public function toArray() : array
@@ -39,6 +45,8 @@ class CardSearchData
             'set_id'        => $this->set_id,
             'sort'          => $this->sort,
             'finish'        => $this->finish,
+            'sort_order'    => $this->sort_order,
+            'filters'       => $this->filters,
         ];
     }
 }

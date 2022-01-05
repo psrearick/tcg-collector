@@ -74,15 +74,17 @@ export default {
         },
         value: {
             get() {
-                return this.modelValue
-                    ? this.modelValue
+                return this.modelValue.value
+                    ? this.modelValue.value
                     : {
                           min: null,
                           max: null,
                       };
             },
             set(value) {
-                this.$emit("update:modelValue", value);
+                let mv = this.modelValue;
+                mv.value = value;
+                this.$emit("update:modelValue", mv);
             },
         },
         valueMin: {

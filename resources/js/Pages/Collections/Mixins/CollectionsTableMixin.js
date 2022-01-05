@@ -68,6 +68,9 @@ export default {
             this.removeFromCollectionPanelShow = true;
         });
     },
+    mounted() {
+        this.setSort();
+    },
     methods: {
         setSort() {
             this.$store.dispatch("setSortFields", {
