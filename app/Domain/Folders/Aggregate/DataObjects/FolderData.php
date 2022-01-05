@@ -22,6 +22,8 @@ class FolderData
 
     public ?string $uuid;
 
+    public array $groups;
+
     public function __construct(array $data)
     {
         $this->uuid         = $data['uuid'] ?? null;
@@ -33,6 +35,7 @@ class FolderData
         $this->is_public    = $data['is_public'] ?? false;
         $this->user_id      = $data['user_id'] ?? null;
         $this->ancestry     = $data['ancestry'] ?? '';
+        $this->groups       = $data['groups'] ?? [];
     }
 
     public function toArray() : array
@@ -47,6 +50,7 @@ class FolderData
             'user_id'       => $this->user_id,
             'ancestry'      => $this->ancestry,
             'path'          => $this->path,
+            'groups'        => $this->groups,
         ];
     }
 }

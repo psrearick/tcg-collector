@@ -32,6 +32,10 @@ class FolderProjector extends Projector
         if ($parent) {
             $folder->appendToNode(Folder::uuid($parent))->save();
         }
+
+        if ($attributes['groups']) {
+            $folder->groups()->sync($attributes['groups']);
+        }
     }
 
     public function onFolderDeleted(FolderDeleted $event) : void
@@ -82,6 +86,15 @@ class FolderProjector extends Projector
     public function onFolderUpdate(FolderUpdated $event) : void
     {
         $attributes = $event->folderAttributes;
-        Folder::uuid($attributes['uuid'])->update($attributes);
+        $folder = Folder::uuid($attributes['uuid']);
+        $folder->update([
+            'name'          => $attributes['name'],
+            'description'   => $attributes['description'],
+            'is_public'     => $attributes['is_public'],
+        ]);
+
+        if ($attributes['groups']) {
+            $folder->groups()->sync($attributes['groups']);
+        }
     }
 }

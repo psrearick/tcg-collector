@@ -7,6 +7,7 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
+use App\Models\Team;
 use App\Models\User;
 use App\Traits\BelongsToUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -46,6 +47,11 @@ class Collection extends Model
     public function summary() : BelongsTo
     {
         return $this->belongsTo(Summary::class, 'uuid', 'uuid');
+    }
+
+    public function groups() : BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'collection_teams', 'collection_uuid', 'team_id', 'uuid', 'id');
     }
 
     public static function uuid(string $uuid) : self

@@ -112,7 +112,17 @@ class CollectionProjector extends Projector
 
     public function onCollectionCreated(CollectionCreated $event) : void
     {
-        Collection::create($event->collectionAttributes);
+        $attributes = $event->collectionAttributes;
+        $collection = Collection::create([
+            'uuid'          => $attributes['uuid'],
+            'name'          => $attributes['name'],
+            'description'   => $attributes['description'],
+            'is_public'     => $attributes['is_public']
+        ]);
+
+        if ($attributes['groups']) {
+            $collection->groups()->sync($attributes['groups']);
+        }
     }
 
     public function onCollectionDeleted(CollectionDeleted $event) : void
@@ -151,7 +161,16 @@ class CollectionProjector extends Projector
     public function onCollectionUpdated(CollectionUpdated $event) : void
     {
         $attributes = $event->collectionAttributes;
-        Collection::uuid($attributes['uuid'])->update($attributes);
+        $collection = Collection::uuid($attributes['uuid']);
+        $collection->update([
+            'name'          => $attributes['name'],
+            'description'   => $attributes['description'],
+            'is_public'     => $attributes['is_public']
+        ]);
+
+        if ($attributes['groups']) {
+            $collection->groups()->sync($attributes['groups']);
+        }
     }
 
     private function updateCollectionCard(array $attributes) : void

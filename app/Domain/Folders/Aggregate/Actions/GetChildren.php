@@ -66,7 +66,8 @@ class GetChildren
                 'allowedDestinations',
                 'allowedDestinations.folder',
                 'allowedDestinations.folder.ancestors',
-                'allowedDestinations.destinationFolder'
+                'allowedDestinations.destinationFolder',
+                'groups'
             )
             ->whereNull('deleted_at')
             ->where('user_id', '=', $this->user_id);
@@ -86,6 +87,7 @@ class GetChildren
             $collectionSummary = (new GetSummaryData)(collect([$collection]));
             $collectionData['count']    = $collectionSummary['total_cards'];
             $collectionData['value']    = $collectionSummary['current_value'];
+            $collectionData['groups']   = $collection->groups->pluck('id');
 
             return $collectionData;
         })->sortBy('name')->values();
@@ -98,7 +100,8 @@ class GetChildren
                 'allowedDestinations',
                 'allowedDestinations.folder',
                 'allowedDestinations.folder.ancestors',
-                'allowedDestinations.destinationFolder'
+                'allowedDestinations.destinationFolder',
+                'groups'
             )
             ->where('user_id', '=', $this->user_id);
 
@@ -117,6 +120,7 @@ class GetChildren
             $folderSummary = (new GetSummaryData)(null, collect([$folder]));
             $folderData['count']    = $folderSummary['total_cards'];
             $folderData['value']    = $folderSummary['current_value'];
+            $folderData['groups']   = $folder->groups->pluck('id');
 
             return $folderData;
         })->sortBy('name')->values();

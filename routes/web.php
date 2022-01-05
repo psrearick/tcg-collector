@@ -10,6 +10,7 @@ use App\Http\Controllers\CollectionsListController;
 use App\Http\Controllers\CollectionsMoveController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
+use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
 use Illuminate\Foundation\Application;
@@ -38,7 +39,8 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard/Dashboard');
+        // return Inertia::render('Dashboard/Dashboard');
+        return redirect(route('collections.index'));
     })->name('dashboard');
 
     Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
@@ -53,4 +55,5 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('folders', FoldersController::class)->except('index');
     Route::resource('collection-set', SetCollectionsController::class)->only(['show', 'edit']);
     Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
+    Route::get('group', [GroupsController::class, 'show'])->name('groups.show');
 });

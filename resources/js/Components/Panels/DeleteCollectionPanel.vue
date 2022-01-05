@@ -50,8 +50,8 @@ export default {
             default: false,
         },
         type: {
-            type: Boolean,
-            default: false,
+            type: String,
+            default: "collection",
         },
     },
 

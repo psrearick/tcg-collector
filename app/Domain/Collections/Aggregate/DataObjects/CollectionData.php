@@ -18,6 +18,8 @@ class CollectionData
 
     public ?string $uuid;
 
+    public array $groups;
+
     public function __construct(array $data)
     {
         $this->uuid         = $data['uuid'] ?? null;
@@ -27,6 +29,7 @@ class CollectionData
         $this->description  = $data['description'] ?? '';
         $this->is_public    = $data['is_public'] ?? false;
         $this->user_id      = $data['user_id'] ?? null;
+        $this->groups       = $data['groups'] ?? [];
     }
 
     public function toArray() : array
@@ -39,6 +42,7 @@ class CollectionData
             'description'   => $this->description,
             'user_id'       => $this->user_id,
             'is_public'     => $this->is_public,
+            'groups'        => $this->groups,
         ];
     }
 }

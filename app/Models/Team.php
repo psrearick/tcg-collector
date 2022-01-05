@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Domain\Collections\Models\Collection;
+use App\Domain\Folders\Models\Folder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
@@ -41,4 +44,14 @@ class Team extends JetstreamTeam
         'name',
         'personal_team',
     ];
+
+    public function collections() : BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class, 'collection_teams', 'team_id', 'collection_uuid', 'id', 'uuid');
+    }
+
+    public function folders() : BelongsToMany
+    {
+        return $this->belongsToMany(Folder::class, 'folder_teams', 'team_id', 'folder_uuid', 'id', 'uuid');
+    }
 }

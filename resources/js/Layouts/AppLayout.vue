@@ -35,12 +35,12 @@
                                     sm:flex
                                 "
                             >
-                                <jet-nav-link
+                                <!-- <jet-nav-link
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     Dashboard
-                                </jet-nav-link>
+                                </jet-nav-link> -->
                                 <jet-nav-link
                                     :href="route('collections.index')"
                                     :active="
@@ -49,17 +49,17 @@
                                 >
                                     Collections
                                 </jet-nav-link>
-                                <jet-nav-link
+                                <!-- <jet-nav-link
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
                                     Cards
-                                </jet-nav-link>
+                                </jet-nav-link> -->
                                 <jet-nav-link
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :href="route('groups.show')"
+                                    :active="route().current('groups.show')"
                                 >
-                                    Shared
+                                    Group
                                 </jet-nav-link>
                             </div>
                         </div>
@@ -423,29 +423,29 @@
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link
+                        <!-- <jet-responsive-nav-link
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
                             Dashboard
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                        >
-                            Collections
-                        </jet-responsive-nav-link>
+                        </jet-responsive-nav-link> -->
                         <jet-responsive-nav-link
                             :href="route('collections.index')"
                             :active="route().current('collections.index')"
                         >
-                            Cards
+                            Collections
                         </jet-responsive-nav-link>
-                        <jet-responsive-nav-link
+                        <!-- <jet-responsive-nav-link
                             :href="route('dashboard')"
                             :active="route().current('dashboard')"
                         >
-                            Shared
+                            Cards
+                        </jet-responsive-nav-link> -->
+                        <jet-responsive-nav-link
+                            :href="route('groups.show')"
+                            :active="route().current('groups.show')"
+                        >
+                            Groups
                         </jet-responsive-nav-link>
                     </div>
 
