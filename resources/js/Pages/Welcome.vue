@@ -10,22 +10,27 @@
         </div>
 
         <div v-if="canLogin" class="px-6 py-4 block">
-            <Link
-                v-if="$page.props.auth.user"
-                href="/dashboard"
-                class="text-sm text-gray-700 underline"
-            >
-                Dashboard
-            </Link>
-
-            <div v-else class="flex justify-around max-w-sm mx-auto">
-                <Link :href="route('login')">
-                    <ui-button button-style="primary-dark" text="Log in" />
+            <div class="flex justify-around max-w-sm mx-auto">
+                <Link
+                    v-if="$page.props.auth.user"
+                    href="/dashboard"
+                    class="text-sm text-gray-700 underline"
+                >
+                    <ui-button button-style="primary-dark" text="Dashboard" />
                 </Link>
 
-                <Link v-if="canRegister" :href="route('register')">
-                    <ui-button button-style="primary-dark" text="Register" />
-                </Link>
+                <div v-else class="flex gap-12">
+                    <Link :href="route('login')">
+                        <ui-button button-style="primary-dark" text="Log in" />
+                    </Link>
+
+                    <Link v-if="canRegister" :href="route('register')">
+                        <ui-button
+                            button-style="primary-dark"
+                            text="Register"
+                        />
+                    </Link>
+                </div>
             </div>
         </div>
     </div>
