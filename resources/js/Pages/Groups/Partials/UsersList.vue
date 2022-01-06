@@ -7,25 +7,35 @@
             :link="true"
             @click.prevent="filterCollections(user.id)"
         >
-            <p class="mt-1 text-center text-xl font-semibold text-gray-900">
-                {{ user.name }}
-            </p>
-            <div class="flex justify-between px-8">
-                <div>
-                    <p class="text-sm font-medium text-gray-500 truncate">
-                        Value
-                    </p>
-                    <p class="text-center">
-                        {{ format(user.current_value) }}
-                    </p>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-500 truncate">
-                        Collections
-                    </p>
-                    <p class="text-center">
-                        {{ user.collection_count }}
-                    </p>
+            <div>
+                <p
+                    class="
+                        mt-1
+                        text-center text-xl
+                        font-semibold
+                        text-gray-900
+                        p-4
+                    "
+                >
+                    {{ user.name }}
+                </p>
+                <div class="flex justify-between p-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 truncate">
+                            Value
+                        </p>
+                        <p class="text-center">
+                            {{ format(user.current_value) }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 truncate">
+                            Cards
+                        </p>
+                        <p class="text-center">
+                            {{ user.total_cards || 0 }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </card-list-card>
