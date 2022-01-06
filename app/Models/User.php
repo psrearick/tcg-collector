@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
@@ -22,7 +22,6 @@ class User extends Authenticatable
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use MustVerifyEmail;
 
     /**
      * The accessors to append to the model's array form.
