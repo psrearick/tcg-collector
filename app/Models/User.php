@@ -22,6 +22,7 @@ class User extends Authenticatable
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use MustVerifyEmail;
 
     /**
      * The accessors to append to the model's array form.
