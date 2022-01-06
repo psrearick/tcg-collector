@@ -2,15 +2,9 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
-use App\Domain\Cards\Actions\BuildCard;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
-use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
-use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 use App\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class FormatCollectionCards
 {

@@ -86,7 +86,7 @@ class FolderProjector extends Projector
     public function onFolderUpdate(FolderUpdated $event) : void
     {
         $attributes = $event->folderAttributes;
-        $folder = Folder::uuid($attributes['uuid']);
+        $folder     = Folder::uuid($attributes['uuid']);
         $folder->update([
             'name'          => $attributes['name'],
             'description'   => $attributes['description'],

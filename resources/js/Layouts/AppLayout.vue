@@ -42,6 +42,16 @@
                                     Dashboard
                                 </jet-nav-link> -->
                                 <jet-nav-link
+                                    :href="route('collections-search.show')"
+                                    :active="
+                                        route().current(
+                                            'collections-search.show'
+                                        )
+                                    "
+                                >
+                                    Search
+                                </jet-nav-link>
+                                <jet-nav-link
                                     :href="route('collections.index')"
                                     :active="
                                         route().current('collections.index')
@@ -429,6 +439,12 @@
                         >
                             Dashboard
                         </jet-responsive-nav-link> -->
+                        <jet-responsive-nav-link
+                            :href="route('collections-search.show')"
+                            :active="route().current('collections-search.show')"
+                        >
+                            Search
+                        </jet-responsive-nav-link>
                         <jet-responsive-nav-link
                             :href="route('collections.index')"
                             :active="route().current('collections.index')"

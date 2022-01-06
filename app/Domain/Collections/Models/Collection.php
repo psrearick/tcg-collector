@@ -2,6 +2,8 @@
 
 namespace App\Domain\Collections\Models;
 
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Folders\Models\AllowedDestination;
@@ -15,8 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\App\Scopes\UserScope;
-use App\App\Scopes\UserScopeNotShared;
 
 class Collection extends Model
 {
@@ -46,11 +46,6 @@ class Collection extends Model
         return $this->belongsTo(Folder::class, 'folder_uuid', 'uuid');
     }
 
-    public function summary() : BelongsTo
-    {
-        return $this->belongsTo(Summary::class, 'uuid', 'uuid');
-    }
-
     public function groups() : BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'collection_teams', 'collection_uuid', 'team_id', 'uuid', 'id');
@@ -68,6 +63,11 @@ class Collection extends Model
             ->leftJoin('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
             ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id)
             ->orWhereIn('collections.folder_uuid', $folders);
+    }
+
+    public function summary() : BelongsTo
+    {
+        return $this->belongsTo(Summary::class, 'uuid', 'uuid');
     }
 
     public static function uuid(string $uuid) : ?self

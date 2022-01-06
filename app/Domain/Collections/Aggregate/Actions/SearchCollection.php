@@ -59,7 +59,7 @@ class SearchCollection
         }
 
         return new CardSearchResultsData([
-            'collection'       => $this->cards,
+            'collection'       => $this->cards->values(),
         ]);
     }
 }

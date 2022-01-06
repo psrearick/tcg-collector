@@ -8,6 +8,8 @@ class FolderData
 
     public string $description;
 
+    public array $groups;
+
     public ?int $id;
 
     public bool $is_public;
@@ -21,8 +23,6 @@ class FolderData
     public ?int $user_id;
 
     public ?string $uuid;
-
-    public array $groups;
 
     public function __construct(array $data)
     {

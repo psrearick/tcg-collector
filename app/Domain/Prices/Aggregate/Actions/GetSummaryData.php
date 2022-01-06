@@ -19,7 +19,7 @@ class GetSummaryData
         if ($collections) {
             if (!$hasSummary) {
                 $collections = DomainCollection::whereIn('uuid', $collections->pluck('uuid'))->with('summary');
-                
+
                 $collections = $collections->get();
             }
 

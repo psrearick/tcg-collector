@@ -13,7 +13,7 @@ class CollectionsEditListSearchController
 {
     public function store(string $uuid, Request $request, GetSummaryData $getSummaryData) : JsonResponse
     {
-        $collections = (new CollectionsPresenter($request->all(), $uuid, $request->get('isGroup')))->present();
+        $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
 
         return response()->json(
         [

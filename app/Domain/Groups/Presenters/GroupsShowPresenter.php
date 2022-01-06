@@ -23,15 +23,15 @@ class GroupsShowPresenter implements PresenterInterface
     public function __construct(?array $pagination = [], ?int $userId = null)
     {
         $this->pagination = $pagination;
-        $this->userId = $userId;
+        $this->userId     = $userId;
     }
 
-    public function present(): array
+    public function present() : array
     {
         $currentGroup   = auth()->user()->currentTeam;
         $uuids          = $this->getGroupCollectionUuids();
-        $collections    = Collection::withoutGlobalScopes([UserScopeNotShared::class])
-            ->whereIn('uuid', $uuids)->with(['summary', 'user'])->get();
+        // dd($uuids);
+        $collections    = Collection::whereIn('uuid', $uuids)->with(['summary', 'user'])->get();
         $summaryData    = (new GetSummaryData)($collections, null, true);
 
         $collections->transform(function ($collection) {
@@ -41,6 +41,7 @@ class GroupsShowPresenter implements PresenterInterface
 
             $collectionData['user']         = $userData;
             $collectionData['summary_data'] = $summaryData;
+
             return new CollectionData($collectionData);
         });
 
@@ -50,6 +51,7 @@ class GroupsShowPresenter implements PresenterInterface
                 return $collection->user_id == $user->id;
             })->transform(function ($collection) {
                 $collection->summary = $collection->summary_data;
+
                 return $collection;
             });
 
@@ -64,7 +66,7 @@ class GroupsShowPresenter implements PresenterInterface
         });
 
         if ($this->userId) {
-            $userId = $this->userId;
+            $userId      = $this->userId;
             $collections = $collections->filter(function ($collection) use ($userId) {
                 return $collection->user_id == $userId;
             });
@@ -74,7 +76,7 @@ class GroupsShowPresenter implements PresenterInterface
 
         $collectionPaginated = (new SupportCollection($collections));
         if ($this->pagination) {
-            $page = $this->pagination;
+            $page                = $this->pagination;
             $collectionPaginated = $collectionPaginated->paginate($page['per_page'], $page['total'], $page['current_page']);
         } else {
             $collectionPaginated = $collectionPaginated->paginate(25);
@@ -90,7 +92,7 @@ class GroupsShowPresenter implements PresenterInterface
     private function getGroupCollectionUuids()
     {
         $folders = [];
-        Folder::inCurrentGroup()->get()->each(function ($folder) use (&$folders) {
+        Folder::get()->each(function ($folder) use (&$folders) {
             $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
         });
 
@@ -100,11 +102,8 @@ class GroupsShowPresenter implements PresenterInterface
             ->pluck('uuid')
             ->toArray();
 
-        $groupCollections = Collection::inCurrentGroup()
-            ->get()
-            ->pluck('uuid')
-            ->toArray();
-        
+        $groupCollections = Collection::get()->pluck('uuid')->toArray();
+
         return array_unique(array_merge($collections, $groupCollections), SORT_REGULAR);
     }
 }

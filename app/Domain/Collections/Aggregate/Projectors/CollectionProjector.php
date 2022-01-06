@@ -117,7 +117,7 @@ class CollectionProjector extends Projector
             'uuid'          => $attributes['uuid'],
             'name'          => $attributes['name'],
             'description'   => $attributes['description'],
-            'is_public'     => $attributes['is_public']
+            'is_public'     => $attributes['is_public'],
         ]);
 
         if ($attributes['groups']) {
@@ -165,7 +165,7 @@ class CollectionProjector extends Projector
         $collection->update([
             'name'          => $attributes['name'],
             'description'   => $attributes['description'],
-            'is_public'     => $attributes['is_public']
+            'is_public'     => $attributes['is_public'],
         ]);
 
         if ($attributes['groups']) {

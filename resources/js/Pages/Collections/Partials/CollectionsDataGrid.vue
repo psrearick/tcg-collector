@@ -197,7 +197,7 @@ export default {
                     sort: this.sortFields,
                     sortOrder: this.sortOrder,
                     filters: this.filters,
-                    isGroup: this.isGroup,
+                    inGroup: this.isGroup,
                 })
                 .then((res) => {
                     this.searching = false;

@@ -14,6 +14,8 @@ class FolderRoot extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const USERSCOPE = 'notShared';
+
     protected $guarded = [];
 
     public function collections() : HasMany

@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="filterableFields">
+        <div v-if="filterableFields.length">
             <p class="text-gray-500 text-sm mt-8 mb-4 font-bold">
                 Filter Fields
             </p>

@@ -8,6 +8,7 @@ use App\Http\Controllers\CollectionsEditListSearchController;
 use App\Http\Controllers\CollectionsEditSearchController;
 use App\Http\Controllers\CollectionsListController;
 use App\Http\Controllers\CollectionsMoveController;
+use App\Http\Controllers\CollectionsSearchController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
 use App\Http\Controllers\GroupsController;
@@ -52,13 +53,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('collections/{collection}/edit/list-search', [CollectionsEditListSearchController::class, 'store'])->name('collection-edit-list-search.store');
     Route::post('collections/{collection}/edit/add', [CollectionCardsController::class, 'store'])->name('collection-cards.store');
     Route::resource('collection-set', SetCollectionsController::class)->only(['show', 'edit']);
+    Route::get('collections-search', [CollectionsSearchController::class, 'show'])->name('collections-search.show');
+    Route::post('collections-search', [CollectionsSearchController::class, 'store'])->name('collections-search.store');
     Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
     Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');
     Route::get('group/{uuid}', [GroupsController::class, 'show'])->name('groups.show');
     Route::get('group', [GroupsController::class, 'index'])->name('groups.index');
-        // Route::resource('collections', CollectionsController::class);
+    // Route::resource('collections', CollectionsController::class);
     Route::middleware('isPublic')->group(function () {
         Route::resource('collections', CollectionsController::class)->except(['index']);
     });

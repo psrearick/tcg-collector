@@ -4,15 +4,15 @@ namespace App\Domains\Users\DataObjects;
 
 class UserData
 {
-    public string $name;
+    public ?int $collection_count;
 
     public string $email;
 
+    public ?int $folder_count;
+
     public ?int $id;
 
-    public ?int $collection_count;
-
-    public ?int $folder_count;
+    public string $name;
 
     public function __construct(array $data)
     {
