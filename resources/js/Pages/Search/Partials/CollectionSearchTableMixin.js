@@ -23,7 +23,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Set",
-                        key: "set",
+                        key: "set_name",
                         event: "set_name_click",
                         sortable: true,
                         filterable: false,
@@ -33,7 +33,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Features",
-                        key: "feature",
+                        key: "features",
                         sortable: false,
                         filterable: false,
                     },
@@ -42,7 +42,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Non-Foil",
-                        key: "quantity_nonfoil",
+                        key: "quantities.nonfoil",
                         sortable: true,
                         filterable: false,
                     },
@@ -51,7 +51,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Foil",
-                        key: "quantity_foil",
+                        key: "quantities.foil",
                         sortable: true,
                         filterable: false,
                     },
@@ -60,15 +60,15 @@ export default {
                         type: "text",
                         link: false,
                         label: "Etched",
-                        key: "quantity_etched",
+                        key: "quantities.etched",
                         sortable: true,
                         filterable: false,
                     },
                     {
                         visible: true,
                         type: "text",
-                        label: "Total Collected",
-                        key: "quantity",
+                        label: "Total",
+                        key: "quantities.total",
                         sortable: true,
                         filterable: false,
                     },
@@ -96,8 +96,8 @@ export default {
                         type: "text",
                         link: true,
                         hover: true,
-                        label: "Card",
-                        key: "name",
+                        label: "Collection",
+                        key: "collection.name",
                         events: {
                             click: "collection_name_click",
                         },
@@ -109,7 +109,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Non-Foil",
-                        key: "nonfoil",
+                        key: "quantities.nonfoil",
                         sortable: true,
                         filterable: false,
                     },
@@ -118,7 +118,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Foil",
-                        key: "foil",
+                        key: "quantities.foil",
                         sortable: true,
                         filterable: false,
                     },
@@ -127,7 +127,7 @@ export default {
                         type: "text",
                         link: false,
                         label: "Etched",
-                        key: "etched",
+                        key: "quantities.etched",
                         sortable: true,
                         filterable: false,
                     },
@@ -135,7 +135,7 @@ export default {
                         visible: true,
                         type: "text",
                         label: "Total Collected",
-                        key: "total",
+                        key: "quantities.total",
                         sortable: true,
                         filterable: false,
                     },
@@ -145,13 +145,13 @@ export default {
     },
     created() {
         this.emitter.on("view_collection_card_details", (card) => {
-            this.collections = Object.values(card.collections);
+            this.collections = Object.values(card.collected);
         });
         this.emitter.on("card_name_click", (card) => {
             this.showCard(card.id);
         });
         this.emitter.on("collection_name_click", (collection) => {
-            this.showCollection(collection.id);
+            this.showCollection(collection.collection.uuid);
         });
     },
 };

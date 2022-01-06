@@ -3,6 +3,7 @@
 namespace App\App\Scopes;
 
 use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
+use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,13 @@ class UserScopeNotShared implements Scope
             return $builder->where('collections.user_id', Auth::id());
         }
 
-        return $builder->inCurrentGroup();
+        $folders = [];
+        Folder::inCurrentGroup()->get()->each(function ($folder) use (&$folders) {
+            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
+        });
+
+        $collections = Collection::inCurrentGroup()->get()->pluck('uuid')->toArray();
+
+        return $builder->whereIn('uuid', $collections)->orWhereIn('folder_uuid', $folders);
     }
 }

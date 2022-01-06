@@ -71,7 +71,13 @@ export default {
             if (typeof this.field.key === "undefined") {
                 return this.field.value;
             }
-            let value = this.data[this.field.key];
+            let key = this.field.key;
+            let keys = key.split(".");
+            let value = this.data;
+            keys.forEach((key) => {
+                value = value[key];
+            });
+
             if (this.field.type === "currency") {
                 return this.formatCurrencyOrEmpty(value);
             }

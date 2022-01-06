@@ -18,6 +18,10 @@
             :fields="cardsTable.fields"
             :grid-name="cardsTable.gridName"
         />
+        <ui-data-grid-pagination-no-link
+            :pagination="cardsPaginator"
+            @update:pagination="updateCardsPagination"
+        />
         <div v-if="collections.length" class="mt-8">
             <span class="text-base text-gray-500">Collections</span>
             <ui-data-table
@@ -39,13 +43,30 @@ import CardSetSearch from "@/Pages/Cards/Partials/CardSetSearch";
 import UiGridConfigurationPanel from "@/UI/DataGrid/UIGridConfigurationPanel";
 import UiDataTable from "@/UI/DataGrid/UIDataTable";
 import CollectionSearchTableMixin from "@/Pages/Search/Partials/CollectionSearchTableMixin";
+import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
 
 export default {
     name: "CollectionSearch",
 
-    components: { CardSetSearch, UiGridConfigurationPanel, UiDataTable },
+    components: {
+        CardSetSearch,
+        UiGridConfigurationPanel,
+        UiDataTable,
+        UiDataGridPaginationNoLink,
+    },
 
     mixins: [CollectionSearchTableMixin],
+
+    props: {
+        searchUrl: {
+            type: String,
+            default: "/collections-search",
+        },
+        collectionUrl: {
+            type: String,
+            default: "/collections",
+        },
+    },
 
     data() {
         return {
@@ -55,6 +76,7 @@ export default {
             searching: false,
             cards: [],
             collections: [],
+            cardsPaginator: [],
         };
     },
     computed: {
@@ -104,15 +126,31 @@ export default {
         showCard() {
             // this.$inertia.get(`/cards/cards/${id}`);
         },
-        showCollection() {
-            // this.$inertia.get(`/collections/collections/${id}`);
+        showCollection(uuid) {
+            this.$inertia.get(`${this.collectionUrl}/${uuid}`);
+        },
+        updateCardsPagination(pagination) {
+            this.cardsPaginator = pagination;
+            this.search();
+        },
+        processData(res) {
+            this.cards = res.data;
+            this.cardsPaginator = _.pick(res.data, [
+                "current_page",
+                "from",
+                "last_page",
+                "per_page",
+                "to",
+                "total",
+                "links",
+            ]);
         },
         search: _.debounce(function () {
             this.cards = [];
             this.collections = [];
             this.searching = true;
             axios
-                .post("/collections-search", {
+                .post(this.searchUrl, {
                     card: this.cardSearchTerm,
                     set: this.setSearchTerm,
                     paginator: this.paginator,
@@ -121,7 +159,7 @@ export default {
                     filters: this.filters,
                 })
                 .then((res) => {
-                    this.cards = res.data;
+                    this.processData(res.data);
                     this.searching = false;
                 });
         }, 1200),

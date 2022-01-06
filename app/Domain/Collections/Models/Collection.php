@@ -53,16 +53,10 @@ class Collection extends Model
 
     public function scopeInCurrentGroup($query) : Builder
     {
-        $folders = [];
-        Folder::inCurrentGroup()->get()->each(function ($folder) use (&$folders) {
-            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
-        });
-
         return $query
             ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
             ->leftJoin('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
-            ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id)
-            ->orWhereIn('collections.folder_uuid', $folders);
+            ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id);
     }
 
     public function summary() : BelongsTo

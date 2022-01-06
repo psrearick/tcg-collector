@@ -3,81 +3,72 @@
 namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Domain\Cards\Models\Card;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Collections\Models\Collection;
-use App\Domains\Users\DataObjects\UserData;
+use App\Domain\Collections\Models\CollectionCardSummary;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection as SupportCollection;
 
 class GetAllCollectionCards
 {
-    private SupportCollection $collections;
-
-    public function __invoke(?SupportCollection $collection = null) : EloquentCollection
+    public function __invoke(?SupportCollection $collection = null) : SupportCollection
     {
         if ($collection !== null) {
-            $this->collections = $this->getCollections();
-
-            return $collection
-                ->transform(function ($collectionCard) {
-                    return $this->formatCollectionCards($collectionCard);
-                });
+            return $collection->mapToGroups(function ($summary) {
+                return [$summary->card_uuid => $summary];
+            })->map(function ($summaryGroup) {
+                return $this->formatCollectionCards($summaryGroup);
+            })->values();
         }
 
         $collections        = Collection::with(['user'])->get();
         $collectionUuids    = $collections->pluck('uuid')->toArray();
 
-        return Card::whereHas('collections', function (Builder $builder) use ($collectionUuids) {
-                $builder->whereIn('uuid', $collectionUuids);
-            })
-            ->with('collections')
+        return CollectionCardSummary::whereHas('collection', function (Builder $builder) use ($collectionUuids) {
+            $builder->whereIn('collection_uuid', $collectionUuids);
+        })
+            ->with(['collection', 'card'])
             ->get();
     }
 
-    private function formatCollectionCards(Card $collectionCard) : Card
+    private function formatCollectionCards(SupportCollection $collectionCards) : Card
     {
-        $collections        = $this->collections;
-
-        $totals = $collectionCard->collections->reduce(function ($carry, $collection) use ($collections) {
-            $pivot = $collection->pivot;
+        return $collectionCards->reduce(function ($carry, $collectionCard) {
             if (!$carry) {
-                $carry = [];
+                $carry = $collectionCard->card;
             }
 
-            $carry['quantities'] = $carry['quantities'] ?? [];
-            $carry['quantities'][$pivot->finish] = $carry['quantities'][$pivot->finish] ?? 0;
-            $carry['quantities'][$pivot->finish] += $pivot->quantity;
+            $quantity   = $collectionCard->quantity;
+            $finish     = $collectionCard->finish;
+            $current    = $collectionCard->current_price;
+            $collection = $collectionCard->collection_uuid;
 
-            $carry['collected'] = $carry['collected'] ?? [];
-            if (!isset($carry['collected'][$collection->uuid])) {
-                $carry['collected'][$collection->uuid]['collection'] = $collections->where('uuid', '=', $collection->uuid)->first();
-                $carry['collected'][$collection->uuid]['quantities'] = [
+            $quantities = $carry->quantities ?: [
+                'nonfoil'   => 0,
+                'foil'      => 0,
+                'etched'    => 0,
+                'total'     => 0,
+            ];
+
+            $quantities[$finish] += $quantity;
+            $quantities['total'] += $quantity;
+
+            $carry->quantities = $quantities;
+
+            $collected = $carry->collected ?: [];
+            if (!isset($collected[$collection])) {
+                $collected[$collection]['collection'] = $collectionCard->collection;
+                $collected[$collection]['quantities'] = [
                     'nonfoil'   => 0,
                     'foil'      => 0,
                     'etched'    => 0,
+                    'total'     => 0,
                 ];
             }
-            $carry['collected'][$collection->uuid]['quantities'][$pivot->finish] += $pivot->quantity;
+            $collected[$collection]['quantities'][$finish] += $quantity;
+            $collected[$collection]['quantities']['total'] += $quantity;
+            $carry->collected = $collected;
 
             return $carry;
-        });
-
-        $collectionCard->quantities   = $totals['quantities'];
-        $collectionCard->collected    = $totals['collected'];
-
-        return $collectionCard;
-    }
-
-    private function getCollections() : SupportCollection
-    {
-        $collections        = Collection::with(['user'])->get();
-
-        return $collections->map(function ($collection) {
-            $collectionData = new CollectionData($collection->getAttributes());
-            $collectionData->user = new UserData($collection->user->getAttributes());
-
-            return $collectionData;
         });
     }
 }

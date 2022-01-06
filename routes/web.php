@@ -12,6 +12,7 @@ use App\Http\Controllers\CollectionsSearchController;
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\FoldersMoveController;
 use App\Http\Controllers\GroupsController;
+use App\Http\Controllers\GroupsSearchController;
 use App\Http\Controllers\GroupUsersController;
 use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
@@ -58,6 +59,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
     Route::resource('folders', FoldersController::class)->except('index');
+    Route::get('group/search', [GroupsSearchController::class, 'show'])->name('group-search.show');
+    Route::post('group/search', [GroupsSearchController::class, 'store'])->name('group-search.store');
     Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');
     Route::get('group/{uuid}', [GroupsController::class, 'show'])->name('groups.show');
     Route::get('group', [GroupsController::class, 'index'])->name('groups.index');

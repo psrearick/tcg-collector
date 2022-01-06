@@ -22,10 +22,18 @@ class SearchAllCollectionCards
         $data           = (new GetAllCollectionCards)();
         $cardSearchData = new CardSearchData($request);
         $builder        = $data->toQuery();
+        $builder
+            ->leftJoin('cards', 'cards.uuid', '=', 'collection_card_summaries.card_uuid');
         $searchResults  = (new SearchCards)($cardSearchData, $builder)->builder ?: null;
 
         if ($searchResults) {
-            $searchResults->with(['collections', 'set', 'finishes', 'frameEffects']);
+            $searchResults->with([
+                'collection',
+                'card',
+                'card.set',
+                'card.finishes',
+                'card.frameEffects',
+            ]);
         }
 
         $cards      = $searchResults ? $searchResults->get() : collect([]);
