@@ -87,6 +87,10 @@ export default {
             type: String,
             default: "",
         },
+        isGroup: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     emits: ["searched"],
@@ -193,6 +197,7 @@ export default {
                     sort: this.sortFields,
                     sortOrder: this.sortOrder,
                     filters: this.filters,
+                    isGroup: this.isGroup,
                 })
                 .then((res) => {
                     this.searching = false;

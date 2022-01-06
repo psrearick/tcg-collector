@@ -20,11 +20,11 @@ class CollectionsPresenter implements PresenterInterface
 
     private string $uuid;
 
-    public function __construct(array $request, string $uuid)
+    public function __construct(array $request, string $uuid, bool $inGroup = false)
     {
         $this->request         = $request;
         $this->uuid            = $uuid;
-        $this->collection      = (new GetCollection)($uuid);
+        $this->collection      = (new GetCollection)($uuid, $inGroup);
     }
 
     public function present() : array

@@ -14,6 +14,7 @@
                 :collection="collection"
                 :table="table"
                 :search-url="searchUrl"
+                :is-group="true"
                 @searched="updateData"
             />
         </div>

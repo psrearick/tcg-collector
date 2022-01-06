@@ -9,7 +9,11 @@
             <div>
                 <h3 class="font-semibold text-lg text-gray-800 my-4">Users</h3>
             </div>
-            <users-list :users="users" @updateUserId="user = $event" />
+            <users-list
+                :users="users"
+                :filter-user="user"
+                @updateUserId="user = $event"
+            />
             <ui-button
                 v-if="userId"
                 text="Clear"

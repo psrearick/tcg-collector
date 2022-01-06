@@ -3,6 +3,7 @@
         <card-list-card
             v-for="(user, userIndex) in users"
             :key="userIndex"
+            :class="filterUser === user.id ? 'bg-gray-200' : ''"
             :link="true"
             @click.prevent="filterCollections(user.id)"
         >
@@ -47,6 +48,10 @@ export default {
         users: {
             type: Array,
             default: () => [],
+        },
+        filterUser: {
+            type: Number,
+            default: null,
         },
     },
 

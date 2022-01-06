@@ -19,7 +19,7 @@ class GroupsController
 
     public function show(string $uuid, Request $request, GetSummaryData $getSummaryData) : Response
     {
-        $collections     = (new CollectionsPresenter($request->all(), $uuid))->present();
+        $collections     = (new CollectionsPresenter($request->all(), $uuid, true))->present();
         $summary         = $getSummaryData(collect([$collections['collection']]), null, false);
 
         return Inertia::render('Groups/Show', [
