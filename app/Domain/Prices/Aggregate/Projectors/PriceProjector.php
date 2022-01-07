@@ -6,7 +6,6 @@ use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
 use App\Domain\Prices\Aggregate\Events\PriceCreated;
 use App\Domain\Prices\Models\Price;
-use Illuminate\Support\Facades\Log;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class PriceProjector extends Projector

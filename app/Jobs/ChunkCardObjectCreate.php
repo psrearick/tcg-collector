@@ -2,14 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Domain\Cards\Models\Card;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use App\Domain\Cards\Models\Card;
-use App\Jobs\CreateCardSearchDataObjects;
 
 class ChunkCardObjectCreate implements ShouldQueue
 {

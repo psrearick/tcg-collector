@@ -3,8 +3,6 @@
 namespace App\Domain\Groups\Presenters;
 
 use App\App\Contracts\PresenterInterface;
-use App\App\Scopes\UserScope;
-use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;

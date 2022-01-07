@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Jobs\ChunkCardObjectCreate;
 use App\Domain\Cards\Models\Card;
+use App\Jobs\ChunkCardObjectCreate;
 use App\Jobs\CreateCardSearchDataObjects;
 
 class CreateCardObjects

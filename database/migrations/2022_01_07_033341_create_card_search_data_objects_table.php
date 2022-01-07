@@ -1,11 +1,6 @@
 <?php
 
 use App\Actions\CreateCardObjects;
-use App\Domain\Cards\Actions\BuildCard;
-use App\Domain\Cards\Models\Card;
-use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
-use App\Domain\Prices\Aggregate\Actions\MatchType;
-use App\Models\CardSearchDataObject;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

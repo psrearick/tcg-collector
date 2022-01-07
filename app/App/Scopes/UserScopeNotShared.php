@@ -2,7 +2,6 @@
 
 namespace App\App\Scopes;
 
-use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use Illuminate\Database\Eloquent\Builder;

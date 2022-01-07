@@ -8,12 +8,9 @@ use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
 use App\Models\CardSearchDataObject;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class CreateCardSearchDataObjects implements ShouldQueue
@@ -42,7 +39,6 @@ class CreateCardSearchDataObjects implements ShouldQueue
         $cardUuid = $this->cardUuid;
 
         Redis::funnel('cardobject')->limit(1)->then(function () use ($cardUuid) {
-
             $card = Card::where('uuid', '=', $cardUuid)->with(['frameEffects', 'set', 'finishes', 'prices'])->first();
 
             if ($card->isOnlineOnly) {

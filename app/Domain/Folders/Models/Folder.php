@@ -4,7 +4,6 @@ namespace App\Domain\Folders\Models;
 
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
-use App\Domain\Folders\Models\FolderRoot;
 use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Builder;

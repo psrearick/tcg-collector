@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

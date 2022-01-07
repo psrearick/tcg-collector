@@ -3,7 +3,6 @@
 namespace App\Domain\Cards\Traits;
 
 use App\Actions\NormalizeString;
-use App\Domain\Sets\Models\Set;
 
 trait CardSearchCollection
 {

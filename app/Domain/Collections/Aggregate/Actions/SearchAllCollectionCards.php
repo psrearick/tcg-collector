@@ -7,8 +7,6 @@ use App\Domain\Cards\Actions\SearchCards;
 use App\Domain\Cards\DataObjects\CardData;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Collections\Aggregate\Actions\FormatCollectionCards;
-use App\Domain\Collections\Aggregate\Actions\GetAllCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;

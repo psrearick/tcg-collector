@@ -4,7 +4,6 @@ namespace App\Domain\Prices\Aggregate\Projectors;
 
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Models\Collection;
-use App\Domain\Folders\Aggregate\Events\FolderMoved;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;

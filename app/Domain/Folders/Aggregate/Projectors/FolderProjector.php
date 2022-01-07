@@ -10,7 +10,6 @@ use App\Domain\Folders\Aggregate\Events\FolderMoved;
 use App\Domain\Folders\Aggregate\Events\FolderUpdated;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
-use Illuminate\Support\Facades\Log;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class FolderProjector extends Projector

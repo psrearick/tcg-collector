@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Collections\Presenters\CollectionsPresenter;
-use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class CollectionsEditListSearchController
 {

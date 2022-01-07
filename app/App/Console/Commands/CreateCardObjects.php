@@ -2,8 +2,8 @@
 
 namespace App\App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Actions\CreateCardObjects as Create;
+use Illuminate\Console\Command;
 
 class CreateCardObjects extends Command
 {

@@ -2,7 +2,6 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
-use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 

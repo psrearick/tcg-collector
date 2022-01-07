@@ -5,8 +5,6 @@ namespace App\Jobs;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Prices\Aggregate\Actions\createPrice;
 use App\Domain\Prices\Aggregate\Actions\createPriceProvider;
-use App\Domain\Prices\Aggregate\DataObjects\PriceData;
-use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
