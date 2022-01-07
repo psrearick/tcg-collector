@@ -68,5 +68,4 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::middleware('isPublic')->group(function () {
         Route::resource('collections', CollectionsController::class)->except(['index', 'create', 'store']);
     });
-
 });

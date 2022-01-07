@@ -2,7 +2,6 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
-use App\Domain\Cards\Actions\BuildCard;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Support\Collection as SupportCollection;
@@ -12,7 +11,7 @@ class GetCollectionCards
 {
     public function __invoke(string $uuid)
     {
-        $collectionCards = CollectionCardSummary::with('card', 'card.frameEffects', 'card.set')
+        $collectionCards = CollectionCardSummary::with('cardSearchDataObject')
             ->where('collection_uuid', '=', $uuid)
             ->where('quantity', '>', 0)
             ->get();
@@ -23,29 +22,24 @@ class GetCollectionCards
     public function format(Collection $collectionCards) : SupportCollection
     {
         $collectionCards->transform(function ($card) {
-            $cardBuilder = new BuildCard($card->card);
-            $build = $cardBuilder
-                    ->add('feature')
-                    ->add('image_url')
-                    ->add('set_image_url')
-                    ->get();
+            $cardData = $card->cardSearchDataObject;
 
             return (new CollectionCardData([
-                'id'                => $build->id,
-                'uuid'              => $build->uuid,
-                'name'              => $build->name,
-                'name_normalized'   => $build->name_normalized,
-                'set'               => optional($build->set)->code,
-                'set_name'          => optional($build->set)->name,
-                'features'          => $build->feature,
+                'id'                => $cardData->id,
+                'uuid'              => $cardData->card_uuid,
+                'name'              => $cardData->card_name,
+                'name_normalized'   => $cardData->card_name_normalized,
+                'set'               => $cardData->set_code,
+                'set_name'          => $cardData->set_name,
+                'features'          => $cardData->features,
                 'price'             => $card->current_price,
                 'acquired_date'     => $card->date_added ?? null,
                 'acquired_price'    => $card->price_when_added ?? null,
                 'quantity'          => $card->quantity ?? null,
                 'finish'            => $card->finish ?? null,
-                'image'             => $build->image_url,
-                'set_image'         => $build->set_image_url,
-                'collector_number'  => $build->collectorNumber,
+                'image'             => $cardData->image,
+                'set_image'         => $cardData->set_image,
+                'collector_number'  => $cardData->collector_number,
             ]))->toArray();
         });
 

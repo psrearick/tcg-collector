@@ -11,7 +11,7 @@ use Inertia\Response;
 
 class CollectionsEditListSearchController
 {
-    public function store(string $uuid, Request $request, GetSummaryData $getSummaryData) : JsonResponse
+    public function store(string $uuid, Request $request) : JsonResponse
     {
         $collections = (new CollectionsPresenter($request->all(), $uuid))->present();
 

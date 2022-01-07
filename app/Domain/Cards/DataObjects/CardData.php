@@ -18,6 +18,8 @@ class CardData
 
     public string $name;
 
+    public string $name_normalized;
+
     public array $prices;
 
     public array $quantities;
@@ -35,8 +37,9 @@ class CardData
         $this->id               = $data['id'] ?? null;
         $this->uuid             = $data['uuid'] ?? '';
         $this->name             = $data['name'] ?? '';
+        $this->name_normalized  = $data['name_normalized'] ?? '';
         $this->set_code         = strtoupper($data['set_code'] ?? '');
-        $this->set_name         = $data['set_name'] ?? [];
+        $this->set_name         = $data['set_name'] ?? '';
         $this->collected        = $data['collected'] ?? [];
         $this->features         = $data['features'] ?? '';
         $this->prices           = $data['prices'] ?? [];
@@ -53,6 +56,7 @@ class CardData
             'id'               => $this->id,
             'uuid'             => $this->uuid,
             'name'             => $this->name,
+            'name_normalized'  => $this->name_normalized,
             'set_name'         => $this->set_name,
             'set_code'         => $this->set_code,
             'collected'        => $this->collected,
