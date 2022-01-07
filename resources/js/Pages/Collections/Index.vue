@@ -1,7 +1,7 @@
 <template>
     <app-layout title="Collections">
         <template #header>
-            <div class="flex justify-between">
+            <div class="grid md:grid-cols-2">
                 <h2
                     class="
                         font-semibold
@@ -12,7 +12,7 @@
                 >
                     Collections
                 </h2>
-                <div class="flex space-x-4">
+                <div class="flex space-x-4 md:justify-end">
                     <Link :href="route('folders.create')">
                         <ui-button
                             text="Create Folder"

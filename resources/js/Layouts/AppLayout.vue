@@ -54,17 +54,12 @@
                                 <jet-nav-link
                                     :href="route('collections.index')"
                                     :active="
-                                        route().current('collections.index')
+                                        route().current('collections.*') ||
+                                        route().current('folders.*')
                                     "
                                 >
                                     Collections
                                 </jet-nav-link>
-                                <!-- <jet-nav-link
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Cards
-                                </jet-nav-link> -->
                                 <jet-nav-link
                                     :href="route('groups.index')"
                                     :active="route().current('groups.index')"

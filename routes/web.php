@@ -64,10 +64,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');
     Route::get('group/{uuid}', [GroupsController::class, 'show'])->name('groups.show');
     Route::get('group', [GroupsController::class, 'index'])->name('groups.index');
-    // Route::resource('collections', CollectionsController::class);
+    Route::resource('collections', CollectionsController::class)->only(['index', 'create', 'store']);
     Route::middleware('isPublic')->group(function () {
-        Route::resource('collections', CollectionsController::class)->except(['index']);
+        Route::resource('collections', CollectionsController::class)->except(['index', 'create', 'store']);
     });
 
-    Route::resource('collections', CollectionsController::class)->only(['index']);
 });

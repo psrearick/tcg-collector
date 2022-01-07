@@ -118,6 +118,8 @@ class CollectionProjector extends Projector
             'name'          => $attributes['name'],
             'description'   => $attributes['description'],
             'is_public'     => $attributes['is_public'],
+            'user_id'       => $attributes['user_id'],
+            'folder_uuid'   => $attributes['folder_uuid'],
         ]);
 
         if ($attributes['groups']) {
