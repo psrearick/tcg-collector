@@ -13,22 +13,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class CreateCardSearchDataObjects implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
-    private Card $card;
+    private string $cardUuid;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Card $card)
+    public function __construct(string $cardUuid)
     {
-        $this->card = $card;
+        $this->cardUuid = $cardUuid;
     }
 
     /**
@@ -38,9 +39,12 @@ class CreateCardSearchDataObjects implements ShouldQueue
      */
     public function handle()
     {
-        $card = $this->card;
+        $cardUuid = $this->cardUuid;
 
-        Redis::funnel('cardobject')->limit(1)->then(function () use ($card) {
+        Redis::funnel('cardobject')->limit(1)->then(function () use ($cardUuid) {
+
+            $card = Card::where('uuid', '=', $cardUuid)->with(['frameEffects', 'set', 'finishes', 'prices'])->first();
+
             if ($card->isOnlineOnly) {
                 return;
             }
@@ -52,7 +56,6 @@ class CreateCardSearchDataObjects implements ShouldQueue
             if (!$card->set->id) {
                 return;
             }
-
             $prices = (new GetLatestPrices)([$card->uuid]);
             $prices->transform(function ($price) {
                 $price->type = (new MatchType)($price->type);

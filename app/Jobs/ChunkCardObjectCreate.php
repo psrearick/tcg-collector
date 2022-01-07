@@ -13,7 +13,7 @@ use App\Jobs\CreateCardSearchDataObjects;
 
 class ChunkCardObjectCreate implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable;
 
     /**
      * Create a new job instance.
@@ -32,10 +32,10 @@ class ChunkCardObjectCreate implements ShouldQueue
      */
     public function handle()
     {
-        Card::with(['frameEffects', 'set', 'finishes', 'prices'])->chunkById(150,
+        Card::chunkById(150,
             function ($cards) {
                 $cards->each(function ($card) {
-                    CreateCardSearchDataObjects::dispatch($card);
+                    CreateCardSearchDataObjects::dispatch($card->uuid);
                 });
             }
         );
