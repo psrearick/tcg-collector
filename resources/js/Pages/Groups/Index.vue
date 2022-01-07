@@ -1,27 +1,20 @@
 <template>
     <app-layout title="Collections">
         <template #header>
-            <div class="flex flex-wrap justify-between">
-                <div>
-                    <h2
-                        class="
-                            font-semibold
-                            text-xl text-gray-800
-                            leading-tight
-                            py-2
-                        "
-                    >
-                        {{ $page.props.auth.user.current_team.name }}
-                    </h2>
-                </div>
-                <div class="flex space-x-4">
-                    <Link :href="route('group-search.store')">
-                        <ui-button
-                            text="Search Group"
-                            button-style="primary-dark"
-                        />
-                    </Link>
-                </div>
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ $page.props.auth.user.current_team.name }}
+                </h2>
+            </div>
+        </template>
+        <template #headerRight>
+            <div class="">
+                <Link :href="route('group-search.store')">
+                    <ui-button
+                        text="Search Group"
+                        button-style="primary-dark"
+                    />
+                </Link>
             </div>
         </template>
         <div class="mb-8">
