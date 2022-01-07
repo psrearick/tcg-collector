@@ -38,13 +38,25 @@ class CreateCardSearchDataObjects implements ShouldQueue
     public function handle()
     {
         $card = $this->card;
+        if ($card->isOnlineOnly) {
+            return;
+        }
+
+        if (!$card->set) {
+            return;
+        }
+
+        if (!$card->set->id) {
+            return;
+        }
+
         $prices = (new GetLatestPrices)([$card->uuid]);
         $prices->transform(function ($price) {
             $price->type = (new MatchType)($price->type);
 
             return $price;
         });
-        $prices      = serialize($prices->pluck('price', 'type')->toArray());
+        $prices      = json_encode($prices->pluck('price', 'type')->toArray());
         $cardBuilder = new BuildCard($card);
         $build       = $cardBuilder
                     ->add('feature')
@@ -52,7 +64,7 @@ class CreateCardSearchDataObjects implements ShouldQueue
                     ->add('set_image_url')
                     ->get();
 
-        $finishes = serialize($build->finishes->pluck('name')->toArray());
+        $finishes = json_encode($build->finishes->pluck('name')->toArray());
 
         CardSearchDataObject::create([
             'card_uuid'              => $build->uuid,

@@ -9,7 +9,7 @@ class CreateCardObjects
 {
     public function __invoke()
     {
-        Card::with(['frameEffects', 'set', 'finishes', 'prices'])->chunk(200,
+        Card::with(['frameEffects', 'set', 'finishes', 'prices'])->chunk(30,
             function ($cards) {
                 $cards->each(function ($card) {
                     CreateCardSearchDataObjects::dispatch($card);
