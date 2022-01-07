@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Redis;
 
 class CreateCardSearchDataObjects implements ShouldQueue
 {
@@ -38,47 +39,52 @@ class CreateCardSearchDataObjects implements ShouldQueue
     public function handle()
     {
         $card = $this->card;
-        if ($card->isOnlineOnly) {
-            return;
-        }
 
-        if (!$card->set) {
-            return;
-        }
+        Redis::funnel('cardobject')->limit(1)->then(function () use ($card) {
+            if ($card->isOnlineOnly) {
+                return;
+            }
 
-        if (!$card->set->id) {
-            return;
-        }
+            if (!$card->set) {
+                return;
+            }
 
-        $prices = (new GetLatestPrices)([$card->uuid]);
-        $prices->transform(function ($price) {
-            $price->type = (new MatchType)($price->type);
+            if (!$card->set->id) {
+                return;
+            }
 
-            return $price;
+            $prices = (new GetLatestPrices)([$card->uuid]);
+            $prices->transform(function ($price) {
+                $price->type = (new MatchType)($price->type);
+
+                return $price;
+            });
+            $prices      = json_encode($prices->pluck('price', 'type')->toArray());
+            $cardBuilder = new BuildCard($card);
+            $build       = $cardBuilder
+                        ->add('feature')
+                        ->add('image_url')
+                        ->add('set_image_url')
+                        ->get();
+
+            $finishes = json_encode($build->finishes->pluck('name')->toArray());
+
+            CardSearchDataObject::create([
+                'card_uuid'              => $build->uuid,
+                'card_name'              => $build->name,
+                'card_name_normalized'   => $build->name_normalized,
+                'set_id'                 => optional($build->set)->id,
+                'set_name'               => optional($build->set)->name,
+                'set_code'               => optional($build->set)->code,
+                'features'               => $build->feature,
+                'prices'                 => $prices,
+                'collector_number'       => $build->collectorNumber,
+                'finishes'               => $finishes,
+                'image'                  => $build->image_url,
+                'set_image'              => $build->set_image_url,
+            ]);
+        }, function () {
+            return $this->release(10);
         });
-        $prices      = json_encode($prices->pluck('price', 'type')->toArray());
-        $cardBuilder = new BuildCard($card);
-        $build       = $cardBuilder
-                    ->add('feature')
-                    ->add('image_url')
-                    ->add('set_image_url')
-                    ->get();
-
-        $finishes = json_encode($build->finishes->pluck('name')->toArray());
-
-        CardSearchDataObject::create([
-            'card_uuid'              => $build->uuid,
-            'card_name'              => $build->name,
-            'card_name_normalized'   => $build->name_normalized,
-            'set_id'                 => optional($build->set)->id,
-            'set_name'               => optional($build->set)->name,
-            'set_code'               => optional($build->set)->code,
-            'features'               => $build->feature,
-            'prices'                 => $prices,
-            'collector_number'       => $build->collectorNumber,
-            'finishes'               => $finishes,
-            'image'                  => $build->image_url,
-            'set_image'              => $build->set_image_url,
-        ]);
     }
 }
