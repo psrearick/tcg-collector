@@ -27,7 +27,7 @@
                     bg-white
                     hover:bg-gray-50
                 "
-                @click="toPage(pagination_local.current_page--)"
+                @click="toPage('Previous')"
             >
                 Previous
             </p>
@@ -47,7 +47,7 @@
                     bg-white
                     hover:bg-gray-50
                 "
-                @click="toPage(pagination_local.current_page++)"
+                @click="toPage('Next')"
             >
                 Next
             </p>
