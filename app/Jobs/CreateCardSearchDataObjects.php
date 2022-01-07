@@ -69,20 +69,22 @@ class CreateCardSearchDataObjects implements ShouldQueue
 
             $finishes = json_encode($build->finishes->pluck('name')->toArray());
 
-            CardSearchDataObject::create([
-                'card_uuid'              => $build->uuid,
-                'card_name'              => $build->name,
-                'card_name_normalized'   => $build->name_normalized,
-                'set_id'                 => optional($build->set)->id,
-                'set_name'               => optional($build->set)->name,
-                'set_code'               => optional($build->set)->code,
-                'features'               => $build->feature,
-                'prices'                 => $prices,
-                'collector_number'       => $build->collectorNumber,
-                'finishes'               => $finishes,
-                'image'                  => $build->image_url,
-                'set_image'              => $build->set_image_url,
-            ]);
+            if (optional($build->set)->id) {
+                CardSearchDataObject::create([
+                    'card_uuid'              => $build->uuid,
+                    'card_name'              => $build->name,
+                    'card_name_normalized'   => $build->name_normalized,
+                    'set_id'                 => optional($build->set)->id,
+                    'set_name'               => optional($build->set)->name,
+                    'set_code'               => optional($build->set)->code,
+                    'features'               => $build->feature,
+                    'prices'                 => $prices,
+                    'collector_number'       => $build->collectorNumber,
+                    'finishes'               => $finishes,
+                    'image'                  => $build->image_url,
+                    'set_image'              => $build->set_image_url,
+                ]);
+            }
         }, function () {
             return $this->release(10);
         });

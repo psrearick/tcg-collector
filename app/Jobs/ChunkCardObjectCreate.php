@@ -32,7 +32,7 @@ class ChunkCardObjectCreate implements ShouldQueue
      */
     public function handle()
     {
-        Card::with(['frameEffects', 'set', 'finishes', 'prices'])->chunk(30,
+        Card::with(['frameEffects', 'set', 'finishes', 'prices'])->chunk(15,
             function ($cards) {
                 $cards->each(function ($card) {
                     CreateCardSearchDataObjects::dispatch($card);
