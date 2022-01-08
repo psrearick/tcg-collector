@@ -67,6 +67,12 @@ export default defineComponent({
         UpdatePasswordForm,
         UpdateProfileInformationForm,
     },
-    props: ["sessions"],
+
+    props: {
+        sessions: {
+            type: Array,
+            default: () => [],
+        },
+    },
 });
 </script>

@@ -87,9 +87,12 @@
             </div>
 
             <div class="flex items-center mt-5">
-                <jet-button @click="confirmLogout">
+                <ui-button
+                    button-style="primary-outline"
+                    @click="confirmLogout"
+                >
                     Log Out Other Browser Sessions
-                </jet-button>
+                </ui-button>
 
                 <jet-action-message :on="form.recentlySuccessful" class="ml-3">
                     Done.
@@ -123,18 +126,18 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <ui-button button-style="white" @click="closeModal">
                         Cancel
-                    </jet-secondary-button>
+                    </ui-button>
 
-                    <jet-button
+                    <ui-button
                         class="ml-2"
-                        :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
+                        button-style="primary-outline"
                         @click="logoutOtherBrowserSessions"
                     >
                         Log Out Other Browser Sessions
-                    </jet-button>
+                    </ui-button>
                 </template>
             </jet-dialog-modal>
         </template>
@@ -145,23 +148,27 @@
 import { defineComponent } from "vue";
 import JetActionMessage from "@/Jetstream/ActionMessage.vue";
 import JetActionSection from "@/Jetstream/ActionSection.vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetDialogModal from "@/Jetstream/DialogModal.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetInputError from "@/Jetstream/InputError.vue";
-import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
         JetActionMessage,
         JetActionSection,
-        JetButton,
         JetDialogModal,
         JetInput,
         JetInputError,
-        JetSecondaryButton,
+        UiButton,
     },
-    props: ["sessions"],
+
+    props: {
+        sessions: {
+            type: Array,
+            default: () => [],
+        },
+    },
 
     data() {
         return {

@@ -27,18 +27,18 @@
             </template>
 
             <template #footer>
-                <jet-secondary-button @click="closeModal">
+                <ui-button button-style="white" @click="closeModal">
                     Cancel
-                </jet-secondary-button>
+                </ui-button>
 
-                <jet-button
+                <ui-button
                     class="ml-2"
-                    :class="{ 'opacity-25': form.processing }"
+                    button-style="primary-outline"
                     :disabled="form.processing"
                     @click="confirmPassword"
                 >
                     {{ button }}
-                </jet-button>
+                </ui-button>
             </template>
         </jet-dialog-modal>
     </span>
@@ -51,6 +51,7 @@ import JetDialogModal from "./DialogModal.vue";
 import JetInput from "./Input.vue";
 import JetInputError from "./InputError.vue";
 import JetSecondaryButton from "./SecondaryButton.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
@@ -59,17 +60,21 @@ export default defineComponent({
         JetInput,
         JetInputError,
         JetSecondaryButton,
+        UiButton,
     },
 
     props: {
         title: {
+            type: String,
             default: "Confirm Password",
         },
         content: {
+            type: String,
             default:
                 "For your security, please confirm your password to continue.",
         },
         button: {
+            type: String,
             default: "Confirm",
         },
     },

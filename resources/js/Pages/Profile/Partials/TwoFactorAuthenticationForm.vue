@@ -77,44 +77,43 @@
                     <jet-confirms-password
                         @confirmed="enableTwoFactorAuthentication"
                     >
-                        <jet-button
+                        <ui-button
+                            button-style="primary-outline"
                             type="button"
-                            :class="{ 'opacity-25': enabling }"
                             :disabled="enabling"
                         >
                             Enable
-                        </jet-button>
+                        </ui-button>
                     </jet-confirms-password>
                 </div>
 
                 <div v-else>
                     <jet-confirms-password @confirmed="regenerateRecoveryCodes">
-                        <jet-secondary-button
+                        <ui-button
                             v-if="recoveryCodes.length > 0"
+                            button-style="white"
                             class="mr-3"
                         >
                             Regenerate Recovery Codes
-                        </jet-secondary-button>
+                        </ui-button>
                     </jet-confirms-password>
 
                     <jet-confirms-password @confirmed="showRecoveryCodes">
-                        <jet-secondary-button
+                        <ui-button
                             v-if="recoveryCodes.length === 0"
+                            button-style="white"
                             class="mr-3"
                         >
                             Show Recovery Codes
-                        </jet-secondary-button>
+                        </ui-button>
                     </jet-confirms-password>
 
                     <jet-confirms-password
                         @confirmed="disableTwoFactorAuthentication"
                     >
-                        <jet-danger-button
-                            :class="{ 'opacity-25': disabling }"
-                            :disabled="disabling"
-                        >
+                        <ui-button button-style="danger" :disabled="disabling">
                             Disable
-                        </jet-danger-button>
+                        </ui-button>
                     </jet-confirms-password>
                 </div>
             </div>
@@ -125,18 +124,14 @@
 <script>
 import { defineComponent } from "vue";
 import JetActionSection from "@/Jetstream/ActionSection.vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetConfirmsPassword from "@/Jetstream/ConfirmsPassword.vue";
-import JetDangerButton from "@/Jetstream/DangerButton.vue";
-import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
         JetActionSection,
-        JetButton,
         JetConfirmsPassword,
-        JetDangerButton,
-        JetSecondaryButton,
+        UiButton,
     },
 
     data() {
@@ -189,7 +184,7 @@ export default defineComponent({
         },
 
         regenerateRecoveryCodes() {
-            axios.post("/user/two-factor-recovery-codes").then((response) => {
+            axios.post("/user/two-factor-recovery-codes").then(() => {
                 this.showRecoveryCodes();
             });
         },

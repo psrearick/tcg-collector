@@ -96,33 +96,34 @@
 
         <template #actions>
             <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                Saved.
+                <p class="text-primary-500">Saved.</p>
             </jet-action-message>
 
-            <jet-button
-                :class="{ 'opacity-25': form.processing }"
+            <ui-button
+                button-style="primary-outline"
                 :disabled="form.processing"
+                type="submit"
             >
                 Save
-            </jet-button>
+            </ui-button>
         </template>
     </jet-form-section>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetInputError from "@/Jetstream/InputError.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import JetActionMessage from "@/Jetstream/ActionMessage.vue";
 import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
         JetActionMessage,
-        JetButton,
+        UiButton,
         JetFormSection,
         JetInput,
         JetInputError,

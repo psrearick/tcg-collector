@@ -70,7 +70,7 @@ export default {
                 return "border border-warning-200 text-gray-700 bg-warning-300 hover:bg-warning-500";
             }
             if (this.buttonStyle === "danger") {
-                return "border border-danger-200 text-black bg-danger-500 hover:bg-danger-700";
+                return "border border-danger-200 text-white bg-danger-500 hover:bg-danger-700";
             }
             if (this.buttonStyle === "white") {
                 return "border border-gray-300 text-gray-700 bg-white hover:bg-gray-300 hover:text-gray-800";
