@@ -2,6 +2,8 @@
 
 namespace App\Domain\Prices\Aggregate\Projectors;
 
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
 use App\Domain\Prices\Aggregate\Events\PriceCreated;
@@ -22,7 +24,10 @@ class PriceProjector extends Projector
             'type'          => $attributes['type'],
         ]);
 
-        $collections = $price->card->collections->unique('uuid');
+        $collections = $price->card->collections()
+            ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
+            ->get()
+            ->unique('uuid');
 
         $collections->each(function ($collection) {
             $getCollectionTotals = new GetCollectionTotals;
