@@ -2,6 +2,8 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Folders\Models\Folder;
 
 class GetFolderTotals
@@ -14,7 +16,10 @@ class GetFolderTotals
             'acquired_value'    => 0,
         ];
 
-        $folder->collections->each(function ($collection) use (&$totals, $forceUpdate) {
+        $folder->collections()
+        ->withoutGlobalScopes([UserScopeNotShared::class, UserScope::class])
+        ->get()
+        ->each(function ($collection) use (&$totals, $forceUpdate) {
             $collectionTotals = optional($collection->summary)->toArray();
             if ($forceUpdate || !$collectionTotals) {
                 $getCollectionTotals = new GetCollectionTotals;

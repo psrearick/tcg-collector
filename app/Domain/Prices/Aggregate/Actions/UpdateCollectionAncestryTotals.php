@@ -9,7 +9,10 @@ class UpdateCollectionAncestryTotals
     public function __invoke(Collection $collection)
     {
         $collectionTotals = (new GetCollectionTotals)($collection);
-        $collection->summary->update($collectionTotals);
+        $collectionTotals['type'] = 'collection';
+        $collection->summary()->updateOrCreate(
+            ['uuid' => $collection->uuid],
+            $collectionTotals);
         $collectionFolder = $collection->folder;
         if ($collectionFolder) {
             (new UpdateFolderAncestryTotals)($collectionFolder);
