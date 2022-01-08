@@ -24,9 +24,22 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $user = optional($request->user())->load('settings');
+        // $userArray = null;
+        if ($user) {
+            $settings  = $user->settings;
+            $userArray = $user->toArray();
+            if (optional($settings)->first()) {
+                $userArray['settings'] = [
+                    'card_condition'    => $settings->first()->tracks_condition,
+                    'price_added'       => $settings->first()->tracks_price,
+                ];
+            }
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $request->user(),
+                'user' => $userArray ?? null,
             ],
         ]);
     }

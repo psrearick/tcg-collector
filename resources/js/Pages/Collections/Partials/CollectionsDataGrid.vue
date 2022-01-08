@@ -14,6 +14,7 @@
                 class="mt-4"
                 :data="data.data"
                 :fields="table.fields"
+                :field-rows="table.fieldRows"
                 :grid-name="table.gridName"
                 :select-menu="table.selectMenu"
             />

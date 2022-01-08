@@ -16,6 +16,7 @@ use App\Http\Controllers\GroupsSearchController;
 use App\Http\Controllers\GroupUsersController;
 use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -68,4 +69,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::middleware('isPublic')->group(function () {
         Route::resource('collections', CollectionsController::class)->except(['index', 'create', 'store']);
     });
+    Route::get('user/settings', [SettingsController::class, 'show'])->name('settings.show');
+    Route::patch('user/update-settings', [SettingsController::class, 'update'])->name('settings.update-settings');
 });

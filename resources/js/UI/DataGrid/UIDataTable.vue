@@ -151,6 +151,7 @@
                                 <td
                                     v-for="(field, fieldKey) in bottomRowFields"
                                     :key="fieldKey"
+                                    :colspan="field.span ? field.span : 1"
                                     :class="
                                         classes.tableCell
                                             ? classes.tableCell
@@ -247,7 +248,7 @@ export default {
             return "Edit Selected (" + this.selectedOptions.length + ")";
         },
         topRowFields() {
-            if (this.fields) {
+            if (this.fields && this.fields.length) {
                 return this.filterFields(this.fields);
             }
             if (this.fieldRows) {

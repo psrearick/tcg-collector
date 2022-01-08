@@ -8,7 +8,7 @@ class UpdateCollectionAncestryTotals
 {
     public function __invoke(Collection $collection)
     {
-        $collectionTotals = (new GetCollectionTotals)($collection);
+        $collectionTotals         = (new GetCollectionTotals)($collection);
         $collectionTotals['type'] = 'collection';
         $collection->summary()->updateOrCreate(
             ['uuid' => $collection->uuid],

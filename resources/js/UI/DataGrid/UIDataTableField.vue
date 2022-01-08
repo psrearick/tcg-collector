@@ -43,11 +43,13 @@
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import UiHorizontalIncrementer from "@/UI/Buttons/UIHorizontalIncrementer";
+import BottomRowCollectionsEdit from "@/Pages/Collections/Partials/BottomRowCollectionsEdit";
 import UiButton from "@/UI/UIButton";
 
 const componentMap = {
     HorizontalIncrementer: UiHorizontalIncrementer,
     UiButton: UiButton,
+    BottomRowCollectionsEdit: BottomRowCollectionsEdit,
 };
 
 export default {
