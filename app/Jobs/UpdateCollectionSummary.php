@@ -3,13 +3,12 @@
 namespace App\Jobs;
 
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 
 class UpdateCollectionSummary implements ShouldQueue
 {
@@ -34,6 +33,6 @@ class UpdateCollectionSummary implements ShouldQueue
      */
     public function handle()
     {
-            (new UpdateCollectionAncestryTotals)($this->collection);
+        (new UpdateCollectionAncestryTotals)($this->collection);
     }
 }

@@ -53,6 +53,13 @@
 
             <div class="mt-3 space-y-1">
                 <jet-responsive-nav-link
+                    :href="route('settings.show')"
+                    :active="route().current('settings.show')"
+                >
+                    Settings
+                </jet-responsive-nav-link>
+
+                <jet-responsive-nav-link
                     :href="route('profile.show')"
                     :active="route().current('profile.show')"
                 >

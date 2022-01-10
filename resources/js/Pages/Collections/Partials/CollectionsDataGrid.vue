@@ -14,8 +14,13 @@
                 class="mt-4"
                 :data="data.data"
                 :fields="table.fields"
+                :field-rows="table.fieldRows"
                 :grid-name="table.gridName"
                 :select-menu="table.selectMenu"
+                :has-expand-toggle="true"
+                :expanded-default="expandedDefault"
+                @expand="expand"
+                @expandRow="expandRow"
             />
             <ui-data-grid-pagination-no-link
                 :pagination="paginator"
@@ -112,6 +117,7 @@ export default {
             removeFromCollectionPanelData: {},
             moveToCollectionPanelShow: false,
             moveToCollectionPanelData: {},
+            expandedDefault: false,
         };
     },
 
@@ -149,6 +155,11 @@ export default {
 
     mounted() {
         this.search();
+        let expanded = this.$settings.expandedDefault("show");
+        if (this.table.gridName === "collection-edit") {
+            expanded = this.$settings.expandedDefault("edit");
+        }
+        this.expandedDefault = expanded || false;
     },
 
     methods: {
@@ -160,6 +171,21 @@ export default {
         },
         clearPanelData() {
             this.moveToCollectionPanelData = {};
+        },
+        expand(expand) {
+            this.data.data.forEach((item, key) => {
+                this.expandRow({
+                    expanded: expand,
+                    key: key,
+                });
+            });
+        },
+        expandRow(expand) {
+            this.emitter.emit("expandBottomRow", {
+                expand: expand.expanded,
+                field: this.table.fields[expand.key],
+                data: this.data.data[expand.key],
+            });
         },
         itemMoved() {
             this.clearDataGrid();
@@ -174,9 +200,30 @@ export default {
             this.search();
         },
         processData(res) {
-            this.data = res.list;
+            let list = res.list;
+            if (this.$settings.hasSettings()) {
+                let masters = [];
+                list.data.forEach((cardGroup) => {
+                    Object.values(cardGroup).forEach((finishGroup) => {
+                        let master = _.cloneDeep(finishGroup[0]);
+                        master.cards = _.cloneDeep(finishGroup);
+                        master.quantity = finishGroup
+                            .map((card) => card.quantity)
+                            .reduce((prev, cur) => prev + cur);
+                        master.cards = master.cards.map((card) => {
+                            card.collection_uuid = this.collection.uuid;
+                            return card;
+                        });
+                        master.showRow = this.expandedDefault;
+                        masters.push(master);
+                    });
+                });
+
+                list.data = masters;
+            }
+            this.data = list;
             this.searchData = res.search;
-            this.paginator = _.pick(this.data, [
+            this.paginator = _.pick(res.list, [
                 "current_page",
                 "from",
                 "last_page",

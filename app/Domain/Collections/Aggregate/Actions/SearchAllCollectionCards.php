@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
+use App\Actions\PaginateSearchResults;
 use App\Domain\Cards\Actions\BuildCard;
 use App\Domain\Cards\Actions\SearchCards;
 use App\Domain\Cards\DataObjects\CardData;
@@ -42,7 +43,7 @@ class SearchAllCollectionCards
             'data'      => $collection,
         ]);
 
-        return (new FormatCollectionCards)($collection, $searchData);
+        return (new PaginateSearchResults())($collection, $searchData);
     }
 
     private function transformCollection(Collection $collection) : Collection

@@ -37,12 +37,13 @@ class GetCollectionCards
                 'acquired_price'    => $card->price_when_added ?? null,
                 'quantity'          => $card->quantity ?? null,
                 'finish'            => $card->finish ?? null,
+                'condition'         => $card->condition ?? null,
                 'image'             => $cardData->image,
                 'set_image'         => $cardData->set_image,
                 'collector_number'  => $cardData->collector_number,
-            ]))->toArray();
+            ]));
         });
 
-        return new SupportCollection($collectionCards->toArray());
+        return new SupportCollection($collectionCards);
     }
 }

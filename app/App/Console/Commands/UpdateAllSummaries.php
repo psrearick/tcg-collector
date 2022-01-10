@@ -6,7 +6,6 @@ use App\Actions\CreateCardObjects as Create;
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Collections\Models\Collection;
-use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Jobs\UpdateCollectionSummary;
 use Illuminate\Console\Command;
 
@@ -43,8 +42,7 @@ class UpdateAllSummaries extends Command
      */
     public function handle()
     {
-        $collections = Collection::
-            withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
+        $collections = Collection::withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
             ->whereNull('deleted_at')
             ->get();
 
