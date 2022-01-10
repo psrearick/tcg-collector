@@ -29,12 +29,12 @@ class CollectionCardSettingsService
     public static function tracksCondition(?User $user = null) : bool
     {
         $settings = self::getSettings($user);
-        return $settings['card_condition'];
+        return $settings['card_condition'] ?: false;
     }
 
     public static function tracksPrice(?User $user = null) : bool
     {
         $settings = self::getSettings($user);
-        return $settings['price_added'];
+        return $settings['price_added'] ?: false;
     }
 }

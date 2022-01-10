@@ -44,10 +44,18 @@ export default {
 
     methods: {
         increment() {
-            this.$emit("incrementQuantity", this.data);
+            if (this.data.emit) {
+                this.$emit("incrementQuantity", this.data);
+            } else {
+                this.emitter.emit("incrementQuantity", this.data);
+            }
         },
         decrement() {
-            this.$emit("decrementQuantity", this.data);
+            if (this.data.emit) {
+                this.$emit("decrementQuantity", this.data);
+            } else {
+                this.emitter.emit("decrementQuantity", this.data);
+            }
         },
     },
 };

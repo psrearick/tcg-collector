@@ -271,6 +271,7 @@ export default {
         indexedCards() {
             return _.cloneDeep(this.data.cards).map((card, index) => {
                 card.index = index;
+                card.emit = true;
                 card.from = _.cloneDeep(card);
                 return card;
             });

@@ -17,7 +17,7 @@
                 :field-rows="table.fieldRows"
                 :grid-name="table.gridName"
                 :select-menu="table.selectMenu"
-                :has-expand-toggle="true"
+                :has-expand-toggle="$settings.hasSettings()"
                 :expanded-default="expandedDefault"
                 @expand="expand"
                 @expandRow="expandRow"

@@ -13,7 +13,7 @@ class FormatCollectionCards
     {
         $needsGrouped = false;
         $settings = auth()->user()->settings->first();
-        if ($settings->tracks_condition || $settings->tracks_price) {
+        if (optional($settings)->tracks_condition || optional($settings)->tracks_price) {
             $needsGrouped = true;
         }
 

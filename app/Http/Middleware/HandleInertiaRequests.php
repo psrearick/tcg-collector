@@ -27,6 +27,12 @@ class HandleInertiaRequests extends Middleware
         $user = optional($request->user())->load('settings');
         if ($user) {
             $settings  = $user->settings;
+                $user->settingsData = [
+                    'card_condition'        => false,
+                    'price_added'        => false,
+                    'expanded_default_edit'        => false,
+                    'expanded_default_show'        => false,
+                ];
             if (optional($settings)->first()) {
                 $user->settingsData = [
                     'card_condition'        => $settings->first()->tracks_condition,
