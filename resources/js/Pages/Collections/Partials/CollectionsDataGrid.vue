@@ -17,6 +17,10 @@
                 :field-rows="table.fieldRows"
                 :grid-name="table.gridName"
                 :select-menu="table.selectMenu"
+                :has-expand-toggle="true"
+                :expanded-default="expandedDefault"
+                @expand="expand"
+                @expandRow="expandRow"
             />
             <ui-data-grid-pagination-no-link
                 :pagination="paginator"
@@ -113,6 +117,7 @@ export default {
             removeFromCollectionPanelData: {},
             moveToCollectionPanelShow: false,
             moveToCollectionPanelData: {},
+            expandedDefault: false,
         };
     },
 
@@ -150,6 +155,11 @@ export default {
 
     mounted() {
         this.search();
+        let expanded = this.$settings.expandedDefault("show");
+        if (this.table.gridName === "collection-edit") {
+            expanded = this.$settings.expandedDefault("edit");
+        }
+        this.expandedDefault = expanded || false;
     },
 
     methods: {
@@ -161,6 +171,21 @@ export default {
         },
         clearPanelData() {
             this.moveToCollectionPanelData = {};
+        },
+        expand(expand) {
+            this.data.data.forEach((item, key) => {
+                this.expandRow({
+                    expanded: expand,
+                    key: key,
+                });
+            });
+        },
+        expandRow(expand) {
+            this.emitter.emit("expandBottomRow", {
+                expand: expand.expanded,
+                field: this.table.fields[expand.key],
+                data: this.data.data[expand.key],
+            });
         },
         itemMoved() {
             this.clearDataGrid();
@@ -189,6 +214,7 @@ export default {
                             card.collection_uuid = this.collection.uuid;
                             return card;
                         });
+                        master.showRow = this.expandedDefault;
                         masters.push(master);
                     });
                 });

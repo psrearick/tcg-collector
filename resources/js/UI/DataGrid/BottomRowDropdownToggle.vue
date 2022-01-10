@@ -25,6 +25,12 @@ export default {
         };
     },
 
+    mounted() {
+        if (this.data.showRow) {
+            this.showExpand = !this.data.showRow;
+        }
+    },
+
     methods: {
         expand(expand) {
             this.showExpand = expand;

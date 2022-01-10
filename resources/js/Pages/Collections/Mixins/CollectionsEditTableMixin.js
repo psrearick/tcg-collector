@@ -6,15 +6,6 @@ export default {
                     row: 1,
                     fields: [
                         {
-                            link: false,
-                            visible: true,
-                            sortable: false,
-                            type: "component",
-                            component: "BottomRowDropdownToggle",
-                            label: "",
-                            key: "",
-                        },
-                        {
                             visible: true,
                             sortable: true,
                             type: "composite-text",
@@ -172,11 +163,13 @@ export default {
             if (!this.$settings.hasSettings()) {
                 return {
                     fields: _.cloneDeep(this.fields),
+                    gridName: this.gridName,
                 };
             }
             return {
                 fields: [],
                 fieldRows: this.fieldRows,
+                gridName: this.gridName,
             };
         },
     },

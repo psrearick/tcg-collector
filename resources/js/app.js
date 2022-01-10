@@ -7,6 +7,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { closable } from "@/directives";
 
 import settings from "./Shared/api/Settings";
+import * as convertValue from "./Shared/api/ConvertValue";
 import store from "./Store";
 import mitt from "mitt";
 const emitter = mitt();
@@ -24,6 +25,7 @@ export const app = createInertiaApp({
             .directive("closable", closable);
         vueApp.use(store);
         vueApp.use(settings);
+        vueApp.config.globalProperties.$convertValue = convertValue;
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.mount(el);
         return vueApp;

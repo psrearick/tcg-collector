@@ -247,7 +247,7 @@ export default {
                 },
             },
             form: null,
-            showRow: false,
+            showRow: this.$settings.expandedDefault("edit"),
         };
     },
 
@@ -289,11 +289,15 @@ export default {
 
     created() {
         this.emitter.on("expandBottomRow", (expandData) => {
+            if (expandData.hideAllRows || expandData.showAllRows) {
+                this.showRow = !!this.hideAllRow;
+                return;
+            }
             if (
                 expandData.data.uuid === this.data.uuid &&
                 expandData.data.finish === this.data.finish
             ) {
-                this.showRow = !this.showRow;
+                this.showRow = expandData.expand;
             }
         });
     },

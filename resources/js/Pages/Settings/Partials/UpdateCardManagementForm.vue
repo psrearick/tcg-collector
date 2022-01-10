@@ -18,7 +18,6 @@
                     class="mt-2"
                 />
             </div>
-
             <div class="col-span-6 sm:col-span-4">
                 <ui-toggle
                     v-model:enabled="form.card_condition"
@@ -27,6 +26,36 @@
 
                 <jet-input-error
                     :message="form.errors.card_condition"
+                    class="mt-2"
+                />
+            </div>
+
+            <div
+                v-if="form.price_added || form.card_condition"
+                class="col-span-6 sm:col-span-4"
+            >
+                <ui-toggle
+                    v-model:enabled="form.expanded_default_show"
+                    label="Expand All Cards by Default on List Page"
+                />
+
+                <jet-input-error
+                    :message="form.errors.expanded_default_show"
+                    class="mt-2"
+                />
+            </div>
+
+            <div
+                v-if="form.price_added || form.card_condition"
+                class="col-span-6 sm:col-span-4"
+            >
+                <ui-toggle
+                    v-model:enabled="form.expanded_default_edit"
+                    label="Expand All Cards by Default on Edit Page"
+                />
+
+                <jet-input-error
+                    :message="form.errors.expanded_default_edit"
                     class="mt-2"
                 />
             </div>
@@ -78,6 +107,8 @@ export default defineComponent({
                 user_id: this.user.id,
                 price_added: !!this.$settings.hasPriceAdded,
                 card_condition: !!this.$settings.hasCardCondition,
+                expanded_default_show: this.$settings.expandedDefault("show"),
+                expanded_default_edit: this.$settings.expandedDefault("edit"),
             }),
         };
     },

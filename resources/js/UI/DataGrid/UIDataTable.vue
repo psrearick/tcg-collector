@@ -39,6 +39,23 @@
                                     classes.headerRow ? classes.headerRow : ''
                                 "
                             >
+                                <th
+                                    v-if="hasExpandToggle"
+                                    class="px-4 cursor-pointer"
+                                >
+                                    <div
+                                        v-if="hasExpandToggle && expanded"
+                                        @click="expand(false)"
+                                    >
+                                        <ui-icon icon="chevron-down-alt" />
+                                    </div>
+                                    <div
+                                        v-if="hasExpandToggle && !expanded"
+                                        @click="expand(true)"
+                                    >
+                                        <ui-icon icon="chevron-right" />
+                                    </div>
+                                </th>
                                 <th v-if="hasSelectMenu" class="p-2 pl-4">
                                     <ui-checkbox
                                         :checked="selectAll"
@@ -105,6 +122,23 @@
                                     classes.tableRow ? classes.tableRow : ''
                                 "
                             >
+                                <td
+                                    v-if="hasExpandToggle"
+                                    class="px-4 cursor-pointer"
+                                >
+                                    <div
+                                        v-if="isExpanded[key]"
+                                        @click="expandRow(false, key)"
+                                    >
+                                        <ui-icon icon="chevron-down-alt" />
+                                    </div>
+                                    <div
+                                        v-if="!isExpanded[key]"
+                                        @click="expandRow(true, key)"
+                                    >
+                                        <ui-icon icon="chevron-right" />
+                                    </div>
+                                </td>
                                 <td v-if="hasSelectMenu" class="p-2 pl-4">
                                     <ui-checkbox
                                         :checked="selectedOptions.includes(key)"
@@ -230,13 +264,26 @@ export default {
                 return { table: null };
             },
         },
+        expandedDefault: {
+            type: Boolean,
+            default: false,
+        },
+        hasExpandToggle: {
+            type: Boolean,
+            default: false,
+        },
     },
+    emits: ["expand", "expandRow"],
 
     data() {
         return {
             selectAll: false,
             selectedOptions: [],
             selectMenuWithItems: [],
+            expanded: this.expandedDefault,
+            expandedRows: [],
+            collapsedRows: [],
+            isExpanded: [],
         };
     },
 
@@ -277,9 +324,25 @@ export default {
         },
     },
 
+    watch: {
+        collapsedRows: {
+            deep: true,
+            handler() {
+                this.checkIsExpanded();
+            },
+        },
+        expandedRows: {
+            deep: true,
+            handler() {
+                this.checkIsExpanded();
+            },
+        },
+    },
+
     mounted() {
         this.selectedOptions = _.clone(this.selected);
         this.setMenu();
+        this.checkIsExpanded();
     },
 
     created() {
@@ -290,10 +353,26 @@ export default {
     },
 
     methods: {
+        checkIsExpanded() {
+            this.isExpanded = this.data.map((field, key) => {
+                return this.checkExpanded(key.toString());
+            });
+        },
         clearDataGridSelections(value) {
             if (value === this.gridName) {
                 this.updateSelectAll();
             }
+        },
+        expand(expanded) {
+            this.expanded = expanded;
+            this.expandedRows = [];
+            this.collapsedRows = [];
+            this.$emit("expand", expanded);
+        },
+        expandRow(expanded, key) {
+            this.expandedRows[key] = expanded;
+            this.collapsedRows[key] = !expanded;
+            this.$emit("expandRow", { expanded: expanded, key: key });
         },
         getIcon(field) {
             let sort = this.sortFields[this.gridName];
@@ -302,6 +381,30 @@ export default {
             }
 
             return sort[field.key] || null;
+        },
+        checkExpanded(key) {
+            let hasMaster = this.hasExpandToggle;
+            let master = this.expanded;
+            let expanded =
+                Object.keys(this.expandedRows).indexOf(key) > -1 &&
+                this.expandedRows[key];
+            let collapsed =
+                Object.keys(this.collapsedRows).indexOf(key) > -1 &&
+                this.collapsedRows[key];
+
+            if (collapsed) {
+                return false;
+            }
+
+            if (expanded) {
+                return true;
+            }
+
+            if (hasMaster && master) {
+                return master;
+            }
+
+            return false;
         },
         filterFields(fields) {
             return fields.filter((field) => {

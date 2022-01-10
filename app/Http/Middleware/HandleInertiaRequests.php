@@ -29,8 +29,10 @@ class HandleInertiaRequests extends Middleware
             $settings  = $user->settings;
             if (optional($settings)->first()) {
                 $user->settingsData = [
-                    'card_condition'    => $settings->first()->tracks_condition,
-                    'price_added'       => $settings->first()->tracks_price,
+                    'card_condition'        => $settings->first()->tracks_condition,
+                    'price_added'           => $settings->first()->tracks_price,
+                    'expanded_default_edit' => $settings->first()->expanded_default_edit,
+                    'expanded_default_show' => $settings->first()->expanded_default_show,
                 ];
             }
         }
