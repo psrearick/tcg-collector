@@ -1,97 +1,43 @@
 <template>
-    <div class="rounded-md">
-        <div
-            class="
-                bg-primary-50
-                hover:bg-primary-200
-                px-4
-                py-2
-                mb-4
-                mx-4
-                rounded-md
-                text-center
-            "
-        >
+    <transition
+        enter-active-class="transform transition ease-in-out duration-500 sm:duration-700"
+        enter-from-class="scale-0"
+        enter-to-class="scale-100"
+        leave-active-class="transform transition ease-in-out duration-500 sm:duration-700"
+        leave-from-class="scale-100"
+        leave-to-class="scale-0"
+    >
+        <div v-if="showRow" class="rounded-md">
             <div
-                v-if="!addCardShow"
-                class="cursor-pointer"
-                @click="addCardShow = true"
+                class="
+                    bg-primary-50
+                    hover:bg-primary-200
+                    px-4
+                    py-2
+                    mb-4
+                    mx-4
+                    rounded-md
+                    text-center
+                "
             >
-                Add Card
-            </div>
-            <div v-if="addCardShow && newCard" class="grid md:grid-cols-4">
-                <div v-if="$settings.hasCardCondition()">
-                    <ui-select-menu
-                        v-model:show="conditionMenuShow['new']"
-                        v-model:selected="newCard.condition"
-                        label="Condition"
-                        name="condition"
-                        class="mb-4 px-8 mx-auto"
-                        :required="false"
-                        :options="conditions"
-                        :center-label="true"
-                    />
+                <div
+                    v-if="!addCardShow"
+                    class="cursor-pointer"
+                    @click="addCardShow = true"
+                >
+                    Add Card
                 </div>
-                <div v-if="$settings.hasPriceAdded()">
-                    <ui-input-label
-                        label="Acquired Price"
-                        :required="false"
-                        class="text-center"
-                    />
-                    <span class="text-center block">
-                        <ui-input
-                            v-model="newCard.price"
-                            type="currency"
-                            before="$"
-                            class="px-8"
-                            @blur="newCard.price = format(newCard.price)"
-                        />
-                    </span>
-                </div>
-                <div>
-                    <ui-input-label
-                        label="Quantity"
-                        :required="false"
-                        class="text-center"
-                    />
-                    <ui-input
-                        v-model="newCard.quantity"
-                        type="number"
-                        :step="1"
-                        class="px-8"
-                    />
-                </div>
-                <div class="flex gap-4 mx-auto">
-                    <ui-button
-                        text="Cancel"
-                        button-style="white"
-                        class="h-10 my-auto"
-                        @click="cancelAddCard"
-                    />
-                    <ui-button
-                        :disabled="!canAddCard"
-                        text="Save"
-                        button-style="primary-outline"
-                        class="h-10 my-auto"
-                        @click="addCard"
-                    />
-                </div>
-            </div>
-        </div>
-        <div v-for="(card, cardIndex) in indexedCards" :key="cardIndex">
-            <div class="bg-gray-100 mb-4 mx-4 rounded-md">
-                <div class="grid md:grid-cols-3 pt-2">
+                <div v-if="addCardShow && newCard" class="grid md:grid-cols-4">
                     <div v-if="$settings.hasCardCondition()">
                         <ui-select-menu
-                            v-model:show="conditionMenuShow[cardIndex]"
-                            v-model:selected="condition[cardIndex]"
+                            v-model:show="conditionMenuShow['new']"
+                            v-model:selected="newCard.condition"
                             label="Condition"
                             name="condition"
                             class="mb-4 px-8 mx-auto"
                             :required="false"
                             :options="conditions"
                             :center-label="true"
-                            @change="updateCondition(cardIndex)"
                         />
                     </div>
                     <div v-if="$settings.hasPriceAdded()">
@@ -102,11 +48,11 @@
                         />
                         <span class="text-center block">
                             <ui-input
-                                v-model="price[cardIndex]"
+                                v-model="newCard.price"
                                 type="currency"
                                 before="$"
                                 class="px-8"
-                                @blur="updatePrice(cardIndex)"
+                                @blur="newCard.price = format(newCard.price)"
                             />
                         </span>
                     </div>
@@ -116,37 +62,100 @@
                             :required="false"
                             class="text-center"
                         />
-                        <ui-horizontal-incrementer
-                            :data="card"
-                            :field="fieldData"
-                            class="mt-2 mx-auto"
-                            @incrementQuantity="increment"
-                            @decrementQuantity="decrement"
+                        <ui-input
+                            v-model="newCard.quantity"
+                            type="number"
+                            :step="1"
+                            class="px-8"
+                        />
+                    </div>
+                    <div class="flex gap-4 mx-auto">
+                        <ui-button
+                            text="Cancel"
+                            button-style="white"
+                            class="h-10 my-auto"
+                            @click="cancelAddCard"
+                        />
+                        <ui-button
+                            :disabled="!canAddCard"
+                            text="Save"
+                            button-style="primary-outline"
+                            class="h-10 my-auto"
+                            @click="addCard"
                         />
                     </div>
                 </div>
-                <jet-action-message
-                    :on="
-                        form &&
-                        form.recentlySuccessful &&
-                        form.index === cardIndex
-                    "
-                >
-                    <div
-                        class="
-                            font-bold
-                            text-center
-                            py-2
-                            bg-success-200
-                            rounded-b
+            </div>
+            <div v-for="(card, cardIndex) in indexedCards" :key="cardIndex">
+                <div class="bg-gray-100 mb-4 mx-4 rounded-md">
+                    <div class="grid md:grid-cols-3 pt-2">
+                        <div v-if="$settings.hasCardCondition()">
+                            <ui-select-menu
+                                v-model:show="conditionMenuShow[cardIndex]"
+                                v-model:selected="condition[cardIndex]"
+                                label="Condition"
+                                name="condition"
+                                class="mb-4 px-8 mx-auto"
+                                :required="false"
+                                :options="conditions"
+                                :center-label="true"
+                                @change="updateCondition(cardIndex)"
+                            />
+                        </div>
+                        <div v-if="$settings.hasPriceAdded()">
+                            <ui-input-label
+                                label="Acquired Price"
+                                :required="false"
+                                class="text-center"
+                            />
+                            <span class="text-center block">
+                                <ui-input
+                                    v-model="price[cardIndex]"
+                                    type="currency"
+                                    before="$"
+                                    class="px-8"
+                                    @blur="updatePrice(cardIndex)"
+                                />
+                            </span>
+                        </div>
+                        <div>
+                            <ui-input-label
+                                label="Quantity"
+                                :required="false"
+                                class="text-center"
+                            />
+                            <ui-horizontal-incrementer
+                                :data="card"
+                                :field="fieldData"
+                                class="mt-2 mx-auto"
+                                @incrementQuantity="increment"
+                                @decrementQuantity="decrement"
+                            />
+                        </div>
+                    </div>
+                    <jet-action-message
+                        :on="
+                            form &&
+                            form.recentlySuccessful &&
+                            form.index === cardIndex
                         "
                     >
-                        Saved
-                    </div>
-                </jet-action-message>
+                        <div
+                            class="
+                                font-bold
+                                text-center
+                                py-2
+                                bg-success-200
+                                rounded-b
+                            "
+                        >
+                            Saved
+                        </div>
+                    </jet-action-message>
+                </div>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
 <script>
 import UiHorizontalIncrementer from "@/UI/Buttons/UIHorizontalIncrementer";
@@ -238,6 +247,7 @@ export default {
                 },
             },
             form: null,
+            showRow: false,
         };
     },
 
@@ -275,6 +285,17 @@ export default {
                 this.setPrice();
             },
         },
+    },
+
+    created() {
+        this.emitter.on("expandBottomRow", (expandData) => {
+            if (
+                expandData.data.uuid === this.data.uuid &&
+                expandData.data.finish === this.data.finish
+            ) {
+                this.showRow = !this.showRow;
+            }
+        });
     },
 
     mounted() {

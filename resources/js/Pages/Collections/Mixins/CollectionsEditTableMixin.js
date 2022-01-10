@@ -6,6 +6,15 @@ export default {
                     row: 1,
                     fields: [
                         {
+                            link: false,
+                            visible: true,
+                            sortable: false,
+                            type: "component",
+                            component: "BottomRowDropdownToggle",
+                            label: "",
+                            key: "",
+                        },
+                        {
                             visible: true,
                             sortable: true,
                             type: "composite-text",
@@ -68,7 +77,7 @@ export default {
                             link: false,
                             visible: true,
                             sortable: true,
-                            span: 5,
+                            span: 6,
                             type: "component",
                             component: "BottomRowCollectionsEdit",
                             label: "Quantity",
