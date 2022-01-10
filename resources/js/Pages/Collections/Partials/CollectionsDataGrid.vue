@@ -175,9 +175,29 @@ export default {
             this.search();
         },
         processData(res) {
-            this.data = res.list;
+            let list = res.list;
+            if (this.$settings.hasSettings()) {
+                let masters = [];
+                list.data.forEach((cardGroup) => {
+                    Object.values(cardGroup).forEach((finishGroup) => {
+                        let master = _.cloneDeep(finishGroup[0]);
+                        master.cards = _.cloneDeep(finishGroup);
+                        master.quantity = finishGroup
+                            .map((card) => card.quantity)
+                            .reduce((prev, cur) => prev + cur);
+                        master.cards = master.cards.map((card) => {
+                            card.collection_uuid = this.collection.uuid;
+                            return card;
+                        });
+                        masters.push(master);
+                    });
+                });
+
+                list.data = masters;
+            }
+            this.data = list;
             this.searchData = res.search;
-            this.paginator = _.pick(this.data, [
+            this.paginator = _.pick(res.list, [
                 "current_page",
                 "from",
                 "last_page",

@@ -1,7 +1,11 @@
 <template>
     <div>
         <div class="z-50">
-            <ui-input-label :label="label" :required="required" />
+            <ui-input-label
+                :label="label"
+                :required="required"
+                :class="centerLabel ? 'text-center' : ''"
+            />
             <div class="mt-1 relative">
                 <button
                     ref="visibilityToggle"
@@ -160,6 +164,10 @@ export default {
         label: {
             type: String,
             default: "",
+        },
+        centerLabel: {
+            type: Boolean,
+            default: false,
         },
         name: {
             type: String,

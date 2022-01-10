@@ -84,7 +84,7 @@ export default {
     components: { UiInputLabel },
     props: {
         modelValue: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         name: {
@@ -156,7 +156,7 @@ export default {
     computed: {
         value() {
             if (!this.formatter) {
-                return this.modelValue;
+                return this.formatted;
             }
             return this.formatter(this.modelValue);
         },

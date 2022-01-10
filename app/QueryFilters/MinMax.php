@@ -9,8 +9,8 @@ class MinMax implements QueryFilterInterface
 {
     public function query(Collection $builder, array $parameters) : Collection
     {
-        $values = $parameters['value'];
-        $field  = $parameters['field'];
+        $values = $parameters['value'] ?? [];
+        $field  = $parameters['field'] ?? '';
 
         if (isset($values['min'])) {
             $builder = $builder->where($field, '>', $values['min']);

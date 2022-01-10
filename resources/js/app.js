@@ -6,6 +6,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 
 import { closable } from "@/directives";
 
+import settings from "./Shared/api/Settings";
 import store from "./Store";
 import mitt from "mitt";
 const emitter = mitt();
@@ -13,7 +14,7 @@ const emitter = mitt();
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
 
-createInertiaApp({
+export const app = createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => require(`./Pages/${name}.vue`),
     setup({ el, app, props, plugin }) {
@@ -22,8 +23,10 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .directive("closable", closable);
         vueApp.use(store);
+        vueApp.use(settings);
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.mount(el);
+        return vueApp;
     },
 });
 

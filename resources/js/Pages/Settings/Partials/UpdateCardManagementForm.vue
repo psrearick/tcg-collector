@@ -76,12 +76,8 @@ export default defineComponent({
             form: this.$inertia.form({
                 _method: "PATCH",
                 user_id: this.user.id,
-                price_added: this.user.settings[0]
-                    ? this.user.settings[0].tracks_price || false
-                    : false,
-                card_condition: this.user.settings[0]
-                    ? this.user.settings[0].tracks_condition || false
-                    : false,
+                price_added: !!this.$settings.hasPriceAdded,
+                card_condition: !!this.$settings.hasCardCondition,
             }),
         };
     },

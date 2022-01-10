@@ -21,6 +21,8 @@ export default {
         },
     },
 
+    emits: ["incrementQuantity", "decrementQuantity"],
+
     computed: {
         buttonClass() {
             let button = "bg-gray-200 hover:bg-gray-400 text-center";
@@ -42,10 +44,10 @@ export default {
 
     methods: {
         increment() {
-            this.emitter.emit("incrementQuantity", this.data);
+            this.$emit("incrementQuantity", this.data);
         },
         decrement() {
-            this.emitter.emit("decrementQuantity", this.data);
+            this.$emit("decrementQuantity", this.data);
         },
     },
 };

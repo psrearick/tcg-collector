@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
+use App\Actions\PaginateSearchResults;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -10,24 +11,24 @@ class FormatCollectionCards
 {
     public function __invoke(Collection $builder, CollectionCardSearchData $collectionCardSearchData) : LengthAwarePaginator
     {
-        $search = $collectionCardSearchData->search;
-
-        if ($search->paginator) {
-            $page = $search->paginator;
-
-            $paginated = $builder->paginate(
-                $page['per_page'] ?? 25, null, $page['current_page'] ?? null, 'page'
-            );
+        $needsGrouped = false;
+        $settings = auth()->user()->settings->first();
+        if ($settings->tracks_condition || $settings->tracks_price) {
+            $needsGrouped = true;
         }
 
-        if (!isset($paginated)) {
-            $paginated = $builder->paginate(25);
+        if ($needsGrouped) {
+            $builder = $builder->mapToGroups(function ($group) {
+                return [$group->uuid => $group];
+            })
+            ->map(function ($cardGroup) {
+                return $cardGroup->mapToGroups(function ($group) {
+                    return [$group->finish => $group];
+                });
+            })
+            ->values();
         }
-
-        if (!$paginated) {
-            return (new Collection([]))->paginate(25);
-        }
-
-        return $paginated->withQueryString();
+        
+        return (new PaginateSearchResults())($builder, $collectionCardSearchData);
     }
 }

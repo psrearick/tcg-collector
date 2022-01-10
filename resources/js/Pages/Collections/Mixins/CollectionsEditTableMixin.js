@@ -1,15 +1,80 @@
 export default {
     data() {
         return {
-            bottomRow: [
+            fieldRows: [
                 {
-                    visible: true,
-                    sortable: true,
-                    span: 6,
-                    type: "component",
-                    component: "BottomRowCollectionsEdit",
-                    label: "Quantity",
-                    key: "quantity",
+                    row: 1,
+                    fields: [
+                        {
+                            visible: true,
+                            sortable: true,
+                            type: "composite-text",
+                            link: false,
+                            key: "name",
+                            label: "Card",
+                            values: [
+                                {
+                                    key: "name",
+                                    classes: "",
+                                },
+                                {
+                                    key: "finish",
+                                    classes: "text-sm text-gray-500 pl-3",
+                                },
+                            ],
+                            events: {
+                                click: "collection_card_name_click",
+                            },
+                        },
+                        {
+                            visible: true,
+                            sortable: true,
+                            type: "text",
+                            link: false,
+                            label: "Set",
+                            key: "set",
+                        },
+                        {
+                            visible: true,
+                            type: "text",
+                            label: "Features",
+                            key: "features",
+                        },
+                        {
+                            visible: true,
+                            sortable: true,
+                            filterable: true,
+                            type: "currency",
+                            label: "Current",
+                            key: "price",
+                            queryComponent: "MinMax",
+                            uiComponent: "ui-min-max",
+                            uiComponentOptions: {
+                                type: "currency",
+                            },
+                        },
+                        {
+                            visible: true,
+                            type: "text",
+                            label: "Quantity",
+                            key: "quantity",
+                        },
+                    ],
+                },
+                {
+                    row: 2,
+                    fields: [
+                        {
+                            link: false,
+                            visible: true,
+                            sortable: true,
+                            span: 5,
+                            type: "component",
+                            component: "BottomRowCollectionsEdit",
+                            label: "Quantity",
+                            key: "quantity",
+                        },
+                    ],
                 },
             ],
             fields: [
@@ -17,7 +82,7 @@ export default {
                     visible: true,
                     sortable: true,
                     type: "composite-text",
-                    link: true,
+                    link: false,
                     key: "name",
                     label: "Card",
                     values: [
@@ -68,6 +133,14 @@ export default {
                         type: "currency",
                     },
                 },
+                {
+                    visible: true,
+                    sortable: true,
+                    type: "component",
+                    component: "HorizontalIncrementer",
+                    label: "Quantity",
+                    key: "quantity",
+                },
             ],
             gridName: "collection-edit",
             selectMenu: [
@@ -80,49 +153,21 @@ export default {
                     action: "remove_from_collection",
                 },
             ],
-            quantityIncrementer: {
-                visible: true,
-                sortable: true,
-                type: "component",
-                component: "HorizontalIncrementer",
-                label: "Quantity",
-                key: "quantity",
-            },
         };
     },
     computed: {
         searchUrl() {
             return "/collections/" + this.collection.uuid + "/edit/list-search";
         },
-        hasSettings() {
-            const price_added = this.$page.props.user.settings[0]
-                ? this.$page.props.user.settings[0].tracks_price || false
-                : false;
-            const card_condition = this.$page.props.user.settings[0]
-                ? this.$page.props.user.settings[0].tracks_condition || false
-                : false;
-            return price_added || card_condition;
-        },
         table() {
-            if (!this.hasSettings) {
-                let fields = _.cloneDeep(this.fields);
-                fields.push(this.quantityIncrementer);
+            if (!this.$settings.hasSettings()) {
                 return {
-                    fields: fields,
+                    fields: _.cloneDeep(this.fields),
                 };
             }
             return {
                 fields: [],
-                fieldRows: [
-                    {
-                        row: 1,
-                        fields: this.fields,
-                    },
-                    {
-                        row: 2,
-                        fields: this.bottomRow,
-                    },
-                ],
+                fieldRows: this.fieldRows,
             };
         },
     },
@@ -133,6 +178,8 @@ export default {
                 change: 1,
                 id: card.uuid,
                 finish: card.finish,
+                acquired_price: card.acquired_price,
+                condition: card.condition,
             });
         });
         this.emitter.on("decrementQuantity", (card) => {
@@ -140,6 +187,8 @@ export default {
                 change: -1,
                 id: card.uuid,
                 finish: card.finish,
+                acquired_price: card.acquired_price,
+                condition: card.condition,
             });
         });
     },

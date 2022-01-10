@@ -28,6 +28,8 @@ class CollectionCardData
 
     public string $set;
 
+    public string $condition;
+
     public string $set_image;
 
     public string $set_name;
@@ -48,6 +50,7 @@ class CollectionCardData
         $this->acquired_price   = $data['acquired_price'] ?? 0.0;
         $this->quantity         = $data['quantity'] ?? 0;
         $this->finish           = $data['finish'] ?? 'nonfoil';
+        $this->condition        = $data['condition'] ?? '';
         $this->image            = $data['image'] ?? '';
         $this->set_image        = $data['set_image'] ?? '';
         $this->collector_number = $data['collector_number'] ?? '';
@@ -68,6 +71,7 @@ class CollectionCardData
             'acquired_price'   => $this->acquired_price,
             'quantity'         => $this->quantity,
             'finish'           => $this->finish,
+            'condition'        => $this->condition,
             'image'            => $this->image,
             'set_image'        => $this->set_image,
             'collector_number' => $this->collector_number,

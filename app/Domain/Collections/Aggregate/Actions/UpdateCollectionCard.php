@@ -9,6 +9,7 @@ use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\CollectionCardSummary;
+use App\Domain\Collections\Services\CollectionCardSettingsService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
@@ -35,6 +36,7 @@ class UpdateCollectionCard
                 'change'        => $data['change'],
                 'updated'       => $updated['collected'],
                 'quantity_diff' => $updated['quantity_diff'],
+                'from'          => $data['change']['from'] ?? [],
                 'lock'          => $lock->owner(),
             ];
 
@@ -81,13 +83,23 @@ class UpdateCollectionCard
 
         $cardBuilder    = Card::where('uuid', '=', $this->change['id']);
         $formattedCards = (new FormatCards)($cardBuilder, $searchData);
+        $formattedCard  = $formattedCards->first();
+        
+        $price = $formattedCard['prices'][$this->change['finish']] ?? 0;
+        $changeAcquiredPrice = $this->change['acquired_price'] ?? $price;
+        $acquiredPrice = CollectionCardSettingsService::tracksPrice() 
+            ? $changeAcquiredPrice : $price;
+        
+        $changeCondition = $this->change['condition'] ?? '';
+        $condition = CollectionCardSettingsService::tracksCondition()
+            ? $changeCondition : '';
 
-        $formattedCard                    = $formattedCards->first();
         $collectionCard                   = $formattedCard;
         $collectionCard['set']            = $formattedCard['set_code'];
         $collectionCard['finish']         = $this->change['finish'];
-        $collectionCard['price']          = $formattedCard['prices'][$this->change['finish']];
-        $collectionCard['acquired_price'] = $formattedCard['prices'][$this->change['finish']];
+        $collectionCard['price']          = $price;
+        $collectionCard['acquired_price'] = $acquiredPrice;
+        $collectionCard['condition']      = $condition;
         $collectionCard['acquired_date']  = Carbon::today();
         $collectionCard['quantity']       = $finalQuantity;
         $collected                        = (new CollectionCardData($collectionCard))->toArray();

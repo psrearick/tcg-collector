@@ -11,6 +11,7 @@ use App\Domain\Collections\Aggregate\Events\CollectionMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
+use App\Domain\Collections\Services\CollectionCardSettingsService;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
@@ -184,6 +185,7 @@ class CollectionProjector extends Projector
                 'price_when_added' => $attributes['updated']['acquired_price'],
                 'quantity'         => $attributes['quantity_diff'],
                 'finish'           => $attributes['updated']['finish'],
+                'condition'        => $attributes['updated']['condition'],
                 'date_added'       => Carbon::now(),
             ]);
     }
@@ -193,31 +195,66 @@ class CollectionProjector extends Projector
         $cardUuid   = $attributes['updated']['uuid'];
         $finish     = $attributes['updated']['finish'];
         $change     = $attributes['quantity_diff'];
-        $price      = $attributes['updated']['acquired_price'];
+        $acquired   = $attributes['updated']['acquired_price'];
+        $price      = (float) ($attributes['updated']['price'] ?? $acquired);
+        $fromPrice  = (float) (isset($attributes['from']) ? ($attributes['from']['acquired_price'] ?? $acquired) : $acquired);
+        $condition  = $attributes['updated']['condition'];
+        $fromCond   = isset($attributes['from']) ? ($attributes['from']['condition'] ?? $condition) : $condition;
 
         $existingCard = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
             ->where('card_uuid', '=', $cardUuid)
-            ->where('finish', '=', $finish)
-            ->first();
+            ->where('finish', '=', $finish);
+
+        if (CollectionCardSettingsService::tracksCondition()) {
+            $existingCard->where('condition', $fromCond);
+        }
+
+        if (CollectionCardSettingsService::tracksPrice()) {
+            $existingCard->where('price_when_added', $fromPrice);
+        }
+
+        $existingCard = $existingCard->get()->first();
+
+        $targetCard   = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
+            ->where('card_uuid', '=', $cardUuid)
+            ->where('finish', '=', $finish);
+
+        if (CollectionCardSettingsService::tracksCondition()) {
+            $targetCard->where('condition', $condition);
+        }
+
+        if (CollectionCardSettingsService::tracksPrice()) {
+            $targetCard->where('price_when_added', $acquired);
+        }
+
+        $targetCard = $targetCard->get()->first();
 
         if (!$existingCard) {
             CollectionCardSummary::create([
                 'collection_uuid'       => $attributes['uuid'],
                 'card_uuid'             => $cardUuid,
-                'price_when_added'      => $price,
+                'price_when_added'      => $acquired,
                 'price_when_updated'    => $price,
                 'current_price'         => $price,
                 'quantity'              => $change,
                 'finish'                => $finish,
+                'condition'             => $condition,
                 'date_added'            => Carbon::now(),
             ]);
 
             return;
         }
 
+        if ($existingCard && $targetCard && $existingCard->id != $targetCard->id) {
+            $change = $change + $targetCard->quantity;
+            $targetCard->delete();
+        }
+
         $existingCard->update([
+            'price_when_added'      => $acquired,
             'price_when_updated'    => $price,
             'current_price'         => $price,
+            'condition'             => $condition,
             'quantity'              => $existingCard->quantity + $change,
         ]);
     }
