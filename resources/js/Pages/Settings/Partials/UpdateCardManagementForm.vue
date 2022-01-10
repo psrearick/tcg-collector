@@ -105,8 +105,8 @@ export default defineComponent({
             form: this.$inertia.form({
                 _method: "PATCH",
                 user_id: this.user.id,
-                price_added: !!this.$settings.hasPriceAdded,
-                card_condition: !!this.$settings.hasCardCondition,
+                price_added: !!this.$settings.hasPriceAdded(),
+                card_condition: !!this.$settings.hasCardCondition(),
                 expanded_default_show: this.$settings.expandedDefault("show"),
                 expanded_default_edit: this.$settings.expandedDefault("edit"),
             }),

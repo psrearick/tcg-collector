@@ -59,6 +59,11 @@ class Collection extends Model
             ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id);
     }
 
+    public function cardSummaries() : HasMany
+    {
+        return $this->hasMany(CollectionCardSummary::class, 'collection_uuid', 'uuid');
+    }
+
     public function summary() : BelongsTo
     {
         return $this->belongsTo(Summary::class, 'uuid', 'uuid');

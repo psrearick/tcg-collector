@@ -3,12 +3,15 @@
 namespace App\Actions;
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UpdateSettings
 {
     public function __invoke(array $request)
     {
-        User::find($request['user_id'])->settings()->updateOrCreate([
+        $user = User::find($request['user_id']);
+        
+        $user->settings()->updateOrCreate([
             'user_id' => $request['user_id'],
         ], [
             'tracks_condition'      => $request['card_condition'] ?? false,
@@ -16,5 +19,14 @@ class UpdateSettings
             'expanded_default_show' => $request['expanded_default_show'] ?? false,
             'expanded_default_edit' => $request['expanded_default_edit'] ?? false,
         ]);
+
+        $user->collections->each(function($collection) {
+            DB::table('collection_card_summaries')
+                ->where('collection_uuid', '=', $collection->uuid)
+                ->update(['condition' => 'NM']);
+            DB::table('card_collections')
+                ->where('collection_uuid', '=', $collection->uuid)
+                ->update(['condition' => 'NM']);
+        });
     }
 }
