@@ -3,14 +3,9 @@
 namespace App\Domain\Cards\Models;
 
 use App\Domain\Base\Model;
-use App\Domain\CardAttributes\Models\Color;
-use App\Domain\CardAttributes\Models\Keyword;
 use App\Domain\CardAttributes\Models\Subtype;
 use App\Domain\CardAttributes\Models\Supertype;
 use App\Domain\CardAttributes\Models\Type;
-use App\Domain\Sets\Models\Set;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class CardGeneric extends Model

@@ -11,21 +11,21 @@ class CollectionData
 
     public ?string $folder_uuid;
 
+    public array $groups;
+
     public ?int $id;
 
     public bool $is_public;
 
     public string $name;
 
-    public ?int $user_id;
-
-    public ?string $uuid;
-
-    public array $groups;
+    public ?SummaryData $summary_data;
 
     public ?UserData $user;
 
-    public ?SummaryData $summary_data;
+    public ?int $user_id;
+
+    public ?string $uuid;
 
     public function __construct(array $data)
     {

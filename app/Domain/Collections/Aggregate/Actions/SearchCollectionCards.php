@@ -34,12 +34,19 @@ class SearchCollectionCards
         $uuid = $this->collectionCardSearchData->uuid;
 
         $this->cards->with([
-            'collections' => function ($query) use ($uuid) {
-                $query->where('collections.uuid', '=', $uuid);
-            },
             'finishes',
             'frameEffects',
             'set',
         ]);
+
+        if ($uuid) {
+            $this->cards->with([
+                'collections' => function ($query) use ($uuid) {
+                    $query->where('collections.uuid', '=', $uuid);
+                },
+            ]);
+        } else {
+            $this->cards->with(['collections']);
+        }
     }
 }

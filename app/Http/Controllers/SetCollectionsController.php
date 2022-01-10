@@ -7,7 +7,6 @@ use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Presenters\SetCollectionsPresenter;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

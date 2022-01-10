@@ -2,7 +2,8 @@
 
 namespace App\App\Scopes;
 
-use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
+use App\Domain\Collections\Models\Collection;
+use App\Domain\Folders\Models\Folder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -19,13 +20,19 @@ class UserScopeNotShared implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        $builder
-            ->where('collections.user_id', auth()->id());
-        //     ->where('collections.is_public', '=', 1);
-        
-        // if (Auth::hasUser()) {
-        //     $builder
-        //         ->orWhere('collections.user_id', auth()->id());
-        // }
+        $inGroup = request()->get('inGroup');
+
+        if (!$inGroup) {
+            return $builder->where('collections.user_id', Auth::id());
+        }
+
+        $folders = [];
+        Folder::inCurrentGroup()->get()->each(function ($folder) use (&$folders) {
+            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
+        });
+
+        $collections = Collection::inCurrentGroup()->get()->pluck('uuid')->toArray();
+
+        return $builder->whereIn('uuid', $collections)->orWhereIn('folder_uuid', $folders);
     }
 }

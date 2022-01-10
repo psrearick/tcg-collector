@@ -43,11 +43,17 @@
 <script>
 import { formatCurrency } from "@/Shared/api/ConvertValue";
 import UiHorizontalIncrementer from "@/UI/Buttons/UIHorizontalIncrementer";
+import BottomRowCollectionsEdit from "@/Pages/Collections/Partials/BottomRowCollectionsEdit";
+import BottomRowCollectionsShow from "@/Pages/Collections/Partials/BottomRowCollectionsShow";
+import BottomRowDropdownToggle from "@/UI/DataGrid/BottomRowDropdownToggle";
 import UiButton from "@/UI/UIButton";
 
 const componentMap = {
     HorizontalIncrementer: UiHorizontalIncrementer,
     UiButton: UiButton,
+    BottomRowCollectionsEdit: BottomRowCollectionsEdit,
+    BottomRowCollectionsShow: BottomRowCollectionsShow,
+    BottomRowDropdownToggle: BottomRowDropdownToggle,
 };
 
 export default {
@@ -71,7 +77,13 @@ export default {
             if (typeof this.field.key === "undefined") {
                 return this.field.value;
             }
-            let value = this.data[this.field.key];
+            let key = this.field.key;
+            let keys = key.split(".");
+            let value = this.data;
+            keys.forEach((key) => {
+                value = value[key];
+            });
+
             if (this.field.type === "currency") {
                 return this.formatCurrencyOrEmpty(value);
             }

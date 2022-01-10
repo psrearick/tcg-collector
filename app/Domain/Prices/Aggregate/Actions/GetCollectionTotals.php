@@ -3,7 +3,6 @@
 namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Collections\Models\Collection;
-use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 
 class GetCollectionTotals
 {

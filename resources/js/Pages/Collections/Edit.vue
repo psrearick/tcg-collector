@@ -1,30 +1,30 @@
 <template>
     <app-layout title="Edit Collection" :main-slots="slotNames">
         <template #header>
-            <div class="flex justify-between">
-                <div>
-                    <h2
-                        class="
-                            font-semibold
-                            text-xl text-gray-800
-                            leading-tight
-                            py-2
-                        "
-                    >
-                        Edit {{ collection.name }}
-                    </h2>
-                    <p class="text-sm text-gray-500">
-                        {{ collection.description }}
-                    </p>
-                </div>
-                <div class="flex space-x-4">
-                    <Link :href="route('collections.show', collection.uuid)">
-                        <ui-button
-                            text="Done Editing"
-                            button-style="primary-dark"
-                        />
-                    </Link>
-                </div>
+            <div>
+                <h2
+                    class="
+                        font-semibold
+                        text-xl text-gray-800
+                        leading-tight
+                        py-2
+                    "
+                >
+                    Edit {{ collection.name }}
+                </h2>
+                <p class="text-sm text-gray-500">
+                    {{ collection.description }}
+                </p>
+            </div>
+        </template>
+        <template #headerRight>
+            <div>
+                <Link :href="route('collections.show', collection.uuid)">
+                    <ui-button
+                        text="Done Editing"
+                        button-style="primary-dark"
+                    />
+                </Link>
             </div>
         </template>
         <template #CollectionDetails>

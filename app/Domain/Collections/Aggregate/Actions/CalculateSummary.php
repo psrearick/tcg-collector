@@ -15,6 +15,7 @@ class CalculateSummary
         ];
 
         $collectionItems->each(function ($item) use (&$totals) {
+            $item = is_array($item) ? $item : $item->toArray();
             $totals['total_cards'] += $item['quantity'];
             $totals['current_value'] += $item['price'] * $item['quantity'];
             $totals['acquired_value'] += $item['acquired_price'] * $item['quantity'];

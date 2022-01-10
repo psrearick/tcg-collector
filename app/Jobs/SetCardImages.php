@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Domain\Cards\Models\Card;
-use App\Jobs\ImportCardImages;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

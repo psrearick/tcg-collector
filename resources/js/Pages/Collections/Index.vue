@@ -1,33 +1,21 @@
 <template>
     <app-layout title="Collections">
         <template #header>
-            <div class="flex justify-between">
-                <h2
-                    class="
-                        font-semibold
-                        text-xl text-gray-800
-                        leading-tight
-                        py-2
-                    "
-                >
-                    Collections
-                </h2>
-                <div class="flex space-x-4">
-                    <Link :href="route('folders.create')">
-                        <ui-button
-                            text="Create Folder"
-                            button-style="primary-dark"
-                        />
-                    </Link>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight py-2">
+                Collections
+            </h2>
+        </template>
+        <template #headerRight>
+            <Link :href="route('folders.create')">
+                <ui-button text="Create Folder" button-style="primary-dark" />
+            </Link>
 
-                    <Link :href="route('collections.create')">
-                        <ui-button
-                            text="Create Collection"
-                            button-style="primary-dark"
-                        />
-                    </Link>
-                </div>
-            </div>
+            <Link :href="route('collections.create')">
+                <ui-button
+                    text="Create Collection"
+                    button-style="primary-dark"
+                />
+            </Link>
         </template>
         <div>
             <folder-summary :summary="totals" />

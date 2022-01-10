@@ -3,7 +3,6 @@
 namespace App\Domain\Cards\Traits;
 
 use App\Actions\NormalizeString;
-use App\Domain\Sets\Models\Set;
 
 trait CardSearchCollection
 {
@@ -26,7 +25,7 @@ trait CardSearchCollection
         $term = (new NormalizeString)($this->cardSearchData->card);
 
         $this->cards = $this->cards->filter(function ($card) use ($term) {
-            return false !== stristr($card['name_normalized'], $term);
+            return false !== stristr($card->name_normalized, $term);
         });
     }
 
@@ -35,9 +34,9 @@ trait CardSearchCollection
         $term = (new NormalizeString)($this->cardSearchData->set);
 
         $this->cards = $this->cards->filter(function ($card) use ($term) {
-            $set_name = (new NormalizeString)($card['set_name']);
+            $set_name = (new NormalizeString)($card->set_name);
 
-            return (false !== stristr($card['set'], $term))
+            return (false !== stristr($card->set, $term))
                 || (false !== stristr($set_name, $term));
         });
     }

@@ -3,8 +3,8 @@
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
 use App\Domain\Cards\DataObjects\CardSearchData;
-use App\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class CollectionCardSearchData
 {

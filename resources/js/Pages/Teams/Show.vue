@@ -48,6 +48,19 @@ export default defineComponent({
         GroupMemberManager,
         UpdateGroupNameForm,
     },
-    props: ["team", "availableRoles", "permissions"],
+    props: {
+        team: {
+            type: Object,
+            default: () => {},
+        },
+        availableRoles: {
+            type: Array,
+            default: () => [],
+        },
+        permissions: {
+            type: Object,
+            default: () => {},
+        },
+    },
 });
 </script>

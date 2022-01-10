@@ -52,10 +52,10 @@ export default {
     computed: {
         style() {
             if (this.buttonStyle === "primary") {
-                return "border border-primary-200 text-gray-200 bg-primary-500 hover:bg-primary-700";
+                return "border border-primary-200 text-white bg-primary-500 hover:bg-primary-700";
             }
             if (this.buttonStyle === "primary-outline") {
-                return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-primary-800 disabled:bg-gray-200";
+                return "border border-primary-400 text-primary-500 bg-white hover:bg-primary-500 hover:text-white disabled:text-primary-500 disabled:bg-gray-200";
             }
             if (this.buttonStyle === "primary-dark") {
                 return "border border-transparent focus:border-blue-900 hover:bg-blue-900 text-white bg-blue-600";
@@ -70,7 +70,7 @@ export default {
                 return "border border-warning-200 text-gray-700 bg-warning-300 hover:bg-warning-500";
             }
             if (this.buttonStyle === "danger") {
-                return "border border-danger-200 text-black bg-danger-500 hover:bg-danger-700";
+                return "border border-danger-200 text-white bg-danger-500 hover:bg-danger-700";
             }
             if (this.buttonStyle === "white") {
                 return "border border-gray-300 text-gray-700 bg-white hover:bg-gray-300 hover:text-gray-800";

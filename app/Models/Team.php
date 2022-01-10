@@ -6,6 +6,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Jetstream\Events\TeamCreated;
 use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
@@ -53,5 +54,10 @@ class Team extends JetstreamTeam
     public function folders() : BelongsToMany
     {
         return $this->belongsToMany(Folder::class, 'folder_teams', 'team_id', 'folder_uuid', 'id', 'uuid');
+    }
+
+    public function settings() : HasMany
+    {
+        return $this->hasMany(Setting::class);
     }
 }

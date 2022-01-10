@@ -5,25 +5,12 @@ namespace App\Jobs;
 use App\Actions\NormalizeString;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Sets\Models\Set;
-use App\Jobs\CreatePricing;
-use App\Jobs\SetCardImages;
-use App\Jobs\SetCardSet;
-use App\Jobs\SetColorFields;
-use App\Jobs\SetFaces;
-use App\Jobs\SetFinishes;
-use App\Jobs\SetFrameEffects;
-use App\Jobs\SetGames;
-use App\Jobs\SetKeywords;
-use App\Jobs\SetLegalities;
-use App\Jobs\SetMultiverseIds;
-use App\Jobs\SetPromoTypes;
-use App\Jobs\SetRelatedObjects;
-use App\Jobs\UpdatePricing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UpdateCard implements ShouldQueue
@@ -52,6 +39,7 @@ class UpdateCard implements ShouldQueue
      */
     public function handle()
     {
+        Log::info($this->options);
         $card = $this->options['cards']
             ? $this->updateCard($this->cardData)
             : null;

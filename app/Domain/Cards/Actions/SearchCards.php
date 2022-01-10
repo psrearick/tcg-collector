@@ -16,14 +16,14 @@ class SearchCards
 
     protected CardSearchData $cardSearchData;
 
-    public function __invoke(CardSearchData $cardSearchData) : CardSearchResultsData
+    public function __invoke(CardSearchData $cardSearchData, ?Builder $builder = null) : CardSearchResultsData
     {
         $this->cardSearchData = $cardSearchData;
         if (!$this->isValidCardSearch()) {
             return new CardSearchResultsData([]);
         }
 
-        $this->cards = Card::with('set')->notOnlineOnly();
+        $this->cards = $builder ?: Card::with('set')->notOnlineOnly();
 
         if ($this->cardSearchData->card) {
             $this->filterOnCards();

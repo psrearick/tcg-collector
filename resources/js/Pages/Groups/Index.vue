@@ -1,15 +1,31 @@
 <template>
     <app-layout title="Collections">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight py-2">
-                {{ $page.props.auth.user.current_team.name }}
-            </h2>
+            <div>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                    {{ $page.props.auth.user.current_team.name }}
+                </h2>
+            </div>
+        </template>
+        <template #headerRight>
+            <div class="">
+                <Link :href="route('group-search.store')">
+                    <ui-button
+                        text="Search Group"
+                        button-style="primary-dark"
+                    />
+                </Link>
+            </div>
         </template>
         <div class="mb-8">
             <div>
                 <h3 class="font-semibold text-lg text-gray-800 my-4">Users</h3>
             </div>
-            <users-list :users="users" @updateUserId="user = $event" />
+            <users-list
+                :users="users"
+                :filter-user="user"
+                @updateUserId="user = $event"
+            />
             <ui-button
                 v-if="userId"
                 text="Clear"
@@ -35,6 +51,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import UsersList from "@/Pages/Groups/Partials/UsersList";
 import GroupCollectionsDataGrid from "@/Pages/Groups/Partials/GroupCollectionsDataGrid";
 import UiButton from "@/UI/UIButton";
+import { Link } from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Index",
@@ -44,6 +61,7 @@ export default {
         UsersList,
         GroupCollectionsDataGrid,
         UiButton,
+        Link,
     },
 
     props: {

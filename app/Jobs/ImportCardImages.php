@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Actions\DownloadFileAWSAction as DownloadFileAction;
-use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Cards\Models\Card;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

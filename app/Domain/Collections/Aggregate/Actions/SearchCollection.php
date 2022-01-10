@@ -8,7 +8,6 @@ use App\Domain\Cards\Traits\CardSearchCollection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\Collection;
 use App\Support\Collection as SupportCollection;
-use Illuminate\Database\Eloquent\Builder;
 
 class SearchCollection
 {
@@ -59,7 +58,7 @@ class SearchCollection
         }
 
         return new CardSearchResultsData([
-            'collection'       => $this->cards,
+            'collection'       => $this->cards->values(),
         ]);
     }
 }

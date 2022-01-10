@@ -3,7 +3,6 @@
 namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Folders\Models\Folder;
-use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
 
 class UpdateFolderAncestryTotals
 {

@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('import:prices')
             ->dailyAt('5:00');
+        $schedule->command('summaries:update')
+            ->dailyAt('6:00');
         $schedule->command('import:cards')
             ->weeklyOn(6, '6:00');
         $schedule->command('import:symbols')

@@ -3,7 +3,6 @@
 namespace App\Domain\Folders\Models;
 
 use App\Domain\Collections\Models\Collection;
-use App\Domain\Folders\Models\FolderRoot;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AllowedDestination extends FolderRoot

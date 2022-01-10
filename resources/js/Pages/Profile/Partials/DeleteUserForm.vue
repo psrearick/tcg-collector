@@ -12,9 +12,9 @@
             </div>
 
             <div class="mt-5">
-                <jet-danger-button @click="confirmUserDeletion">
+                <ui-button button-style="danger" @click="confirmUserDeletion">
                     Delete Account
-                </jet-danger-button>
+                </ui-button>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
@@ -48,18 +48,18 @@
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="closeModal">
+                    <ui-button button-style="white" @click="closeModal">
                         Cancel
-                    </jet-secondary-button>
+                    </ui-button>
 
-                    <jet-danger-button
+                    <ui-button
                         class="ml-2"
-                        :class="{ 'opacity-25': form.processing }"
+                        button-style="danger"
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
                         Delete Account
-                    </jet-danger-button>
+                    </ui-button>
                 </template>
             </jet-dialog-modal>
         </template>
@@ -70,19 +70,17 @@
 import { defineComponent } from "vue";
 import JetActionSection from "@/Jetstream/ActionSection.vue";
 import JetDialogModal from "@/Jetstream/DialogModal.vue";
-import JetDangerButton from "@/Jetstream/DangerButton.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetInputError from "@/Jetstream/InputError.vue";
-import JetSecondaryButton from "@/Jetstream/SecondaryButton.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
         JetActionSection,
-        JetDangerButton,
         JetDialogModal,
         JetInput,
         JetInputError,
-        JetSecondaryButton,
+        UiButton,
     },
 
     data() {

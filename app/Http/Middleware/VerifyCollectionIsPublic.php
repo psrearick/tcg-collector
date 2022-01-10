@@ -29,13 +29,13 @@ class VerifyCollectionIsPublic
         }
 
         $uuid         = $request->route('collection');
-        $collection = Collection::uuid($uuid);
+        $collection   = Collection::uuid($uuid);
         // if (!$collection) {
-            // return redirect(RouteServiceProvider::HOME);
+        // return redirect(RouteServiceProvider::HOME);
         // }
 
         // if ($collection->is_public) {
-            // return $next($request);
+        // return $next($request);
         // }
 
         if (!$authenticated) {

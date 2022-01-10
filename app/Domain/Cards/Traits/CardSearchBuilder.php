@@ -3,7 +3,6 @@
 namespace App\Domain\Cards\Traits;
 
 use App\Domain\Sets\Models\Set;
-use Illuminate\Support\Facades\DB;
 
 trait CardSearchBuilder
 {
