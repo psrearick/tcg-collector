@@ -3,6 +3,7 @@
 use Brick\Money\Money;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class PopulateIntegerMoneyFields extends Migration
 {
@@ -33,7 +34,11 @@ class PopulateIntegerMoneyFields extends Migration
 
         DB::table('card_search_data_objects')
             ->lazyById()->each(function ($dataObject) {
-                $prices = $dataObject->prices ? unserialize($dataObject->prices) : [];
+                try {
+                    $prices = $dataObject->prices ? unserialize($dataObject->prices) : [];
+                } catch (Exception $e) {
+                    $prices = [];
+                }
                 $priceInts = [];
                 foreach ($prices as $finish => $price) {
                     $priceValue = Money::of($price ?: 0, 'USD');
