@@ -3,7 +3,7 @@
 use Brick\Money\Money;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-use Exception;
+use \Exception;
 
 class PopulateIntegerMoneyFields extends Migration
 {
