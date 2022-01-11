@@ -3,7 +3,6 @@
 use Brick\Money\Money;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-use \Exception;
 
 class PopulateIntegerMoneyFields extends Migration
 {
@@ -36,7 +35,7 @@ class PopulateIntegerMoneyFields extends Migration
             ->lazyById()->each(function ($dataObject) {
                 try {
                     $prices = $dataObject->prices ? unserialize($dataObject->prices) : [];
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $prices = [];
                 }
                 $priceInts = [];
