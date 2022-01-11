@@ -33,7 +33,7 @@ class PopulateIntegerMoneyFields extends Migration
 
         DB::table('card_search_data_objects')
             ->lazyById()->each(function ($dataObject) {
-                $prices = unserialize($dataObject->prices);
+                $prices = $dataObject->prices ? unserialize($dataObject->prices) : [];
                 $priceInts = [];
                 foreach ($prices as $finish => $price) {
                     $priceValue = Money::of($price ?: 0, 'USD');
