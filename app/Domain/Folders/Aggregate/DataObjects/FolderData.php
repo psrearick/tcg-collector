@@ -6,6 +6,8 @@ use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 
 class FolderData
 {
+    public array $allowed;
+
     public string $ancestry;
 
     public string $description;
@@ -22,13 +24,11 @@ class FolderData
 
     public string $path;
 
+    public ?SummaryData $summary_data;
+
     public ?int $user_id;
 
     public ?string $uuid;
-
-    public array $allowed;
-
-    public ?SummaryData $summary_data;
 
     public function __construct(array $data)
     {

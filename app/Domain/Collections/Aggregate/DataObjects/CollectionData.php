@@ -7,6 +7,8 @@ use App\Domains\Users\DataObjects\UserData;
 
 class CollectionData
 {
+    public array $allowed;
+
     public string $description;
 
     public ?string $folder_uuid;
@@ -24,8 +26,6 @@ class CollectionData
     public ?UserData $user;
 
     public ?int $user_id;
-
-    public array $allowed;
 
     public ?string $uuid;
 

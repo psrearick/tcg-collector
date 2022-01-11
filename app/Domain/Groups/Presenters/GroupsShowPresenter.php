@@ -7,7 +7,6 @@ use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
-use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use App\Domains\Users\DataObjects\UserData;
 use App\Support\Collection as AppSupportCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
