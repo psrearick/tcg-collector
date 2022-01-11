@@ -25,6 +25,8 @@ class CollectionData
 
     public ?int $user_id;
 
+    public array $allowed;
+
     public ?string $uuid;
 
     public function __construct(array $data)
@@ -39,12 +41,14 @@ class CollectionData
         $this->groups       = $data['groups'] ?? [];
         $this->user         = $data['user'] ?? null;
         $this->summary_data = $data['summary_data'] ?? null;
+        $this->allowed      = $data['allowed'] ?? [];
     }
 
     public function toArray() : array
     {
         return [
             'uuid'          => $this->uuid,
+            'allowed'       => $this->allowed,
             'id'            => $this->id,
             'folder_uuid'   => $this->folder_uuid,
             'name'          => $this->name,

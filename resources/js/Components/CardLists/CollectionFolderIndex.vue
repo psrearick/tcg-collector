@@ -40,13 +40,21 @@
                                 <p class="text-xs text-gray-500">Cards</p>
                                 <p>
                                     {{
-                                        folderItem.count ? folderItem.count : 0
+                                        folderItem.summary_data.total_cards
+                                            ? folderItem.summary_data
+                                                  .total_cards
+                                            : 0
                                     }}
                                 </p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
-                                <p>{{ folderItem.value }}</p>
+                                <p>
+                                    {{
+                                        folderItem.summary_data
+                                            .display_current_value
+                                    }}
+                                </p>
                             </div>
                         </div>
                     </template>
@@ -77,13 +85,21 @@
                                 <p class="text-xs text-gray-500">Cards</p>
                                 <p>
                                     {{
-                                        collection.count ? collection.count : 0
+                                        collection.summary_data.total_cards
+                                            ? collection.summary_data
+                                                  .total_cards
+                                            : 0
                                     }}
                                 </p>
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
-                                <p>{{ collection.value }}</p>
+                                <p>
+                                    {{
+                                        collection.summary_data
+                                            .display_current_value
+                                    }}
+                                </p>
                             </div>
                         </div>
                     </template>

@@ -81,15 +81,14 @@ class GetChildren
         }
 
         return $collections->get()->map(function ($collection) {
-            $collectionData             = (new CollectionData($collection->toArray()))->toArray();
-            $collectionData['allowed']  = $this
-                ->formatAllowed($collection->allowedDestinations, 'collection', empty($collection->folder_uuid));
             $collectionSummary = (new GetSummaryData)(collect([$collection]));
-            $collectionData['count']    = $collectionSummary['total_cards'];
-            $collectionData['value']    = $collectionSummary['current_value'];
-            $collectionData['groups']   = $collection->groups->pluck('id');
+            $collectionData             = (new CollectionData($collection->toArray()));
+            $collectionData->allowed  = $this
+                ->formatAllowed($collection->allowedDestinations, 'collection', empty($collection->folder_uuid));
+            $collectionData->groups   = $collection->groups->pluck('id')->values()->toArray();
+            $collectionData->summary_data = $collectionSummary;
 
-            return $collectionData;
+            return $collectionData->toArray();
         })->sortBy('name')->values();
     }
 
@@ -115,15 +114,14 @@ class GetChildren
         }
 
         return $folders->get()->map(function ($folder) {
-            $folderData             = (new FolderData($folder->toArray()))->toArray();
-            $folderData['allowed']  = $this
+            $folderSummary              = (new GetSummaryData)(null, collect([$folder]));
+            $folderData                 = (new FolderData($folder->toArray()));
+            $folderData->allowed        = $this
                 ->formatAllowed($folder->allowedDestinations, $folder->isRoot());
-            $folderSummary          = (new GetSummaryData)(null, collect([$folder]));
-            $folderData['count']    = $folderSummary['total_cards'];
-            $folderData['value']    = $folderSummary['current_value'];
-            $folderData['groups']   = $folder->groups->pluck('id');
+            $folderData->groups         = $folder->groups->pluck('id')->values()->toArray();
+            $folderData->summary_data   = $folderSummary;
 
-            return $folderData;
+            return $folderData->toArray();
         })->sortBy('name')->values();
     }
 }

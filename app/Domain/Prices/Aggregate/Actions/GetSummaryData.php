@@ -4,13 +4,14 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Collections\Models\Collection as DomainCollection;
 use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 class GetSummaryData
 {
-    public function __invoke(?Collection $collections = null, ?Collection $folders = null, bool $hasSummary = true)
+    public function __invoke(?Collection $collections = null, ?Collection $folders = null, bool $hasSummary = true) : SummaryData
     {
         $totals = [
             'total_cards'       => 0,
@@ -73,6 +74,6 @@ class GetSummaryData
         $totals['display_gain_loss']        = $gainLoss->formatTo('en_US');
         $totals['gain_loss_percent']        = $gainLossPercent;
 
-        return $totals;
+        return new SummaryData($totals);
     }
 }

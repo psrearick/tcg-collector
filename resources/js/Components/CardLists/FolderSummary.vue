@@ -13,7 +13,7 @@
                 Current Value
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ summary.current_value }}
+                {{ summary.display_current_value }}
             </dd>
         </card-list-card>
         <card-list-card>
@@ -21,7 +21,7 @@
                 Acquired Value
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ summary.acquired_value }}
+                {{ summary.display_acquired_value }}
             </dd>
         </card-list-card>
         <card-list-card>
@@ -32,11 +32,11 @@
                 class="mt-1 text-3xl font-semibold"
                 :class="
                     currency(summary.gain_loss).value >= 0
-                        ? 'text-gray-900'
+                        ? 'text-success-500'
                         : 'text-red-500'
                 "
             >
-                {{ summary.gain_loss }} ({{
+                {{ summary.display_gain_loss }} ({{
                     formattedPercentage(summary.gain_loss_percent)
                 }})
             </dd>

@@ -2,6 +2,8 @@
 
 namespace App\Domain\Folders\Aggregate\DataObjects;
 
+use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
+
 class FolderData
 {
     public string $ancestry;
@@ -24,6 +26,10 @@ class FolderData
 
     public ?string $uuid;
 
+    public array $allowed;
+
+    public ?SummaryData $summary_data;
+
     public function __construct(array $data)
     {
         $this->uuid         = $data['uuid'] ?? null;
@@ -36,6 +42,8 @@ class FolderData
         $this->user_id      = $data['user_id'] ?? null;
         $this->ancestry     = $data['ancestry'] ?? '';
         $this->groups       = $data['groups'] ?? [];
+        $this->summary_data = $data['summary_data'] ?? null;
+        $this->allowed      = $data['allowed'] ?? [];
     }
 
     public function toArray() : array
@@ -51,6 +59,8 @@ class FolderData
             'ancestry'      => $this->ancestry,
             'path'          => $this->path,
             'groups'        => $this->groups,
+            'summary_data'  => $this->summary_data,
+            'allowed'       => $this->allowed,
         ];
     }
 }

@@ -125,12 +125,11 @@ class GroupsShowPresenter implements PresenterInterface
     {
         $this->collections->transform(function ($collection) {
             $summary        = (new GetSummaryData)(collect([$collection]));
-            $summaryData    = new SummaryData($summary, null, true);
             $collectionData = $collection->toArray();
             $userData       = new UserData($collectionData['user']);
 
             $collectionData['user']         = $userData;
-            $collectionData['summary_data'] = $summaryData;
+            $collectionData['summary_data'] = $summary;
 
             return new CollectionData($collectionData);
         });

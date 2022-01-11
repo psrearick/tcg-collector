@@ -6,10 +6,11 @@ use Brick\Math\BigInteger;
 use Brick\Math\RoundingMode;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
+use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 
 class CalculateSummary
 {
-    public function __invoke(Collection $collectionItems) : array
+    public function __invoke(Collection $collectionItems) : SummaryData
     {
         $totals = [
             'total_cards'       => 0,
@@ -36,11 +37,27 @@ class CalculateSummary
                 ->dividedBy($acquiredValue, 4, RoundingMode::UP)->toFloat();
         }
 
-        $totals['acquired_value']        = $totals['acquired_value']->formatTo('en_US');
-        $totals['current_value']         = $totals['current_value']->formatTo('en_US');
-        $totals['gain_loss']             = Money::of($gainLoss->toFloat(), 'USD')->formatTo('en_US');
-        $totals['gain_loss_percent']     = $gainLossPercent;
+        // $totals['acquired_value']        = $totals['acquired_value']->formatTo('en_US');
+        // $totals['current_value']         = $totals['current_value']->formatTo('en_US');
+        // $totals['gain_loss']             = Money::of($gainLoss->toFloat(), 'USD')->formatTo('en_US');
+        // $totals['gain_loss_percent']     = $gainLossPercent;
 
-        return $totals;
+        // return $totals;
+
+        $gainLoss               = Money::of($gainLoss->toFloat(), 'USD');
+        $acquiredValue          = $totals['acquired_value']->getMinorAmount()->toInt();
+        $acquiredValueFormatted = $totals['acquired_value']->formatTo('en_US');
+        $currentValue           = $totals['current_value']->getMinorAmount()->toInt();
+        $currentValueFormatted  = $totals['current_value']->formatTo('en_US');
+
+        $totals['acquired_value']           = $acquiredValue;
+        $totals['display_acquired_value']   = $acquiredValueFormatted;
+        $totals['current_value']            = $currentValue;
+        $totals['display_current_value']    = $currentValueFormatted;
+        $totals['gain_loss']                = $gainLoss->getMinorAmount()->toInt();
+        $totals['display_gain_loss']        = $gainLoss->formatTo('en_US');
+        $totals['gain_loss_percent']        = $gainLossPercent;
+
+        return new SummaryData($totals);
     }
 }
