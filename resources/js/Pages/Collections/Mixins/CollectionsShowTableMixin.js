@@ -42,17 +42,17 @@ export default {
                 {
                     visible: true,
                     sortable: true,
-                    type: "currency",
+                    type: "text",
                     label: "Acquired Price",
-                    key: "acquired_price",
+                    key: "display_acquired_price",
                 },
                 {
                     visible: true,
                     sortable: true,
                     filterable: true,
-                    type: "currency",
+                    type: "text",
                     label: "Current",
-                    key: "price",
+                    key: "display_price",
                     queryComponent: "MinMax",
                     uiComponent: "ui-min-max",
                     uiComponentOptions: {
@@ -109,17 +109,17 @@ export default {
                         {
                             visible: true,
                             sortable: true,
-                            type: "currency",
+                            type: "text",
                             label: "Acquired Price",
-                            key: "acquired_price",
+                            key: "display_acquired_price",
                         },
                         {
                             visible: true,
                             sortable: true,
                             filterable: true,
-                            type: "currency",
+                            type: "text",
                             label: "Current",
-                            key: "price",
+                            key: "display_price",
                             queryComponent: "MinMax",
                             uiComponent: "ui-min-max",
                             uiComponentOptions: {

@@ -45,7 +45,6 @@ class GetChildren
                 return (new FolderData($folderData))->toArray();
             })->sortBy('path')->values()->toArray();
 
-        // dd($isRoot);
         if (!$isRoot) {
             $root = (new FolderData([
                 'uuid'      => '',
@@ -83,7 +82,8 @@ class GetChildren
 
         return $collections->get()->map(function ($collection) {
             $collectionData             = (new CollectionData($collection->toArray()))->toArray();
-            $collectionData['allowed']  = $this->formatAllowed($collection->allowedDestinations, 'collection', empty($collection->folder_uuid));
+            $collectionData['allowed']  = $this
+                ->formatAllowed($collection->allowedDestinations, 'collection', empty($collection->folder_uuid));
             $collectionSummary = (new GetSummaryData)(collect([$collection]));
             $collectionData['count']    = $collectionSummary['total_cards'];
             $collectionData['value']    = $collectionSummary['current_value'];
@@ -116,8 +116,9 @@ class GetChildren
 
         return $folders->get()->map(function ($folder) {
             $folderData             = (new FolderData($folder->toArray()))->toArray();
-            $folderData['allowed']  = $this->formatAllowed($folder->allowedDestinations, $folder->isRoot());
-            $folderSummary = (new GetSummaryData)(null, collect([$folder]));
+            $folderData['allowed']  = $this
+                ->formatAllowed($folder->allowedDestinations, $folder->isRoot());
+            $folderSummary          = (new GetSummaryData)(null, collect([$folder]));
             $folderData['count']    = $folderSummary['total_cards'];
             $folderData['value']    = $folderSummary['current_value'];
             $folderData['groups']   = $folder->groups->pluck('id');

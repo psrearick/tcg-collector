@@ -4,6 +4,8 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Collections\Models\Collection as DomainCollection;
 use App\Domain\Folders\Models\Folder;
+use Brick\Math\RoundingMode;
+use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 class GetSummaryData
@@ -12,8 +14,8 @@ class GetSummaryData
     {
         $totals = [
             'total_cards'       => 0,
-            'current_value'     => 0,
-            'acquired_value'    => 0,
+            'current_value'     => Money::ofMinor(0, 'USD'),
+            'acquired_value'    => Money::ofMinor(0, 'USD'),
         ];
 
         if ($collections) {
@@ -27,10 +29,9 @@ class GetSummaryData
                 $summary = $collection->summary;
                 if ($summary) {
                     $totals['total_cards'] += $summary->total_cards;
-                    $totals['current_value'] += $summary->current_value;
-                    $totals['acquired_value'] += $summary->acquired_value;
+                    $totals['current_value'] = $totals['current_value']->plus(Money::ofMinor($summary->current_value, 'USD'));
+                    $totals['acquired_value'] = $totals['acquired_value']->plus(Money::ofMinor($summary->acquired_value, 'USD'));
                 }
-                // }
             });
         }
 
@@ -43,18 +44,34 @@ class GetSummaryData
                 $summary = $folder->summary;
                 if ($summary) {
                     $totals['total_cards'] += $summary->total_cards;
-                    $totals['current_value'] += $summary->current_value;
-                    $totals['acquired_value'] += $summary->acquired_value;
+                    $totals['current_value'] = $totals['current_value']->plus(Money::ofMinor($summary->current_value, 'USD'));
+                    $totals['acquired_value'] = $totals['acquired_value']->plus(Money::ofMinor($summary->acquired_value, 'USD'));
                 }
             });
         }
 
-        $gainLoss        = $totals['current_value'] - $totals['acquired_value'];
-        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
-        $gainLossPercent = $totals['acquired_value'] != 0 ? $gainLoss / $totals['acquired_value'] : $gainLossPercent;
+        $gainLoss           = $totals['current_value']->minus($totals['acquired_value'])->getAmount();
+        $acquiredValue      = $totals['acquired_value']->getAmount();
+        $gainLossPercent    = $gainLoss->isEqualTo(0) ? 0 : 1;
 
-        $totals['gain_loss']         = $gainLoss;
-        $totals['gain_loss_percent'] = $gainLossPercent;
+        if (!$acquiredValue->isEqualTo(0)) {
+            $gainLossPercent = $gainLoss
+                ->dividedBy($acquiredValue, 4, RoundingMode::UP)->toFloat();
+        }
+
+        $gainLoss               = Money::of($gainLoss->toFloat(), 'USD');
+        $acquiredValue          = $totals['acquired_value']->getMinorAmount()->toInt();
+        $acquiredValueFormatted = $totals['acquired_value']->formatTo('en_US');
+        $currentValue           = $totals['current_value']->getMinorAmount()->toInt();
+        $currentValueFormatted  = $totals['current_value']->formatTo('en_US');
+
+        $totals['acquired_value']           = $acquiredValue;
+        $totals['display_acquired_value']   = $acquiredValueFormatted;
+        $totals['current_value']            = $currentValue;
+        $totals['display_current_value']    = $currentValueFormatted;
+        $totals['gain_loss']                = $gainLoss->getMinorAmount()->toInt();
+        $totals['display_gain_loss']        = $gainLoss->formatTo('en_US');
+        $totals['gain_loss_percent']        = $gainLossPercent;
 
         return $totals;
     }

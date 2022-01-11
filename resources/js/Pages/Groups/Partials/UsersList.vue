@@ -25,7 +25,7 @@
                             Value
                         </p>
                         <p class="text-center">
-                            {{ format(user.current_value) }}
+                            {{ user.display_current_value }}
                         </p>
                     </div>
                     <div>
@@ -44,7 +44,6 @@
 <script>
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
-import { formatCurrency } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "UsersList",
@@ -70,9 +69,6 @@ export default {
     methods: {
         filterCollections(userId) {
             this.$emit("updateUserId", userId);
-        },
-        format(value) {
-            return value ? formatCurrency(value) : "N/A";
         },
     },
 };

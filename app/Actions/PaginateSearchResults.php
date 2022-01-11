@@ -2,9 +2,9 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Collection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class PaginateSearchResults
 {

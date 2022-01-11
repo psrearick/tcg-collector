@@ -67,9 +67,9 @@ export default {
                     {
                         visible: true,
                         sortable: true,
-                        type: "currency",
+                        type: "text",
                         label: "Price",
-                        key: "current_value",
+                        key: "display_current_value",
                     },
                     {
                         visible: true,
@@ -87,8 +87,8 @@ export default {
         collectionsComputed() {
             return this.collectionList.map((collection) => {
                 collection.total_cards = collection.summary_data.total_cards;
-                collection.current_value =
-                    collection.summary_data.current_value;
+                collection.display_current_value =
+                    collection.summary_data.display_current_value;
                 collection.user_name = collection.user.name;
                 return collection;
             });

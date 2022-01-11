@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
+use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use App\Domain\Collections\Models\CollectionCardSummary;
 
 class UpdateCardManagementSettings implements ShouldQueue
 {
@@ -118,7 +118,7 @@ class UpdateCardManagementSettings implements ShouldQueue
             $grouped = $collection->mapToGroups(function ($pivot) {
                 return [$pivot->card_uuid => $pivot->toArray()];
             });
-            
+
             $grouped->each(function ($group) {
                 $this->updateGroup($group);
             });

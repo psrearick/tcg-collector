@@ -84,14 +84,14 @@ class UpdateCollectionCard
         $cardBuilder    = Card::where('uuid', '=', $this->change['id']);
         $formattedCards = (new FormatCards)($cardBuilder, $searchData);
         $formattedCard  = $formattedCards->first();
-        
-        $price = $formattedCard['prices'][$this->change['finish']] ?? 0;
+
+        $price               = $formattedCard['prices'][$this->change['finish']] ?? 0;
         $changeAcquiredPrice = $this->change['acquired_price'] ?? $price;
-        $acquiredPrice = CollectionCardSettingsService::tracksPrice() 
+        $acquiredPrice       = CollectionCardSettingsService::tracksPrice()
             ? $changeAcquiredPrice : $price;
-        
+
         $changeCondition = $this->change['condition'] ?? '';
-        $condition = CollectionCardSettingsService::tracksCondition()
+        $condition       = CollectionCardSettingsService::tracksCondition()
             ? $changeCondition : '';
 
         $collectionCard                   = $formattedCard;

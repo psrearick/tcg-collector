@@ -146,7 +146,7 @@ class BuildCard
      * @param bool $foil
      * @return mixed|null
      */
-    private function getPrice(bool $foil = false) : ?float
+    private function getPrice(bool $foil = false) : ?int
     {
         return optional(
             $this->card->prices

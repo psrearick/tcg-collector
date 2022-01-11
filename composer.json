@@ -9,6 +9,7 @@
         "bensampo/laravel-enum": "^4.1",
         "brick/money": "^0.5.3",
         "coconutcraig/laravel-postmark": "^2.11",
+        "doctrine/dbal": "^3.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "inertiajs/inertia-laravel": "^0.4.3",

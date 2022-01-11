@@ -16,6 +16,7 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
+use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -195,9 +196,14 @@ class CollectionProjector extends Projector
         $cardUuid   = $attributes['updated']['uuid'];
         $finish     = $attributes['updated']['finish'];
         $change     = $attributes['quantity_diff'];
+
         $acquired   = $attributes['updated']['acquired_price'];
-        $price      = (float) ($attributes['updated']['price'] ?? $acquired);
-        $fromPrice  = (float) (isset($attributes['from']) ? ($attributes['from']['acquired_price'] ?? $acquired) : $acquired);
+        $price      = $attributes['updated']['price'] ?? $acquired;
+        $fromPrice  = isset($attributes['from']) ? ($attributes['from']['acquired_price'] ?? $acquired) : $acquired;
+        // $acquired   = Money::of($acquired, 'USD')->getMinorAmount()->toInt();
+        // $price      = Money::of($price, 'USD')->getMinorAmount()->toInt();
+        // $fromPrice  = Money::of($fromPrice, 'USD')->getMinorAmount()->toInt();
+
         $condition  = $attributes['updated']['condition'];
         $fromCond   = isset($attributes['from']) ? ($attributes['from']['condition'] ?? $condition) : $condition;
 

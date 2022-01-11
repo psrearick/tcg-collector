@@ -38,6 +38,7 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "currency.js": "^2.0.4",
         "es6-promise": "^4.2.8",
         "mitt": "^2.1.0",
         "vuex": "^4.0.1"

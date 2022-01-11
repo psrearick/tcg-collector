@@ -58,7 +58,7 @@ class SummaryProjector extends Projector
         ]);
     }
 
-    protected function updateFolderWithCollectionCard(Folder $folder, int $quantity, float $change) : void
+    protected function updateFolderWithCollectionCard(Folder $folder, int $quantity, int $change) : void
     {
         $folderTotals = optional($folder->summary)->toArray();
         if (!$folderTotals) {

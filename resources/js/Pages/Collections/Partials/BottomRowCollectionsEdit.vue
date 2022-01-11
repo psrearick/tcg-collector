@@ -393,7 +393,7 @@ export default {
             const changed = this.getChangedPrice(index);
             if (changed) {
                 const card = this.indexedCards[index];
-                this.submitForm(card, { acquired_price: price });
+                this.submitForm(card, { acquired_price: this.unformat(price) });
             }
         },
         format(value) {

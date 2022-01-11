@@ -22,19 +22,21 @@ class CollectionCardSettingsService
                 ];
             }
         }
-        
+
         return $settingsData;
     }
 
     public static function tracksCondition(?User $user = null) : bool
     {
         $settings = self::getSettings($user);
+
         return $settings['card_condition'] ?: false;
     }
 
     public static function tracksPrice(?User $user = null) : bool
     {
         $settings = self::getSettings($user);
+
         return $settings['price_added'] ?: false;
     }
 }

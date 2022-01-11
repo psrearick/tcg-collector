@@ -77,7 +77,7 @@
                             <span class="text-sm text-gray-500 mr-2">{{
                                 capitalizeFirstLetter(priceIndex)
                             }}</span>
-                            <span>{{ price ? format(price) : "N/A" }}</span>
+                            <span>{{ price ? price : "N/A" }}</span>
                         </p>
                     </div>
                 </div>
@@ -92,7 +92,6 @@
 </template>
 
 <script>
-import { formatCurrency } from "@/Shared/api/ConvertValue";
 import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
 import UiVerticalIncrementer from "@/UI/Buttons/UIVerticalIncrementer";
 import UiCard from "@/UI/UICard";
@@ -158,9 +157,6 @@ export default {
         activate(id, finish) {
             this.activeField = id;
             this.activeFieldFinish = finish;
-        },
-        format(value) {
-            return value ? formatCurrency(value) : "N/A";
         },
         updatePage(page) {
             this.$emit("update:paginator", page);

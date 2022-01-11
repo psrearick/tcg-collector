@@ -3,6 +3,7 @@ require("./bootstrap");
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
+import currency from "currency.js";
 
 import { closable } from "@/directives";
 
@@ -26,6 +27,7 @@ export const app = createInertiaApp({
         vueApp.use(store);
         vueApp.use(settings);
         vueApp.config.globalProperties.$convertValue = convertValue;
+        vueApp.config.globalProperties.currency = currency;
         vueApp.config.globalProperties.emitter = emitter;
         vueApp.mount(el);
         return vueApp;

@@ -10,7 +10,7 @@ class UpdateSettings
     public function __invoke(array $request)
     {
         $user = User::find($request['user_id']);
-        
+
         $user->settings()->updateOrCreate([
             'user_id' => $request['user_id'],
         ], [
@@ -20,7 +20,7 @@ class UpdateSettings
             'expanded_default_edit' => $request['expanded_default_edit'] ?? false,
         ]);
 
-        $user->collections->each(function($collection) {
+        $user->collections->each(function ($collection) {
             DB::table('collection_card_summaries')
                 ->where('collection_uuid', '=', $collection->uuid)
                 ->update(['condition' => 'NM']);

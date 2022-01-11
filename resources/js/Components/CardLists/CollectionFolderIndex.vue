@@ -46,7 +46,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
-                                <p>{{ format(folderItem.value) }}</p>
+                                <p>{{ folderItem.value }}</p>
                             </div>
                         </div>
                     </template>
@@ -83,7 +83,7 @@
                             </div>
                             <div>
                                 <p class="text-xs text-gray-500">Value</p>
-                                <p>{{ format(collection.value) }}</p>
+                                <p>{{ collection.value }}</p>
                             </div>
                         </div>
                     </template>
@@ -122,7 +122,6 @@
 <script>
 import CardList from "@/Components/CardLists/CardList";
 import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu";
-import { formatCurrency } from "@/Shared/api/ConvertValue";
 import EditCollectionPanel from "@/Components/Panels/EditCollectionPanel";
 import DeleteCollectionPanel from "@/Components/Panels/DeleteCollectionPanel";
 import MoveItemPanel from "@/Components/Panels/MoveItemPanel";
@@ -195,9 +194,6 @@ export default {
     },
 
     methods: {
-        format(value) {
-            return value ? formatCurrency(value) : "N/A";
-        },
         linkClicked(clickData) {
             this.editCollection = clickData.collection;
             this.editCollectionType = clickData.type;

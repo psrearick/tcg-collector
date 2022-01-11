@@ -13,7 +13,7 @@
                 Current Value
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ formattedCurrency(summary.current_value) }}
+                {{ summary.current_value }}
             </dd>
         </card-list-card>
         <card-list-card>
@@ -21,7 +21,7 @@
                 Acquired Value
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ formattedCurrency(summary.acquired_value) }}
+                {{ summary.acquired_value }}
             </dd>
         </card-list-card>
         <card-list-card>
@@ -31,10 +31,12 @@
             <dd
                 class="mt-1 text-3xl font-semibold"
                 :class="
-                    summary.gain_loss >= 0 ? 'text-gray-900' : 'text-red-500'
+                    currency(summary.gain_loss).value >= 0
+                        ? 'text-gray-900'
+                        : 'text-red-500'
                 "
             >
-                {{ formattedCurrency(summary.gain_loss) }} ({{
+                {{ summary.gain_loss }} ({{
                     formattedPercentage(summary.gain_loss_percent)
                 }})
             </dd>
@@ -45,7 +47,7 @@
 <script>
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
-import { formatCurrency, formatPercentage } from "@/Shared/api/ConvertValue";
+import { formatPercentage } from "@/Shared/api/ConvertValue";
 
 export default {
     name: "CollectionsShowCardList",
@@ -63,10 +65,8 @@ export default {
     },
 
     methods: {
-        formattedCurrency(value) {
-            return formatCurrency(value);
-        },
         formattedPercentage(value) {
+            console.log();
             return formatPercentage(value, 2, true, true);
         },
     },

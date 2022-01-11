@@ -10,7 +10,7 @@ class PriceData
 
     public ?int $id;
 
-    public float $price;
+    public int $price;
 
     public string $provider_uuid;
 
@@ -21,7 +21,7 @@ class PriceData
         $this->id               = $data['id'] ?? null;
         $this->card_uuid        = $data['card_uuid'] ?? '';
         $this->provider_uuid    = $data['provider_uuid'] ?? '';
-        $this->price            = $data['price'] ?? 0.0;
+        $this->price            = $data['price'] ?? 0;
         $this->foil             = $data['foil'] ?? false;
         $this->type             = $data['type'] ?? 'usd';
     }

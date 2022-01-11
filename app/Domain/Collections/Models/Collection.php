@@ -41,6 +41,11 @@ class Collection extends Model
         ->withTimestamps();
     }
 
+    public function cardSummaries() : HasMany
+    {
+        return $this->hasMany(CollectionCardSummary::class, 'collection_uuid', 'uuid');
+    }
+
     public function folder() : BelongsTo
     {
         return $this->belongsTo(Folder::class, 'folder_uuid', 'uuid');
@@ -57,11 +62,6 @@ class Collection extends Model
             ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
             ->leftJoin('collection_teams', 'collections.uuid', '=', 'collection_teams.collection_uuid')
             ->where('collection_teams.team_id', '=', auth()->user()->currentTeam->id);
-    }
-
-    public function cardSummaries() : HasMany
-    {
-        return $this->hasMany(CollectionCardSummary::class, 'collection_uuid', 'uuid');
     }
 
     public function summary() : BelongsTo

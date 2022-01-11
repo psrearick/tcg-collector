@@ -2,6 +2,9 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
+use Brick\Math\BigInteger;
+use Brick\Math\RoundingMode;
+use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 class CalculateSummary
@@ -10,23 +13,33 @@ class CalculateSummary
     {
         $totals = [
             'total_cards'       => 0,
-            'current_value'     => 0,
-            'acquired_value'    => 0,
+            'current_value'     => Money::ofMinor(0, 'USD'),
+            'acquired_value'    => Money::ofMinor(0, 'USD'),
         ];
 
         $collectionItems->each(function ($item) use (&$totals) {
             $item = is_array($item) ? $item : $item->toArray();
             $totals['total_cards'] += $item['quantity'];
-            $totals['current_value'] += $item['price'] * $item['quantity'];
-            $totals['acquired_value'] += $item['acquired_price'] * $item['quantity'];
+            $quantity = BigInteger::of($item['quantity']);
+            $totals['current_value'] = $totals['current_value']
+                ->plus(Money::ofMinor($item['price'], 'USD')->multipliedBy($quantity));
+            $totals['acquired_value'] = $totals['acquired_value']
+                ->plus(Money::ofMinor($item['acquired_price'], 'USD')->multipliedBy($quantity));
         });
 
-        $gainLoss        = $totals['current_value'] - $totals['acquired_value'];
-        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
-        $gainLossPercent = $totals['acquired_value'] != 0 ? $gainLoss / $totals['acquired_value'] : $gainLossPercent;
+        $gainLoss           = $totals['current_value']->minus($totals['acquired_value'])->getAmount();
+        $acquiredValue      = $totals['acquired_value']->getAmount();
+        $gainLossPercent    = $gainLoss->isEqualTo(0) ? 0 : 1;
 
-        $totals['gain_loss']         = $gainLoss;
-        $totals['gain_loss_percent'] = $gainLossPercent;
+        if (!$acquiredValue->isEqualTo(0)) {
+            $gainLossPercent = $gainLoss
+                ->dividedBy($acquiredValue, 4, RoundingMode::UP)->toFloat();
+        }
+
+        $totals['acquired_value']        = $totals['acquired_value']->formatTo('en_US');
+        $totals['current_value']         = $totals['current_value']->formatTo('en_US');
+        $totals['gain_loss']             = Money::of($gainLoss->toFloat(), 'USD')->formatTo('en_US');
+        $totals['gain_loss_percent']     = $gainLossPercent;
 
         return $totals;
     }

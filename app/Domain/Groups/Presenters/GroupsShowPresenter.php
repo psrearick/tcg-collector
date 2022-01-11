@@ -9,11 +9,15 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use App\Domains\Users\DataObjects\UserData;
-use App\Support\Collection as SupportCollection;
+use App\Support\Collection as AppSupportCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 
 class GroupsShowPresenter implements PresenterInterface
 {
+    private ?SupportCollection $collections;
+
     private ?array $pagination;
 
     private ?int $userId;
@@ -26,24 +30,59 @@ class GroupsShowPresenter implements PresenterInterface
 
     public function present() : array
     {
-        $currentGroup   = auth()->user()->currentTeam;
-        $uuids          = $this->getGroupCollectionUuids();
-        // dd($uuids);
-        $collections    = Collection::whereIn('uuid', $uuids)->with(['summary', 'user'])->get();
-        $summaryData    = (new GetSummaryData)($collections, null, true);
+        $this->getCollections();
 
-        $collections->transform(function ($collection) {
-            $collectionData = $collection->toArray();
-            $summaryData   = new SummaryData((new GetSummaryData)(collect([$collection]), null, true));
-            $userData       = new UserData($collectionData['user']);
+        return [
+            'collections'   => $this->paginateCollection(),
+            'users'         => $this->getUsers(),
+            'userId'        => $this->userId,
+        ];
+    }
 
-            $collectionData['user']         = $userData;
-            $collectionData['summary_data'] = $summaryData;
+    private function filterCollections() : void
+    {
+        if ($userId = $this->userId) {
+            $this->collections = $this->collections->filter(function ($collection) use ($userId) {
+                return $collection->user_id == $userId;
+            });
+        }
+    }
 
-            return new CollectionData($collectionData);
+    private function getCollections() : void
+    {
+        $uuids                = $this->getGroupCollectionUuids();
+        $this->collections    = Collection::whereIn('uuid', $uuids)
+            ->with(['summary', 'user'])->get();
+
+        $this->transformCollections();
+        $this->filterCollections();
+        $this->sortCollections();
+    }
+
+    private function getGroupCollectionUuids() : array
+    {
+        $folders = [];
+        Folder::get()->each(function ($folder) use (&$folders) {
+            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
         });
 
-        $users = $currentGroup->allUsers()->map(function ($user) use ($collections) {
+        $collections = DB::table('collections')
+            ->whereIn('folder_uuid', $folders)
+            ->whereNull('deleted_at')
+            ->pluck('uuid')
+            ->toArray();
+
+        $groupCollections = Collection::get()->pluck('uuid')->toArray();
+
+        return array_unique(array_merge($collections, $groupCollections), SORT_REGULAR);
+    }
+
+    private function getUsers() : SupportCollection
+    {
+        $currentGroup   = auth()->user()->currentTeam;
+        $collections    = $this->collections;
+
+        return $currentGroup->allUsers()->map(function ($user) use ($collections) {
             $data               = new UserData($user->toArray());
             $userCollections    = $collections->filter(function ($collection) use ($user) {
                 return $collection->user_id == $user->id;
@@ -62,17 +101,11 @@ class GroupsShowPresenter implements PresenterInterface
 
             return $data;
         });
+    }
 
-        if ($this->userId) {
-            $userId      = $this->userId;
-            $collections = $collections->filter(function ($collection) use ($userId) {
-                return $collection->user_id == $userId;
-            });
-        }
-
-        $collections = $collections->sortBy('name');
-
-        $collectionPaginated = (new SupportCollection($collections));
+    private function paginateCollection() : LengthAwarePaginator
+    {
+        $collectionPaginated = (new AppSupportCollection($this->collections));
         if ($this->pagination) {
             $page                = $this->pagination;
             $collectionPaginated = $collectionPaginated->paginate($page['per_page'], $page['total'], $page['current_page']);
@@ -80,28 +113,26 @@ class GroupsShowPresenter implements PresenterInterface
             $collectionPaginated = $collectionPaginated->paginate(25);
         }
 
-        return [
-            'collections'   => $collectionPaginated,
-            'users'         => $users,
-            'userId'        => $this->userId,
-        ];
+        return $collectionPaginated;
     }
 
-    private function getGroupCollectionUuids()
+    private function sortCollections() : void
     {
-        $folders = [];
-        Folder::get()->each(function ($folder) use (&$folders) {
-            $folders = array_merge($folders, Folder::descendantsAndSelf($folder)->pluck('uuid')->all());
+        $this->collections = $this->collections->sortBy('name');
+    }
+
+    private function transformCollections() : void
+    {
+        $this->collections->transform(function ($collection) {
+            $summary        = (new GetSummaryData)(collect([$collection]));
+            $summaryData    = new SummaryData($summary, null, true);
+            $collectionData = $collection->toArray();
+            $userData       = new UserData($collectionData['user']);
+
+            $collectionData['user']         = $userData;
+            $collectionData['summary_data'] = $summaryData;
+
+            return new CollectionData($collectionData);
         });
-
-        $collections = DB::table('collections')
-            ->whereIn('folder_uuid', $folders)
-            ->whereNull('deleted_at')
-            ->pluck('uuid')
-            ->toArray();
-
-        $groupCollections = Collection::get()->pluck('uuid')->toArray();
-
-        return array_unique(array_merge($collections, $groupCollections), SORT_REGULAR);
     }
 }
