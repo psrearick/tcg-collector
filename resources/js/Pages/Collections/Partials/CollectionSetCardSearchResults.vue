@@ -56,7 +56,7 @@
                 </div>
                 <div>
                     <p
-                        v-for="(price, priceIndex) in card.prices"
+                        v-for="(price, priceIndex) in getPrices(card.prices)"
                         :key="priceIndex"
                         class="text-center md:text-right"
                     >
@@ -121,6 +121,15 @@ export default {
         },
         capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
+        },
+        getPrices(prices) {
+            let result = {};
+            Object.keys(prices).forEach((price) => {
+                if ("display_" + price in prices) {
+                    result[price] = prices["display_" + price];
+                }
+            });
+            return result;
         },
         updateQuantity: function (value, id, finish) {
             this.activeField = null;

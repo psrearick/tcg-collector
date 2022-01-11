@@ -10,18 +10,18 @@
         </card-list-card>
         <card-list-card>
             <dt class="text-sm font-medium text-gray-500 truncate">
-                Current Value
-            </dt>
-            <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                {{ summary.display_current_value }}
-            </dd>
-        </card-list-card>
-        <card-list-card>
-            <dt class="text-sm font-medium text-gray-500 truncate">
                 Acquired Value
             </dt>
             <dd class="mt-1 text-3xl font-semibold text-gray-900">
                 {{ summary.display_acquired_value }}
+            </dd>
+        </card-list-card>
+        <card-list-card>
+            <dt class="text-sm font-medium text-gray-500 truncate">
+                Current Value
+            </dt>
+            <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                {{ summary.display_current_value }}
             </dd>
         </card-list-card>
         <card-list-card>

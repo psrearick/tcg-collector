@@ -84,8 +84,8 @@ export default {
     components: { UiInputLabel },
     props: {
         modelValue: {
-            type: [String, Number],
-            default: "",
+            type: [String, Number, Object],
+            default: () => {},
         },
         name: {
             type: String,

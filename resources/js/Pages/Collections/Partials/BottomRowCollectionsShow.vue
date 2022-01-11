@@ -27,9 +27,7 @@
                                 >Acquired Price</span
                             >
                             <span class="ml-4">{{
-                                $convertValue.formatCurrency(
-                                    card.acquired_price
-                                )
+                                card.display_acquired_price
                             }}</span>
                         </div>
                         <div class="flex">

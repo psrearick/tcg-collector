@@ -206,6 +206,7 @@ class CollectionProjector extends Projector
 
         $condition  = $attributes['updated']['condition'];
         $fromCond   = isset($attributes['from']) ? ($attributes['from']['condition'] ?? $condition) : $condition;
+        $fromCond   = $fromCond ?: 'NM';
 
         $existingCard = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
             ->where('card_uuid', '=', $cardUuid)
@@ -221,6 +222,21 @@ class CollectionProjector extends Projector
 
         $existingCard = $existingCard->get()->first();
 
+        if (!$existingCard) {
+            if (CollectionCardSettingsService::tracksPrice() && $fromCond == 'NM') {
+                $existingCard = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
+                    ->where('card_uuid', '=', $cardUuid)
+                    ->where('finish', '=', $finish)
+                    ->whereNull('condition');
+
+                if (CollectionCardSettingsService::tracksPrice()) {
+                    $existingCard->where('price_when_added', $fromPrice);
+                }
+
+                $existingCard = $existingCard->get()->first();
+            }
+        }
+
         $targetCard   = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
             ->where('card_uuid', '=', $cardUuid)
             ->where('finish', '=', $finish);
@@ -234,6 +250,21 @@ class CollectionProjector extends Projector
         }
 
         $targetCard = $targetCard->get()->first();
+
+        if (!$targetCard) {
+            if (CollectionCardSettingsService::tracksPrice() && $condition == 'NM') {
+                $targetCard   = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
+                    ->where('card_uuid', '=', $cardUuid)
+                    ->where('finish', '=', $finish)
+                    ->whereNull('condition');
+
+                if (CollectionCardSettingsService::tracksPrice()) {
+                    $targetCard->where('price_when_added', $acquired);
+                }
+
+                $targetCard = $targetCard->get()->first();
+            }
+        }
 
         if (!$existingCard) {
             CollectionCardSummary::create([

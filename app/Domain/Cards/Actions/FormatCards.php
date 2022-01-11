@@ -8,6 +8,7 @@ use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
+use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as SupportCollection;
 
@@ -64,7 +65,13 @@ class FormatCards
 
             return [$price->card_uuid => $price];
         })->map(function ($group) {
-            return $group->filter(fn ($price) => $price->price > 0)->pluck('price', 'finish')->toArray();
+            $filtered = $group->filter(fn ($price) => $price->price > 0)->pluck('price', 'finish')->toArray();
+
+            foreach ($filtered as $finish => $price) {
+                $filtered["display_$finish"] = Money::ofMinor($price, 'USD')->formatTo('en_US');
+            }
+
+            return $filtered;
         });
 
         return $results->transform(function ($model) use ($collectionMap, $prices) {

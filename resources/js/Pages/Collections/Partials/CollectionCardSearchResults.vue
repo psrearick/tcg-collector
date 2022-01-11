@@ -70,7 +70,9 @@
                     </div>
                     <div>
                         <p
-                            v-for="(price, priceIndex) in card.prices"
+                            v-for="(price, priceIndex) in getPrices(
+                                card.prices
+                            )"
                             :key="priceIndex"
                             class="text-center md:text-right md:pr-1"
                         >
@@ -157,6 +159,15 @@ export default {
         activate(id, finish) {
             this.activeField = id;
             this.activeFieldFinish = finish;
+        },
+        getPrices(prices) {
+            let result = {};
+            Object.keys(prices).forEach((price) => {
+                if ("display_" + price in prices) {
+                    result[price] = prices["display_" + price];
+                }
+            });
+            return result;
         },
         updatePage(page) {
             this.$emit("update:paginator", page);

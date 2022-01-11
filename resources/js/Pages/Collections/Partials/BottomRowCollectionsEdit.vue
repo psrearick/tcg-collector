@@ -52,7 +52,7 @@
                                 type="currency"
                                 before="$"
                                 class="px-8"
-                                @blur="newCard.price = format(newCard.price)"
+                                @blur="newCard.price = currency(newCard.price)"
                             />
                         </span>
                     </div>
@@ -225,8 +225,8 @@ export default {
                 finish: null,
                 quantity: 0,
                 change: 0,
-                acquired_price: this.format("0"),
-                price: this.format("0"),
+                acquired_price: this.currency(0),
+                price: this.currency(0),
                 condition: null,
             },
             addCardShow: false,
@@ -237,12 +237,12 @@ export default {
                 finish: null,
                 quantity: 0,
                 change: 0,
-                acquired_price: this.format("0"),
-                price: this.format("0"),
+                acquired_price: this.currency(0),
+                price: this.currency(0),
                 condition: null,
                 from: {
                     finish: null,
-                    acquired_price: this.format("0"),
+                    acquired_price: this.currency(0),
                     condition: null,
                 },
             },
@@ -260,7 +260,7 @@ export default {
                 this.newCard.price !== "" &&
                 this.newCard.condition !== "" &&
                 this.newCard.quantity !== "" &&
-                this.unformat(this.newCard.quantity) > 0
+                this.newCard.quantity > 0
             );
         },
         fieldData() {
@@ -321,6 +321,7 @@ export default {
             if (!change) {
                 change = {};
             }
+
             let route = this.route(
                 "collection-cards.store",
                 card.collection_uuid
@@ -343,6 +344,7 @@ export default {
                 }
                 if (key === "index") {
                     formData.index = card.index;
+                    return;
                 }
                 const value = change[key] ? change[key] : card[key];
                 formData[key] = value ? value : formData[key];
@@ -365,15 +367,16 @@ export default {
         addCard() {
             let collection =
                 this.$store.getters.currentCollection || this.page.collection;
-            this.newCard.index = -1;
-            this.newCard.uuid = this.data.uuid;
-            this.newCard.finish = this.data.finish;
-            this.newCard.acquired_price = this.unformat(this.newCard.price);
-            this.newCard.price = this.unformat(this.newCard.price);
-            this.newCard.change = this.newCard.quantity;
-            this.newCard.collection_uuid = collection.uuid;
-            let condition = this.conditions[this.newCard.condition].label;
-            this.submitForm(this.newCard, { condition: condition });
+            let submitCard = _.cloneDeep(this.newCard);
+            submitCard.index = -1;
+            submitCard.uuid = this.data.uuid;
+            submitCard.finish = this.data.finish;
+            submitCard.acquired_price = this.unformat(this.newCard.price);
+            submitCard.price = this.unformat(this.newCard.price);
+            submitCard.change = this.newCard.quantity;
+            submitCard.collection_uuid = collection.uuid;
+            let condition = this.conditions[submitCard.condition].label;
+            this.submitForm(submitCard, { condition: condition });
         },
         cancelAddCard() {
             this.newCard = _.cloneDeep(this.defaultForm);
@@ -381,17 +384,15 @@ export default {
         },
         updateCondition(index) {
             let condition = this.conditions[this.condition[index]].label;
-            const changed = this.getChangedCondition(index);
-            if (changed) {
+            if (this.getChangedCondition(index)) {
                 const card = this.indexedCards[index];
                 this.submitForm(card, { condition: condition });
             }
         },
         updatePrice(index) {
-            let price = this.format(this.price[index]);
-            this.price[index] = price;
-            const changed = this.getChangedPrice(index);
-            if (changed) {
+            const price = this.price[index];
+            this.price[index] = this.currency(price);
+            if (this.getChangedPrice(index)) {
                 const card = this.indexedCards[index];
                 this.submitForm(card, { acquired_price: this.unformat(price) });
             }
@@ -400,8 +401,7 @@ export default {
             return value ? formatNumber(value) : "N/A";
         },
         unformat(value) {
-            let val = value ? formatNumber(value, 2, ".", "") : 0;
-            return Number(val);
+            return Math.round(value * 100);
         },
         setCondition() {
             this.condition = this.data.cards.map((card) => {
@@ -413,7 +413,10 @@ export default {
         },
         setPrice() {
             this.price = this.data.cards.map((card) =>
-                this.format(card.acquired_price)
+                this.currency(card.acquired_price, {
+                    fromCents: true,
+                    precision: 2,
+                })
             );
         },
         getChangedCondition(index) {
@@ -422,8 +425,11 @@ export default {
             return original !== updated;
         },
         getChangedPrice(index) {
-            const original = Number(this.indexedCards[index].acquired_price);
-            const updated = Number(this.price[index]);
+            const original = this.currency(
+                this.indexedCards[index].acquired_price,
+                { fromCents: true, precision: 2 }
+            ).value;
+            const updated = this.currency(this.price[index]).value;
             return original !== updated;
         },
     },
