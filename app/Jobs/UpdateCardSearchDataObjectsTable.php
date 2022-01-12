@@ -34,7 +34,7 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
     public function handle()
     {
         $dataObject = $this->dataObject;
-        $dataPrices = $dataObject->prices;
+        $dataPrices = $dataObject->prices_bak;
         $prices = [];
         if (strlen($dataPrices) > 0) {
             $prices = unserialize($dataPrices);

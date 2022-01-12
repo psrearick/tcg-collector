@@ -13,10 +13,10 @@ class PopulateIntegerMoneyFields
 {
     public function __invoke()
     {
-        $this->updateSummariesTable();
-        $this->updatePrices();
-        $this->updateCollectionCardSummaries();
-        $this->updateCardCollections();
+        // $this->updateSummariesTable();
+        // $this->updatePrices();
+        // $this->updateCollectionCardSummaries();
+        // $this->updateCardCollections();
         $this->updateCardSearchDataObjects();
     }
 
