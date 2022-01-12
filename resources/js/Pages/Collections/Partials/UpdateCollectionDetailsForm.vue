@@ -77,7 +77,9 @@ export default {
     methods: {
         updateCollection() {
             this.form.post(
-                route("collections.update", { collection: this.collection.id }),
+                route("collections.update", {
+                    collection: this.collection.uuid,
+                }),
                 {
                     errorBag: "updateCollection",
                     preserveScroll: true,
