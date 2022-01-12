@@ -37,7 +37,7 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
         $dataPrices = $dataObject->prices_bak;
         $prices = [];
         if (strlen($dataPrices) > 0) {
-            $prices = unserialize($dataPrices);
+            $prices = json_decode($dataPrices);
         }
 
         $priceInts = [];
@@ -50,7 +50,7 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
         DB::table('card_search_data_objects')
             ->where('id', '=', $dataObject->id)
             ->update([
-                'prices_int' => serialize($priceInts),
+                'prices_int' => json_encode($priceInts),
             ]);
     }
 }
