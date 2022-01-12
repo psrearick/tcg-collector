@@ -50,7 +50,7 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
         DB::table('card_search_data_objects')
             ->where('id', '=', $dataObject->id)
             ->update([
-                'prices_int' => json_encode($priceInts),
+                'prices' => json_encode($priceInts),
             ]);
     }
 }
