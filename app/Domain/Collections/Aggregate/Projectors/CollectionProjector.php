@@ -200,9 +200,6 @@ class CollectionProjector extends Projector
         $acquired   = $attributes['updated']['acquired_price'];
         $price      = $attributes['updated']['price'] ?? $acquired;
         $fromPrice  = isset($attributes['from']) ? ($attributes['from']['acquired_price'] ?? $acquired) : $acquired;
-        // $acquired   = Money::of($acquired, 'USD')->getMinorAmount()->toInt();
-        // $price      = Money::of($price, 'USD')->getMinorAmount()->toInt();
-        // $fromPrice  = Money::of($fromPrice, 'USD')->getMinorAmount()->toInt();
 
         $condition  = $attributes['updated']['condition'];
         $fromCond   = isset($attributes['from']) ? ($attributes['from']['condition'] ?? $condition) : $condition;
@@ -227,7 +224,10 @@ class CollectionProjector extends Projector
                 $existingCard = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
                     ->where('card_uuid', '=', $cardUuid)
                     ->where('finish', '=', $finish)
-                    ->whereNull('condition');
+                    ->where(function ($query) {
+                        $query->where('condition', '=', '')
+                        ->orWhereNull('condition');
+                    });
 
                 if (CollectionCardSettingsService::tracksPrice()) {
                     $existingCard->where('price_when_added', $fromPrice);
@@ -256,7 +256,10 @@ class CollectionProjector extends Projector
                 $targetCard   = CollectionCardSummary::where('collection_uuid', '=', $attributes['uuid'])
                     ->where('card_uuid', '=', $cardUuid)
                     ->where('finish', '=', $finish)
-                    ->whereNull('condition');
+                    ->where(function ($query) {
+                        $query->where('condition', '=', '')
+                        ->orWhereNull('condition');
+                    });
 
                 if (CollectionCardSettingsService::tracksPrice()) {
                     $targetCard->where('price_when_added', $acquired);
@@ -275,7 +278,7 @@ class CollectionProjector extends Projector
                 'current_price'         => $price,
                 'quantity'              => $change,
                 'finish'                => $finish,
-                'condition'             => $condition,
+                'condition'             => $condition ?: 'NM',
                 'date_added'            => Carbon::now(),
             ]);
 
@@ -291,7 +294,7 @@ class CollectionProjector extends Projector
             'price_when_added'      => $acquired,
             'price_when_updated'    => $price,
             'current_price'         => $price,
-            'condition'             => $condition,
+            'condition'             => $condition ?: 'NM',
             'quantity'              => $existingCard->quantity + $change,
         ]);
     }
