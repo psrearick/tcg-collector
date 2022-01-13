@@ -4,7 +4,7 @@ namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\DataObjects\CardData;
 use App\Domain\Cards\DataObjects\CardSearchData;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
@@ -14,10 +14,10 @@ use Illuminate\Support\Collection as SupportCollection;
 
 class FormatCards
 {
-    public function __invoke(Builder $builder, ?CollectionCardSearchData $collectionCardSearchData = null, $shouldPaginate = true)
+    public function __invoke(Builder $builder, ?CollectionCardSearchParameterData $collectionCardSearchParameterData = null, $shouldPaginate = true)
     {
-        $collection = $collectionCardSearchData->uuid;
-        $search     = $collectionCardSearchData->search;
+        $collection = $collectionCardSearchParameterData->uuid;
+        $search     = $collectionCardSearchParameterData->search;
 
         $collectionMap = [];
         if ($collection) {

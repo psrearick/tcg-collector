@@ -7,7 +7,7 @@
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <team-dropdown />
+                <team-dropdown v-if="!$page.props.auth['admin-panel']" />
                 <settings-dropdown />
             </div>
 

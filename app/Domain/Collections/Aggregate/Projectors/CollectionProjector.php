@@ -16,7 +16,6 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
-use Brick\Money\Money;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;

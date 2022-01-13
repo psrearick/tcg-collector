@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Domain\Collections\Aggregate\DataObjects;
+namespace App\Domain\Base;
 
-use App\Domain\Cards\DataObjects\CardSearchData;
+use App\App\Contracts\DataObjectInterface;
+use App\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 
-class CollectionCardSearchData
+abstract class SearchParameterData implements DataObjectInterface
 {
     public ?Builder $builder;
 
     public ?Collection $data;
 
-    public CardSearchData $search;
+    public SearchData $search;
 
     public bool $single;
 

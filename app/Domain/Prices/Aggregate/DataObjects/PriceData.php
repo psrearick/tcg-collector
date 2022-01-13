@@ -2,7 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\DataObjects;
 
-class PriceData
+use App\App\Contracts\DataObjectInterface;
+
+class PriceData implements DataObjectInterface
 {
     public string $card_uuid;
 

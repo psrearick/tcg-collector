@@ -2,7 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\DataObjects;
 
-class SummaryData
+use App\App\Contracts\DataObjectInterface;
+
+class SummaryData implements DataObjectInterface
 {
     public int $acquired_value;
 

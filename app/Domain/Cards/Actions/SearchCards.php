@@ -45,6 +45,9 @@ class SearchCards
             $this->sort();
         }
 
-        return new CardSearchResultsData(['builder' => $this->cards]);
+        return new CardSearchResultsData([
+            'builder'   => $this->cards,
+            'search'    => $this->cardSearchData,
+        ]);
     }
 }
