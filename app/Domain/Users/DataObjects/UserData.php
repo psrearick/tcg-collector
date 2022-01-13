@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Users\DataObjects;
+namespace App\Domain\Users\DataObjects;
 
 use App\App\Contracts\DataObjectInterface;
 

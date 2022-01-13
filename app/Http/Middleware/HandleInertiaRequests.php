@@ -24,17 +24,18 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $user = optional($request->user())->load('settings');
+        $user           = optional($request->user())->load('settings');
+        $settingsData   = [
+            'card_condition'               => false,
+            'price_added'                  => false,
+            'expanded_default_edit'        => false,
+            'expanded_default_show'        => false,
+        ];
+
         if ($user) {
             $settings           = $user->settings;
-            $user->settingsData = [
-                'card_condition'               => false,
-                'price_added'                  => false,
-                'expanded_default_edit'        => false,
-                'expanded_default_show'        => false,
-            ];
             if (optional($settings)->first()) {
-                $user->settingsData = [
+                $settingsData = [
                     'card_condition'        => $settings->first()->tracks_condition,
                     'price_added'           => $settings->first()->tracks_price,
                     'expanded_default_edit' => $settings->first()->expanded_default_edit,
@@ -45,8 +46,9 @@ class HandleInertiaRequests extends Middleware
 
         return array_merge(parent::share($request), [
             'auth' => [
-                'user'        => $user,
-                'admin-panel' => session('admin-panel', false),
+                'settings'      => $settingsData,
+                'user'          => $user,
+                'admin-panel'   => session('admin-panel', false),
             ],
         ]);
     }
