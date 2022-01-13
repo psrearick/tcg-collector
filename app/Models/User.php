@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
+use App\Domain\Stores\Models\Store;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,7 +14,6 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
-use App\Domain\Stores\Models\Store;
 
 class User extends Authenticatable implements MustVerifyEmail
 {

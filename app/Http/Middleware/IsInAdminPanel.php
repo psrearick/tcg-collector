@@ -19,6 +19,7 @@ class IsInAdminPanel
         if (!session('admin-panel', false)) {
             return redirect()->route('collections.index');
         }
+
         return $next($request);
     }
 }

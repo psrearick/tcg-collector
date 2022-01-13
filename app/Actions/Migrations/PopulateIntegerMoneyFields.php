@@ -20,30 +20,6 @@ class PopulateIntegerMoneyFields
         $this->updateCardSearchDataObjects();
     }
 
-    private function updateSummariesTable() : void
-    {
-        DB::table('summaries')
-            ->lazyById()->each(function ($summary) {
-                UpdateSummariesTable::dispatch($summary);
-            });
-    }
-
-    private function updatePrices() : void
-    {
-        DB::table('prices')
-            ->lazyById()->each(function ($price) {
-                UpdatePricesTable::dispatch($price);
-            });
-    }
-
-    private function updateCollectionCardSummaries() : void
-    {
-        DB::table('collection_card_summaries')
-            ->lazyById()->each(function ($summary) {
-                UpdateCollectionCardSummariesTable::dispatch($summary);
-            });
-    }
-
     private function updateCardCollections() : void
     {
         DB::table('card_collections')
@@ -57,6 +33,30 @@ class PopulateIntegerMoneyFields
         DB::table('card_search_data_objects')
             ->lazyById()->each(function ($dataObject) {
                 UpdateCardSearchDataObjectsTable::dispatch($dataObject);
+            });
+    }
+
+    private function updateCollectionCardSummaries() : void
+    {
+        DB::table('collection_card_summaries')
+            ->lazyById()->each(function ($summary) {
+                UpdateCollectionCardSummariesTable::dispatch($summary);
+            });
+    }
+
+    private function updatePrices() : void
+    {
+        DB::table('prices')
+            ->lazyById()->each(function ($price) {
+                UpdatePricesTable::dispatch($price);
+            });
+    }
+
+    private function updateSummariesTable() : void
+    {
+        DB::table('summaries')
+            ->lazyById()->each(function ($summary) {
+                UpdateSummariesTable::dispatch($summary);
             });
     }
 }

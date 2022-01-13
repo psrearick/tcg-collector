@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\IsInAdminPanel;
 
 class Kernel extends HttpKernel
 {

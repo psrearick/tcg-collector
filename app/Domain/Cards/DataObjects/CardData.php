@@ -29,10 +29,10 @@ class CardData extends CoreCardData implements DataObjectInterface
         return array_merge(
             parent::toArray(),
             [
-            'collected'        => $this->collected,
-            'finishes'         => $this->finishes,
-            'prices'           => $this->prices,
-            'quantities'       => $this->quantities,
-        ]);
+                'collected'        => $this->collected,
+                'finishes'         => $this->finishes,
+                'prices'           => $this->prices,
+                'quantities'       => $this->quantities,
+            ]);
     }
 }

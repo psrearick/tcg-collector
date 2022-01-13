@@ -44,16 +44,16 @@ class CollectionCardData extends CoreCardData implements DataObjectInterface
         return array_merge(
             parent::toArray(),
             [
-            'id'                       => $this->id,
-            'price'                    => $this->price,
-            'display_price'            => $this->display_price,
-            'acquired_date'            => $this->acquired_date,
-            'acquired_price'           => $this->acquired_price,
-            'display_acquired_price'   => $this->display_acquired_price,
-            'quantity'                 => $this->quantity,
-            'finish'                   => $this->finish,
-            'condition'                => $this->condition,
-            'set'                      => $this->set,
-        ]);
+                'id'                       => $this->id,
+                'price'                    => $this->price,
+                'display_price'            => $this->display_price,
+                'acquired_date'            => $this->acquired_date,
+                'acquired_price'           => $this->acquired_price,
+                'display_acquired_price'   => $this->display_acquired_price,
+                'quantity'                 => $this->quantity,
+                'finish'                   => $this->finish,
+                'condition'                => $this->condition,
+                'set'                      => $this->set,
+            ]);
     }
 }

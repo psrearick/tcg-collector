@@ -10,7 +10,7 @@ class PaginateSearchResults
 {
     public function __invoke(?Collection $builder, SearchParameterData $searchParameterData) : LengthAwarePaginator
     {
-        $search = $searchParameterData->search;
+        $search  = $searchParameterData->search;
         $builder = $builder ?: $searchParameterData->data;
 
         if ($search->paginator) {

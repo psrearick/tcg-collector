@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateStoresTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('stores');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -27,15 +37,5 @@ class CreateStoresTable extends Migration
             $table->string('role');
             $table->timestamps();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('stores');
     }
 }

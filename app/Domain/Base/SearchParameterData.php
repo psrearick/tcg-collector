@@ -3,17 +3,16 @@
 namespace App\Domain\Base;
 
 use App\App\Contracts\DataObjectInterface;
-use Illuminate\Database\Eloquent\Builder;
 use App\Support\Collection;
-use App\Domain\Base\SearchData;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class SearchParameterData implements DataObjectInterface
 {
     public ?Builder $builder;
 
-    public SearchData $search;
-
     public ?Collection $data;
+
+    public SearchData $search;
 
     public bool $single;
 

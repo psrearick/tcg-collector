@@ -16,9 +16,9 @@ class SearchCollectionCards
     public function __invoke(CollectionCardSearchParameterData $collectionCardSearchParameterData) : CollectionCardSearchResultsData
     {
         $this->collectionCardSearchParameterData = $collectionCardSearchParameterData;
-        $searchCards                    = new SearchCards;
-        $cardSearchResults              = $searchCards($collectionCardSearchParameterData->search);
-        $this->cards                    = $cardSearchResults->builder;
+        $searchCards                             = new SearchCards;
+        $cardSearchResults                       = $searchCards($collectionCardSearchParameterData->search);
+        $this->cards                             = $cardSearchResults->builder;
 
         if (!$this->cards) {
             return new CollectionCardSearchResultsData([]);

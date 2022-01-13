@@ -4,8 +4,8 @@ namespace App\Domain\Stores\Actions;
 
 use App\Domain\Stores\DataObjects\StoreData;
 use App\Domain\Stores\Models\Store;
-use DateTimeZone;
 use App\Support\Collection;
+use DateTimeZone;
 
 class GetStores
 {
@@ -17,6 +17,7 @@ class GetStores
             $date->setTimeZone(new DateTimeZone('America/New_York'));
             $data = new StoreData($store->toArray());
             $data->created_at = date_format($date, 'm-d-Y h:i a');
+
             return $data;
         });
 

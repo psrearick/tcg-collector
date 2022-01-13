@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Brick\Money\Money;
 use Illuminate\Support\Facades\DB;
 
 class UpdatePricesTable implements ShouldQueue
@@ -34,8 +33,8 @@ class UpdatePricesTable implements ShouldQueue
      */
     public function handle()
     {
-        $price = $this->price;
-        $priceValue = Money::of($price->price ?: 0, 'USD');
+        $price         = $this->price;
+        $priceValue    = Money::of($price->price ?: 0, 'USD');
         $priceValueInt = $priceValue->getMinorAmount()->toInt();
 
         DB::table('prices')

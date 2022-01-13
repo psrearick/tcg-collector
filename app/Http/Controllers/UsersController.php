@@ -6,7 +6,8 @@ use Inertia\Inertia;
 
 class UsersController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return Inertia::render('Users/Index');
     }
 }
