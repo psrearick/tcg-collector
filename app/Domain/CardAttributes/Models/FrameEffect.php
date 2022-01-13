@@ -4,11 +4,14 @@ namespace App\Domain\CardAttributes\Models;
 
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class FrameEffect extends Model
 {
+    use HasFactory;
+    
     /**
      * Get all cards assigned to this frame effect
      *

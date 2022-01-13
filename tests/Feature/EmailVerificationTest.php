@@ -23,6 +23,9 @@ class EmailVerificationTest extends TestCase
 
         Event::fake();
 
+        /**
+         * @var User
+         */
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);
@@ -47,6 +50,9 @@ class EmailVerificationTest extends TestCase
             return $this->markTestSkipped('Email verification not enabled.');
         }
 
+        /**
+         * @var User
+         */
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);

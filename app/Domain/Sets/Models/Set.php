@@ -7,10 +7,19 @@ use App\Domain\Base\Model;
 use App\Domain\CardAttributes\Models\Printing;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;
+use Database\Factories\SetFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Set extends Model
 {
+    use HasFactory;
+
+    protected static function newFactory()
+    {
+        return SetFactory::new();
+    }
+
     public static function booted() : void
     {
         static::addGlobalScope(new NotOnlineOnlySetScope);
