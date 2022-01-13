@@ -150,7 +150,6 @@ class UpdateCard implements ShouldQueue
             return;
         }
 
-        // SetCardImages::dispatch($card)->delay(now()->addMinutes(5));
         SetCardSet::dispatch($cardData, $card)->delay(now()->addMinutes(10));
         SetColorFields::dispatch($cardData, $card)->delay(now()->addMinutes(15));
         SetFinishes::dispatch($cardData, $card)->delay(now()->addMinutes(20));
