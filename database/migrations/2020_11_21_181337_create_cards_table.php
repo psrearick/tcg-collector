@@ -26,7 +26,7 @@ class CreateCardsTable extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
-            $table->string('name_normalized')->virtualAs("regexp_replace(name, '[^A-Za-z0-9]', '')")->index();
+            $table->string('name_normalized')->index();
             $table->string('cardId')->index();
             $table->string('arenaId')->nullable();
             $table->string('languageCode')->nullable();
