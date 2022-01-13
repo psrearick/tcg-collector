@@ -2,9 +2,10 @@
 
 namespace App\Domain\Folders\Aggregate\DataObjects;
 
+use App\App\Contracts\DataObjectInterface;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 
-class FolderData
+class FolderData implements DataObjectInterface
 {
     public array $allowed;
 

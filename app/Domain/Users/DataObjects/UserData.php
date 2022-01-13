@@ -2,7 +2,9 @@
 
 namespace App\Domains\Users\DataObjects;
 
-class UserData
+use App\App\Contracts\DataObjectInterface;
+
+class UserData implements DataObjectInterface
 {
     public ?int $collection_count;
 
@@ -23,7 +25,7 @@ class UserData
         $this->folder_count     = $data['folder_count'] ?? null;
     }
 
-    public function toArray()
+    public function toArray() : array
     {
         return [
             'name'              => $this->name,

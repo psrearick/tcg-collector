@@ -7,7 +7,7 @@ use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\CollectionAggregateRoot;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Collections\Services\CollectionCardSettingsService;
 use Carbon\Carbon;
@@ -69,7 +69,7 @@ class UpdateCollectionCard
             $finalQuantity = 0;
         }
 
-        $searchData = new CollectionCardSearchData([
+        $searchData = new CollectionCardSearchParameterData([
             'uuid'      => $this->uuid,
             'single'    => true,
             'search'    => new CardSearchData(

@@ -8,7 +8,7 @@ use App\Domain\Cards\Actions\SearchCards;
 use App\Domain\Cards\DataObjects\CardData;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
 use App\Support\Collection as SupportCollection;
@@ -38,7 +38,7 @@ class SearchAllCollectionCards
         $cards      = $searchResults ? $searchResults->get() : collect([]);
         $collection = (new GetAllCollectionCards)($cards);
         $collection = $this->transformCollection($collection);
-        $searchData = new CollectionCardSearchData([
+        $searchData = new CollectionCardSearchParameterData([
             'search'    => new CardSearchData($request),
             'data'      => $collection,
         ]);

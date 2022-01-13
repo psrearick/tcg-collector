@@ -3,14 +3,14 @@
 namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Actions\PaginateSearchResults;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Support\Collection;
 use Brick\Money\Money;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class FormatCollectionCards
 {
-    public function __invoke(Collection $builder, CollectionCardSearchData $collectionCardSearchData) : LengthAwarePaginator
+    public function __invoke(Collection $builder, CollectionCardSearchParameterData $collectionCardSearchParameterData) : LengthAwarePaginator
     {
         $builder->transform(function ($card) {
             $card->display_price = Money::ofMinor($card->price, 'USD')->formatTo('en_US');
@@ -37,6 +37,6 @@ class FormatCollectionCards
             ->values();
         }
 
-        return (new PaginateSearchResults())($builder, $collectionCardSearchData);
+        return (new PaginateSearchResults())($builder, $collectionCardSearchParameterData);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Cards\Actions\FormatCards;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Presenters\SetCollectionsPresenter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,7 +25,7 @@ class SetCollectionsController extends Controller
             ],
         ];
 
-        $searchData = new CollectionCardSearchData([
+        $searchData = new CollectionCardSearchParameterData([
             'uuid'      => $collection,
             'search'    => new CardSearchData($search),
         ]);

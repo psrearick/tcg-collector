@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Cards\Actions\FormatCards;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class CollectionsEditSearchController
         $search['sort']['name']         = 'asc';
         $search['sort']['releaseDate']  = 'desc';
 
-        $searchData = new CollectionCardSearchData([
+        $searchData = new CollectionCardSearchParameterData([
             'uuid'      => $collection,
             'search'    => new CardSearchData($search),
         ]);

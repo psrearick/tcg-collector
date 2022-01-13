@@ -3,7 +3,7 @@
 namespace App\Domain\Collections\Aggregate\Actions;
 
 use App\Domain\Cards\Actions\SearchCards;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchResultsData;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -11,13 +11,13 @@ class SearchCollectionCards
 {
     protected ?Builder $cards;
 
-    protected CollectionCardSearchData $collectionCardSearchData;
+    protected CollectionCardSearchParameterData $collectionCardSearchParameterData;
 
-    public function __invoke(CollectionCardSearchData $collectionCardSearchData) : CollectionCardSearchResultsData
+    public function __invoke(CollectionCardSearchParameterData $collectionCardSearchParameterData) : CollectionCardSearchResultsData
     {
-        $this->collectionCardSearchData = $collectionCardSearchData;
+        $this->collectionCardSearchParameterData = $collectionCardSearchParameterData;
         $searchCards                    = new SearchCards;
-        $cardSearchResults              = $searchCards($collectionCardSearchData->search);
+        $cardSearchResults              = $searchCards($collectionCardSearchParameterData->search);
         $this->cards                    = $cardSearchResults->builder;
 
         if (!$this->cards) {
@@ -31,7 +31,7 @@ class SearchCollectionCards
 
     private function addRelations() : void
     {
-        $uuid = $this->collectionCardSearchData->uuid;
+        $uuid = $this->collectionCardSearchParameterData->uuid;
 
         $this->cards->with([
             'finishes',

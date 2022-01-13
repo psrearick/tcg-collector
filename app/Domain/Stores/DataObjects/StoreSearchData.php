@@ -7,8 +7,4 @@ use App\Domain\Base\SearchData;
 
 class StoreSearchData extends SearchData implements DataObjectInterface
 {
-    public function __construct(array $data)
-    {
-        $this->paginator  = $data['paginator'] ?? [];
-    }
 }
