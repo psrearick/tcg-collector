@@ -2,7 +2,10 @@
 
 namespace App\Domain\Cards\DataObjects;
 
-class CardSearchData
+use App\App\Contracts\DataObjectInterface;
+use App\Domain\Base\SearchData;
+
+class CardSearchData extends SearchData implements DataObjectInterface
 {
     public ?string $card;
 

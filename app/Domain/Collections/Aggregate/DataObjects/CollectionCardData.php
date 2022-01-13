@@ -2,7 +2,9 @@
 
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
-class CollectionCardData
+use App\App\Contracts\DataObjectInterface;
+
+class CollectionCardData implements DataObjectInterface
 {
     public string $acquired_date;
 

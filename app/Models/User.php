@@ -13,6 +13,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
+use App\Domain\Stores\Models\Store;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -75,5 +76,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function settings() : HasMany
     {
         return $this->hasMany(Setting::class);
+    }
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class)
+                        ->withPivot('role')
+                        ->withTimestamps();
     }
 }

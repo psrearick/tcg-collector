@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\IsInAdminPanel;
 
 class Kernel extends HttpKernel
 {
@@ -65,5 +66,6 @@ class Kernel extends HttpKernel
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isPublic'         => \App\App\Client\Middleware\VerifyCollectionIsPublic::class,
+        'isInAdminPanel'   => \App\Http\Middleware\IsInAdminPanel::class,
     ];
 }

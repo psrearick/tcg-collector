@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\CollectionCardsController;
 use App\Http\Controllers\CollectionCardsDeleteController;
 use App\Http\Controllers\CollectionCardsMoveController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\GroupUsersController;
 use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StoresController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -71,4 +74,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
     Route::get('user/settings', [SettingsController::class, 'show'])->name('settings.show');
     Route::patch('user/update-settings', [SettingsController::class, 'update'])->name('settings.update-settings');
+
+    // Admin Routes
+    Route::get('admin-panel/edit', [AdminPanelController::class, 'edit'])->name('admin-panel.edit');
+    Route::middleware(['isInAdminPanel'])->group(function () {
+        Route::get('stores', [StoresController::class, 'index'])->name('stores.index');
+        Route::get('stores/create', [StoresController::class, 'create'])->name('stores.create');
+        Route::post('stores', [StoresController::class, 'store'])->name('stores.store');
+        Route::get('users', [UsersController::class, 'index'])->name('users.index');
+    });
 });

@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Domain\Prices\Aggregate\DataObjects;
+namespace App\Domain\Stores\DataObjects;
 
 use App\App\Contracts\DataObjectInterface;
 
-class PriceProviderData implements DataObjectInterface
+class StoreData implements DataObjectInterface
 {
     public string $name;
 
-    public string $uuid;
+    public ?string $created_at;
 
     public function __construct(array $data)
     {
-        $this->uuid = $data['uuid'] ?? '';
         $this->name = $data['name'] ?? '';
+        $this->created_at = $data['created_at'] ?? null;
     }
 
     public function toArray() : array
     {
         return [
-            'uuid'  => $this->uuid,
-            'name'  => $this->name,
+            'name' => $this->name,
+            'created_at' => $this->created_at,
         ];
     }
 }

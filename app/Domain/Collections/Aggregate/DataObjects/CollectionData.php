@@ -2,10 +2,11 @@
 
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
+use App\App\Contracts\DataObjectInterface;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use App\Domains\Users\DataObjects\UserData;
 
-class CollectionData
+class CollectionData implements DataObjectInterface
 {
     public array $allowed;
 

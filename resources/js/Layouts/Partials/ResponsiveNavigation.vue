@@ -23,7 +23,7 @@
                 :href="route('groups.index')"
                 :active="route().current('groups.index')"
             >
-                Groups
+                Group
             </jet-responsive-nav-link>
         </div>
 
