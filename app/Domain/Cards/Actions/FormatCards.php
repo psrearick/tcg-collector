@@ -10,8 +10,8 @@ use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
 use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 
 class FormatCards
 {

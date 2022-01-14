@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class RelatedObjects extends Model
 {
     use HasFactory;
-    
+
     /**
      * @return BelongsToMany
      */

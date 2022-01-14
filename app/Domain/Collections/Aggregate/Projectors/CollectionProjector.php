@@ -179,7 +179,6 @@ class CollectionProjector extends Projector
 
     private function updateCardSearchDataObject(CollectionCardSummary $collectionCardSummary) : void
     {
-        
     }
 
     private function updateCollectionCard(array $attributes) : void

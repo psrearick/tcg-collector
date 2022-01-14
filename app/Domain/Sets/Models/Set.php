@@ -15,11 +15,6 @@ class Set extends Model
 {
     use HasFactory;
 
-    protected static function newFactory()
-    {
-        return SetFactory::new();
-    }
-
     public static function booted() : void
     {
         static::addGlobalScope(new NotOnlineOnlySetScope);
@@ -53,5 +48,10 @@ class Set extends Model
     public function tokens() : HasMany
     {
         return $this->hasMany(Token::class);
+    }
+
+    protected static function newFactory()
+    {
+        return SetFactory::new();
     }
 }

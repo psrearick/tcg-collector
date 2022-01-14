@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 class FrameEffect extends Model
 {
     use HasFactory;
-    
+
     /**
      * Get all cards assigned to this frame effect
      *

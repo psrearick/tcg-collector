@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Finish extends Model
 {
     use HasFactory;
-    
+
     public function cards() : BelongsToMany
     {
         return $this->belongsToMany(Card::class);

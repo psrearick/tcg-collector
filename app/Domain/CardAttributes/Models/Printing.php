@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Printing extends Model
 {
     use HasFactory;
-    
+
     /**
      * @return BelongsTo
      */

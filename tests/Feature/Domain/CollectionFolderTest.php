@@ -2,15 +2,14 @@
 
 namespace Tests\Feature\Domain;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\MoveCollection;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Models\Folder;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CollectionFolderTest extends TestCase
 {
@@ -26,7 +25,7 @@ class CollectionFolderTest extends TestCase
         $collectionFolder           = $collection->folder;
         $folderCollections          = $folder->collections();
         $folderCollection           = $folderCollections->first();
-        
+
         $this->assertModelExists($collectionFolder);
         $this->assertEquals($folderUuid, $collectionFolder->uuid);
         $this->assertModelExists($folderCollection);
@@ -64,6 +63,20 @@ class CollectionFolderTest extends TestCase
         $this->assertEquals($collectionUuid, $newFolderCollection->uuid);
     }
 
+    public function test_a_collection_can_move_from_a_folder_to_root()
+    {
+        $collectionFolderCreated    = $this->createCollectionInFolder();
+        $userId                     = $collectionFolderCreated['user_id'];
+        $folderUuid                 = $collectionFolderCreated['folder_uuid'];
+        $collectionUuid             = $collectionFolderCreated['collection_uuid'];
+        (new MoveCollection)($collectionUuid, '', $userId);
+
+        $collection = Collection::uuid($collectionUuid);
+        $folder     = Folder::uuid($folderUuid);
+        $this->assertNull($collection->folder);
+        $this->assertEquals(0, $folder->collections->count());
+    }
+
     public function test_a_collection_can_move_from_root_to_a_folder()
     {
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
@@ -92,20 +105,6 @@ class CollectionFolderTest extends TestCase
         $this->assertEquals($folderUuid, $collection->folder->uuid);
         $this->assertEquals(1, $folder->collections->count());
         $this->assertEquals($collectionUuid, $folder->collections->first()->uuid);
-    }
-
-    public function test_a_collection_can_move_from_a_folder_to_root()
-    {
-        $collectionFolderCreated    = $this->createCollectionInFolder();
-        $userId                     = $collectionFolderCreated['user_id'];
-        $folderUuid                 = $collectionFolderCreated['folder_uuid'];
-        $collectionUuid             = $collectionFolderCreated['collection_uuid'];
-        (new MoveCollection)($collectionUuid, '', $userId);
-
-        $collection = Collection::uuid($collectionUuid);
-        $folder     = Folder::uuid($folderUuid);
-        $this->assertNull($collection->folder);
-        $this->assertEquals(0, $folder->collections->count());
     }
 
     private function createCollectionInFolder() : array

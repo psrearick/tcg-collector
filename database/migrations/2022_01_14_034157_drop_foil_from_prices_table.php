@@ -7,18 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class DropFoilFromPricesTable extends Migration
 {
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::table('prices', function (Blueprint $table) {
-            $table->dropColumn('foil');
-        });
-    }
-
-    /**
      * Reverse the migrations.
      *
      * @return void
@@ -27,6 +15,18 @@ class DropFoilFromPricesTable extends Migration
     {
         Schema::table('prices', function (Blueprint $table) {
             //
+        });
+    }
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('prices', function (Blueprint $table) {
+            $table->dropColumn('foil');
         });
     }
 }

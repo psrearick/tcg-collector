@@ -11,8 +11,7 @@ class GetCollectionCards
 {
     public function __invoke(string $uuid)
     {
-        $collectionCards = CollectionCardSummary
-            ::with('cardSearchDataObject')
+        $collectionCards = CollectionCardSummary::with('cardSearchDataObject')
             ->where('collection_uuid', '=', $uuid)
             ->where('quantity', '>', 0)
             ->get();

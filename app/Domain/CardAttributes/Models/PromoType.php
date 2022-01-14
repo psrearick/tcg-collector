@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class PromoType extends Model
 {
     use HasFactory;
+
     /**
      * @return BelongsToMany
      */

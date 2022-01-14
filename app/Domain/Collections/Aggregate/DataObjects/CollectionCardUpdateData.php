@@ -4,7 +4,7 @@ namespace App\Domain\Collections\Aggregate\DataObjects;
 
 use App\App\Contracts\DataObjectInterface;
 
-Class CollectionCardUpdateData implements DataObjectInterface
+class CollectionCardUpdateData implements DataObjectInterface
 {
     public string $card_uuid;
 
@@ -16,10 +16,9 @@ Class CollectionCardUpdateData implements DataObjectInterface
 
     public function __construct(array $data)
     {
-        
     }
 
-    public function toArray(): array
+    public function toArray() : array
     {
         return [];
     }

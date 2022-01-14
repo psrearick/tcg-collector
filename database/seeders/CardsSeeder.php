@@ -6,14 +6,15 @@ use App\Domain\Cards\Models\Card;
 use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Prices\Models\PriceProvider;
+use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Faker\Generator;
 
 class CardsSeeder extends Seeder
 {
     private $faker;
+
     /**
      * Run the database seeds.
      *

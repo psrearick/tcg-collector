@@ -2,11 +2,11 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
+use App\Domain\Cards\Actions\BuildCard;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
-use App\Domain\Cards\Actions\BuildCard;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
 use App\Models\CardSearchDataObject;
 
 class GetCardSearchData
@@ -17,7 +17,7 @@ class GetCardSearchData
     {
         $this->uuid = $uuid;
         $data       = $this->getData();
-        
+
         if ($create) {
             $this->create($data);
         }

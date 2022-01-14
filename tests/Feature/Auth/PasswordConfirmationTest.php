@@ -25,7 +25,7 @@ class PasswordConfirmationTest extends TestCase
     public function test_password_can_be_confirmed()
     {
         /** @var \App\Models\User $user */
-        $user = User::factory()->create();
+        $user     = User::factory()->create();
         $response = $this->actingAs($user)->post('/user/confirm-password', [
             'password' => 'password',
         ]);

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class LeadershipSkill extends Model
 {
     use HasFactory;
+
     // get all cards assigned to this leadership skill
     public function cards() : BelongsToMany
     {

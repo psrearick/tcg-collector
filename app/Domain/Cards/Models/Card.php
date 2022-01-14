@@ -38,11 +38,6 @@ class Card extends Model
         'number' => 'int',
     ];
 
-    protected static function newFactory()
-    {
-        return CardFactory::new();
-    }
-
     /**
      * @return HasMany
      */
@@ -234,6 +229,11 @@ class Card extends Model
     public function set() : BelongsTo
     {
         return $this->belongsTo(Set::class);
+    }
+
+    protected static function newFactory()
+    {
+        return CardFactory::new();
     }
 
     /*

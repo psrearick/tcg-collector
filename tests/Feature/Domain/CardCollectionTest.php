@@ -3,20 +3,19 @@
 namespace Tests\Feature\Domain;
 
 use App\Domain\Cards\Models\Card;
-use Database\Seeders\CardsSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use App\Domain\Collections\Models\Collection;
+use App\Models\User;
+use Database\Seeders\CardsSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CardCollectionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    public function setUp() : void
     {
         parent::setUp();
         $this->seed(CardsSeeder::class);
@@ -70,7 +69,7 @@ class CardCollectionTest extends TestCase
         $this->assertEquals(2, $summary->total_cards);
 
         $cardSummary  = $collection->cardSummaries->first();
-        
+
         $this->assertEquals($cardPrice, $cardSummary->price_when_added);
         $this->assertEquals(2, $cardSummary->quantity);
 
@@ -93,12 +92,11 @@ class CardCollectionTest extends TestCase
         $newCardTotal       = $cardPrice * 3;
         $collectionPrice    = $totalPrice + $newCardTotal;
 
-
         $this->assertEquals($collectionPrice, $summary->current_value);
         $this->assertEquals(5, $summary->total_cards);
 
         $cardSummary  = $collection->cardSummaries->get(1);
-        
+
         $this->assertEquals($cardPrice, $cardSummary->price_when_added);
         $this->assertEquals(3, $cardSummary->quantity);
     }
@@ -128,7 +126,7 @@ class CardCollectionTest extends TestCase
         $this->assertEquals(2, $summary->total_cards);
 
         $cardSummary  = $collection->cardSummaries->first();
-        
+
         $this->assertEquals($cardPrice, $cardSummary->price_when_added);
         $this->assertEquals(2, $cardSummary->quantity);
 
@@ -157,7 +155,7 @@ class CardCollectionTest extends TestCase
 
         $this->assertEquals(1, $collection->cardSummaries->count());
         $cardSummary  = $collection->cardSummaries->first();
-        
+
         $this->assertEquals($cardPrice, $cardSummary->price_when_added);
         $this->assertEquals(5, $cardSummary->quantity);
     }

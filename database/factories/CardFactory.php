@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 use App\Actions\NormalizeString;
 use App\Domain\Cards\Models\Card;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CardFactory extends Factory
 {
@@ -31,7 +31,7 @@ class CardFactory extends Factory
         $layouts = [
             'normal',
             'saga',
-            'adventure'
+            'adventure',
         ];
 
         $frames = [
@@ -39,7 +39,7 @@ class CardFactory extends Factory
             '1997',
             '2003',
             '2015',
-            'future'
+            'future',
         ];
 
         $rarities = [
@@ -48,7 +48,7 @@ class CardFactory extends Factory
             'rare',
             'special',
             'mythic',
-            'bonus'
+            'bonus',
         ];
 
         return [

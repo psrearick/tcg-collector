@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Legality extends Model
 {
     use HasFactory;
+
     /**
      * get all cards assigned to this legality
      *

@@ -22,9 +22,9 @@ abstract class CoreCardData implements DataObjectInterface
 
     public array $prices;
 
-    public string $set_id;
-
     public string $set_code;
+
+    public string $set_id;
 
     public string $set_image;
 

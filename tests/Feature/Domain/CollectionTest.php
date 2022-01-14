@@ -3,13 +3,12 @@
 namespace Tests\Feature\Domain;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Domain\Collections\Models\Collection;
 use App\Models\User;
-use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CollectionTest extends TestCase
 {
@@ -35,6 +34,23 @@ class CollectionTest extends TestCase
         $this->assertEquals($params['name'], $collection->name);
         $this->assertEquals($params['description'], $collection->description);
         $this->assertEquals($params['is_public'], !!$collection->is_public);
+    }
+
+    public function test_a_collection_can_be_deleted()
+    {
+        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+        $params = [
+            'description'   => 'New Collection',
+            'name'          => 'description 01',
+            'is_public'     => false,
+        ];
+
+        $uuid       = (new CreateCollection)($params);
+        $collection = Collection::uuid($uuid);
+        $this->assertEquals($params['name'], $collection->name);
+
+        (new DeleteCollection)($uuid);
+        $this->assertSoftDeleted($collection);
     }
 
     public function test_a_collection_can_be_updated()
@@ -64,22 +80,5 @@ class CollectionTest extends TestCase
         $this->assertEquals($params['name'], $collection->name);
         $this->assertEquals($params['description'], $collection->description);
         $this->assertEquals($params['is_public'], $collection->is_public);
-    }
-
-    public function test_a_collection_can_be_deleted()
-    {
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
-        $params = [
-            'description'   => 'New Collection',
-            'name'          => 'description 01',
-            'is_public'     => false,
-        ];
-
-        $uuid       = (new CreateCollection)($params);
-        $collection = Collection::uuid($uuid);
-        $this->assertEquals($params['name'], $collection->name);
-
-        (new DeleteCollection)($uuid);
-        $this->assertSoftDeleted($collection);
     }
 }
