@@ -11,6 +11,7 @@ use App\Domain\Prices\Aggregate\Actions\MatchType;
 use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Collection;
 
 class FormatCards
 {
@@ -36,7 +37,7 @@ class FormatCards
         return $this->getResults($builder, $collectionMap);
     }
 
-    private function getResults(Builder $builder, array $collectionMap)
+    private function getResults(Builder $builder, array $collectionMap) : Collection
     {
         return $this->transformResults($builder->get(), $collectionMap);
     }
@@ -58,7 +59,7 @@ class FormatCards
         });
     }
 
-    private function transformResults(SupportCollection $results, array $collectionMap)
+    private function transformResults(SupportCollection $results, array $collectionMap) : Collection
     {
         $prices = ((new GetLatestPrices)($results->pluck('uuid')->toArray()))->mapToGroups(function ($price) {
             $price->finish = (new MatchType)($price->type);
@@ -88,7 +89,7 @@ class FormatCards
                 'name'              => $card['name'],
                 'set_code'          => $card['set']['code'] ?? '',
                 'set_name'          => $card['set']['name'] ?? '',
-                'prices'            => $prices[$card['uuid']],
+                'prices'            => $prices[$card['uuid']] ?? [],
                 'quantities'        => $collectionMap[$card['uuid']] ?? [],
                 'features'          => $card['feature'],
                 'finishes'          => $card->finishes->pluck('name')->values()->toArray(),

@@ -107,7 +107,8 @@ class CollectionProjector extends Projector
     {
         $attributes = $event->collectionCardAttributes;
         $this->updateCollectionCard($attributes);
-        $this->updateCollectionCardSummary($attributes);
+        $summary = $this->updateCollectionCardSummary($attributes);
+        $this->updateCardSearchDataObject($summary);
         Cache::restoreLock('saving-collection-card', $attributes['lock'])->release();
     }
 
@@ -176,6 +177,11 @@ class CollectionProjector extends Projector
         }
     }
 
+    private function updateCardSearchDataObject(CollectionCardSummary $collectionCardSummary) : void
+    {
+        
+    }
+
     private function updateCollectionCard(array $attributes) : void
     {
         Collection::uuid($attributes['uuid'])->cards()
@@ -190,7 +196,7 @@ class CollectionProjector extends Projector
             ]);
     }
 
-    private function updateCollectionCardSummary(array $attributes) : void
+    private function updateCollectionCardSummary(array $attributes) : CollectionCardSummary
     {
         $cardUuid   = $attributes['updated']['uuid'];
         $finish     = $attributes['updated']['finish'];
@@ -269,7 +275,7 @@ class CollectionProjector extends Projector
         }
 
         if (!$existingCard) {
-            CollectionCardSummary::create([
+            return CollectionCardSummary::create([
                 'collection_uuid'       => $attributes['uuid'],
                 'card_uuid'             => $cardUuid,
                 'price_when_added'      => $acquired,
@@ -280,8 +286,6 @@ class CollectionProjector extends Projector
                 'condition'             => $condition ?: 'NM',
                 'date_added'            => Carbon::now(),
             ]);
-
-            return;
         }
 
         if ($existingCard && $targetCard && $existingCard->id != $targetCard->id) {
@@ -296,5 +300,7 @@ class CollectionProjector extends Projector
             'condition'             => $condition ?: 'NM',
             'quantity'              => $existingCard->quantity + $change,
         ]);
+
+        return $existingCard;
     }
 }

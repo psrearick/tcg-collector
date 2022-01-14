@@ -10,7 +10,7 @@ use App\Domain\Collections\Aggregate\Actions\GetCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\SearchCollection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
-use GetCollection;
+use App\Domain\Collections\Aggregate\Actions\GetCollection;
 
 class CollectionsPresenter implements PresenterInterface
 {

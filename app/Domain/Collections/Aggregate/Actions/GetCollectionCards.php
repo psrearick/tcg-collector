@@ -11,7 +11,8 @@ class GetCollectionCards
 {
     public function __invoke(string $uuid)
     {
-        $collectionCards = CollectionCardSummary::with('cardSearchDataObject')
+        $collectionCards = CollectionCardSummary
+            ::with('cardSearchDataObject')
             ->where('collection_uuid', '=', $uuid)
             ->where('quantity', '>', 0)
             ->get();
@@ -23,12 +24,16 @@ class GetCollectionCards
     {
         $collectionCards->transform(function ($card) {
             $cardData = $card->cardSearchDataObject;
+            if (!$cardData) {
+                $cardData = (new GetCardSearchData)($card->card_uuid, true);
+            }
 
             return (new CollectionCardData([
                 'id'                => $cardData->id,
-                'uuid'              => $cardData->card_uuid,
-                'name'              => $cardData->card_name,
-                'name_normalized'   => $cardData->card_name_normalized,
+                'uuid'              => $cardData->card_uuid ?? $cardData->uuid,
+                'name'              => $cardData->card_name ?? $cardData->name,
+                'name_normalized'   => $cardData->card_name_normalized
+                    ?? $cardData->name_normalized,
                 'set'               => $cardData->set_code,
                 'set_name'          => $cardData->set_name,
                 'features'          => $cardData->features,
