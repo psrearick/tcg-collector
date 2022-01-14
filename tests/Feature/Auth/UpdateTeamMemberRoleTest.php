@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,6 +14,9 @@ class UpdateTeamMemberRoleTest extends TestCase
     {
         $user = User::factory()->withPersonalTeam()->create();
 
+            /**
+             * @var \App\Models\User
+             */
         $user->currentTeam->users()->attach(
             $otherUser = User::factory()->create(), ['role' => 'admin']
         );

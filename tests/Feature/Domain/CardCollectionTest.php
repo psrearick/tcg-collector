@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Domain;
 
 use App\Domain\Cards\Models\Card;
 use Database\Seeders\CardsSeeder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +21,11 @@ class ApiTokenPermissionsTest extends TestCase
         if (Features::hasTeamFeatures()) {
             $this->actingAs($user = User::factory()->withPersonalTeam()->create());
         } else {
-            $this->actingAs($user = User::factory()->create());
+            /**
+             * @var \Illuminate\Contracts\Auth\Authenticatable
+             */
+            $user = User::factory()->create();
+            $this->actingAs($user);
         }
 
         $token = $user->tokens()->create([
