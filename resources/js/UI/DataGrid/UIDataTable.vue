@@ -40,6 +40,15 @@
                                 "
                             >
                                 <th
+                                    v-if="hasSelectMenu"
+                                    class="p-2 pl-4 text-left"
+                                >
+                                    <ui-checkbox
+                                        :checked="selectAll"
+                                        @update:checked="updateSelectAll"
+                                    />
+                                </th>
+                                <th
                                     v-if="hasExpandToggle"
                                     class="px-4 cursor-pointer"
                                 >
@@ -55,12 +64,6 @@
                                     >
                                         <ui-icon icon="chevron-right" />
                                     </div>
-                                </th>
-                                <th v-if="hasSelectMenu" class="p-2 pl-4">
-                                    <ui-checkbox
-                                        :checked="selectAll"
-                                        @update:checked="updateSelectAll"
-                                    />
                                 </th>
                                 <th
                                     v-for="(field, index) in topRowFields"
@@ -122,6 +125,12 @@
                                     classes.tableRow ? classes.tableRow : ''
                                 "
                             >
+                                <td v-if="hasSelectMenu" class="p-2 pl-4">
+                                    <ui-checkbox
+                                        :checked="selectedOptions.includes(key)"
+                                        @update:checked="check(key)"
+                                    />
+                                </td>
                                 <td
                                     v-if="hasExpandToggle"
                                     class="px-4 cursor-pointer"
@@ -138,12 +147,6 @@
                                     >
                                         <ui-icon icon="chevron-right" />
                                     </div>
-                                </td>
-                                <td v-if="hasSelectMenu" class="p-2 pl-4">
-                                    <ui-checkbox
-                                        :checked="selectedOptions.includes(key)"
-                                        @update:checked="check(key)"
-                                    />
                                 </td>
                                 <td
                                     v-for="(field, fieldKey) in topRowFields"
