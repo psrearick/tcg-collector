@@ -37,7 +37,7 @@ class CollectionTest extends TestCase
         $this->assertEquals($params['is_public'], !!$collection->is_public);
     }
 
-    public function test_a_collection_can_be_update()
+    public function test_a_collection_can_be_updated()
     {
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
         $params = [

@@ -16,11 +16,6 @@ class CollectionFolderTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_a_collection_can_be_created_in_a_folder()
     {
         $collectionFolderCreated    = $this->createCollectionInFolder();
@@ -46,7 +41,7 @@ class CollectionFolderTest extends TestCase
         $collectionUuid             = $collectionFolderCreated['collection_uuid'];
 
         $params = [
-            'name'          => 'folder description 02',
+            'name'          => 'folder 02',
         ];
 
         $newFolderUuid = (new CreateFolder)($params);
@@ -74,7 +69,7 @@ class CollectionFolderTest extends TestCase
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
         $params = [
-            'name'          => 'collection description 01',
+            'name'          => 'collection 01',
         ];
 
         $collectionUuid     = (new CreateCollection)($params);
@@ -83,7 +78,7 @@ class CollectionFolderTest extends TestCase
         $this->assertNull($collection->folder);
 
         $params = [
-            'name'          => 'folder description 01',
+            'name'          => 'folder 01',
         ];
 
         $folderUuid = (new CreateFolder)($params);
@@ -117,13 +112,13 @@ class CollectionFolderTest extends TestCase
     {
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
         $params = [
-            'name'          => 'folder description 01',
+            'name'          => 'folder 01',
         ];
 
         $folder_uuid = (new CreateFolder)($params);
 
         $params = [
-            'name'          => 'collection description 01',
+            'name'          => 'collection 01',
             'folder_uuid'   => $folder_uuid,
         ];
 
