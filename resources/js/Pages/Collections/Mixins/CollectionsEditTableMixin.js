@@ -68,7 +68,7 @@ export default {
                             link: false,
                             visible: true,
                             sortable: true,
-                            span: 6,
+                            span: 7,
                             type: "component",
                             component: "BottomRowCollectionsEdit",
                             label: "Quantity",
