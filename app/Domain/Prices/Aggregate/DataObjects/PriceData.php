@@ -24,7 +24,6 @@ class PriceData implements DataObjectInterface
         $this->card_uuid        = $data['card_uuid'] ?? '';
         $this->provider_uuid    = $data['provider_uuid'] ?? '';
         $this->price            = $data['price'] ?? 0;
-        $this->foil             = $data['foil'] ?? false;
         $this->type             = $data['type'] ?? 'usd';
     }
 
@@ -35,7 +34,6 @@ class PriceData implements DataObjectInterface
             'card_uuid'     => $this->card_uuid,
             'provider_uuid' => $this->provider_uuid,
             'price'         => $this->price,
-            'foil'          => $this->foil,
             'type'          => $this->type,
         ];
     }

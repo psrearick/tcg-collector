@@ -53,7 +53,6 @@ class SummaryData implements DataObjectInterface
             'gain_loss'                 => $this->gain_loss,
             'current_gain_loss'         => $this->current_gain_loss,
             'gain_loss_percent'         => $this->gain_loss_percent,
-            'foil'                      => $this->foil,
         ];
     }
 }
