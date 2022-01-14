@@ -164,12 +164,14 @@ export default {
                 return {
                     fields: _.cloneDeep(this.fields),
                     gridName: this.gridName,
+                    selectMenu: this.selectMenu,
                 };
             }
             return {
                 fields: [],
                 fieldRows: this.fieldRows,
                 gridName: this.gridName,
+                selectMenu: this.selectMenu,
             };
         },
     },
