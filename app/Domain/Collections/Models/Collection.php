@@ -11,6 +11,7 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
 use App\Traits\BelongsToUser;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToUser;
+    use HasFactory, SoftDeletes, BelongsToUser, HasUuid;
 
     const USERSCOPE = 'notShared';
 
@@ -67,10 +68,5 @@ class Collection extends Model
     public function summary() : BelongsTo
     {
         return $this->belongsTo(Summary::class, 'uuid', 'uuid');
-    }
-
-    public static function uuid(string $uuid) : ?self
-    {
-        return self::where('uuid', '=', $uuid)->first();
     }
 }

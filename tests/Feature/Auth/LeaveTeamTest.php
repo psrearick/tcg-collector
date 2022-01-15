@@ -25,7 +25,7 @@ class LeaveTeamTest extends TestCase
     {
         $user = User::factory()->withPersonalTeam()->create();
 
-        /** 
+        /**
          * @var \App\Models\User
          */
         $user->currentTeam->users()->attach(

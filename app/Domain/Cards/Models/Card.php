@@ -21,6 +21,7 @@ use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
+use App\Traits\HasUuid;
 use Database\Factories\CardFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,7 +33,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuid;
 
     protected $casts = [
         'number' => 'int',
