@@ -11,8 +11,6 @@ class CollectionCardsController extends Controller
 {
     public function store(string $collection, Request $request, UpdateCollectionCard $updateCollectionCard) : Response
     {
-        // dd($request->all());
-
         $newCard = $updateCollectionCard(['uuid' => $collection, 'change' => $request->all()]);
 
         return $request->wantsJson()

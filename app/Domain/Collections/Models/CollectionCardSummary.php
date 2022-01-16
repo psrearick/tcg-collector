@@ -12,6 +12,13 @@ class CollectionCardSummary extends Model
 {
     use SoftDeletes;
 
+    protected $casts = [
+        'price_when_added'      => 'integer',
+        'price_when_updated'    => 'integer',
+        'current_price'         => 'integer',
+        'quantity'              => 'integer',
+    ];
+
     protected $guarded = [];
 
     public function card() : BelongsTo

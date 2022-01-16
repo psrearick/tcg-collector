@@ -9,7 +9,6 @@ class GroupCardsByCollection
 {
     public function __invoke(SupportCollection $collectionCards, bool $inGroup = false) : AppCollection
     {
-        dd($collectionCards);
 
         // return new AppCollection($collection->all());
     }

@@ -65,7 +65,7 @@ class UpdateCollectionCard
         $actualChange     = $requestedChange;
         $finalQuantity    = $proposedQuantity;
         if ($proposedQuantity < 0) {
-            $actualChange  = $quantity;
+            $actualChange  = $proposedQuantity;
             $finalQuantity = 0;
         }
 

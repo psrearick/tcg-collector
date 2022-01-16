@@ -12,9 +12,21 @@ class Summary extends Model implements ShouldQueue
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'current_value'     => 'integer',
+        'acquired_value'    => 'integer',
+        'gain_loss'         => 'integer',
+        'total_cards'       => 'integer',
+    ];
+
     public function collections() : HasMany
     {
         return $this->hasMany(Collection::class, 'uuid', 'uuid');
+    }
+
+    public function getGainLossPercentAttribute($value) : float
+    {
+        return round($value, 4);
     }
 
     public function folders() : HasMany

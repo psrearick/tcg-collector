@@ -22,29 +22,42 @@ class SummaryProjector extends Projector
             $collectionTotals    = $getCollectionTotals($collection);
         }
 
-        $quantity   = $attributes['quantity_diff'];
-        $price      = $attributes['updated']['price'];
-        $change     = $quantity * $price;
+        $quantity       = $attributes['quantity_diff'];
+        $price          = $attributes['updated']['price'];
+        $acquired       = $attributes['updated']['acquired_price'];
+        $end_quantity   = $attributes['updated']['quantity'];
+        $start_quantity = $end_quantity - $quantity;
+        $value_change   = $quantity * $price;
+
+        $previous_price = $price;
+        if (isset($attributes['change']['from'])) {
+            $previous_price = $attributes['change']['from']['price'] ?? $price;
+        }
+
+        $previous_value = $start_quantity * $previous_price;
+        $updated_value  = $end_quantity * ($acquired ?: $price);
+        $value_diff     = $updated_value - $previous_value;
 
         $totalCards     = $collectionTotals['total_cards'] + $quantity;
-        $currentValue   = $collectionTotals['current_value'] + $change;
-        $acquiredValue  = $collectionTotals['acquired_value'] + $change;
+        $currentValue   = $collectionTotals['current_value'] + $value_change;
+        $acquiredValue  = $collectionTotals['acquired_value'] + $value_diff;
 
         $gainLoss        = $currentValue - $acquiredValue;
         $gainLossPercent = $gainLoss == 0 ? 0 : 1;
         $gainLossPercent = $acquiredValue != 0 ? $gainLoss / $acquiredValue : $gainLossPercent;
 
-        $parentUuid = $collection->folder_uuid;
-        if ($parentUuid) {
-            $parent = Folder::uuid($parentUuid);
 
-            $ancestors = $parent->ancestors;
-            $ancestors->each(function ($ancestor) use ($quantity, $change) {
-                $this->updateFolderWithCollectionCard($ancestor, $quantity, $change);
-            });
+        // $parentUuid = $collection->folder_uuid;
+        // if ($parentUuid) {
+        //     $parent = Folder::uuid($parentUuid);
 
-            $this->updateFolderWithCollectionCard($parent, $quantity, $change);
-        }
+        //     $ancestors = $parent->ancestors;
+        //     $ancestors->each(function ($ancestor) use ($quantity, $change) {
+        //         $this->updateFolderWithCollectionCard($ancestor, $quantity, $change);
+        //     });
+
+        //     $this->updateFolderWithCollectionCard($parent, $quantity, $change);
+        // }
 
         $collection->summary()->updateOrCreate([
             'uuid'              => $collection->uuid,
