@@ -4,20 +4,16 @@ namespace App\Domain\Collections\Aggregate\Projectors;
 
 use App\Domain\Collections\Aggregate\Events\CollectionCardsDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionCardsMoved;
-use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Aggregate\Events\CollectionCreated;
 use App\Domain\Collections\Aggregate\Events\CollectionDeleted;
 use App\Domain\Collections\Aggregate\Events\CollectionMoved;
 use App\Domain\Collections\Aggregate\Events\CollectionUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
-use App\Domain\Collections\Services\CollectionCardSettingsService;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Aggregate\Actions\UpdateFolderAncestryTotals;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionProjector extends Projector

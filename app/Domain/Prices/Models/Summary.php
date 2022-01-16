@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Summary extends Model implements ShouldQueue
 {
-    protected $guarded = [];
-
     protected $casts = [
         'current_value'     => 'integer',
         'acquired_value'    => 'integer',
@@ -19,18 +17,20 @@ class Summary extends Model implements ShouldQueue
         'total_cards'       => 'integer',
     ];
 
+    protected $guarded = [];
+
     public function collections() : HasMany
     {
         return $this->hasMany(Collection::class, 'uuid', 'uuid');
     }
 
-    public function getGainLossPercentAttribute($value) : float
-    {
-        return round($value, 4);
-    }
-
     public function folders() : HasMany
     {
         return $this->hasMany(Folder::class, 'uuid', 'uuid');
+    }
+
+    public function getGainLossPercentAttribute($value) : float
+    {
+        return round($value, 4);
     }
 }

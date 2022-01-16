@@ -46,7 +46,6 @@ class SummaryProjector extends Projector
         $gainLossPercent = $gainLoss == 0 ? 0 : 1;
         $gainLossPercent = $acquiredValue != 0 ? $gainLoss / $acquiredValue : $gainLossPercent;
 
-
         // $parentUuid = $collection->folder_uuid;
         // if ($parentUuid) {
         //     $parent = Folder::uuid($parentUuid);

@@ -63,6 +63,7 @@ class CollectionCardProjector extends Projector
 
         if (!$this->isValidUpdate($attributes)) {
             Cache::restoreLock('saving-collection-card', $attributes['lock'])->release();
+
             return;
         }
 

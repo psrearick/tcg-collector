@@ -116,8 +116,7 @@ trait UpdatesCollectionCards
             'condition'  => $attributes['from']['condition'],
         ];
 
-        if (!isset($attributes['from']['quantity']))
-        {
+        if (!isset($attributes['from']['quantity'])) {
             return $values;
         }
     }

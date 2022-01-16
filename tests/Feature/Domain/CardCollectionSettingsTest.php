@@ -385,7 +385,6 @@ class CardCollectionSettingsTest extends TestCase
         $this->assertEquals(2, $secondState['collection_card_summaries']['total_cards']);
         $this->assertEquals('LP', $secondState['collection_card_summary']['condition']);
 
-
         // Third State Assertions - one card removed
         $this->assertEquals(3, $thirdState['collection_cards']['total_cards']);
         $this->assertEquals(1, $thirdState['collection_card_summaries']['total_cards']);
