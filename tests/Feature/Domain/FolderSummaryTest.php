@@ -463,6 +463,81 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(1, $state2['total_cards']);
     }
 
+    public function test_folders_are_update_when_cards_change_collections() : void
+    {
+        // set user
+        $this->act();
+
+        //########## Collection 1 ##########//
+        // create collection in folder
+        $folderCollection   = $this->createCollectionInFolder();
+        $collectionUuid     = $folderCollection['collection_uuid'];
+        $folderUuid         = $folderCollection['folder_uuid'];
+
+        // add cards to collection
+        $c1 = $this->createCollectionCard($collectionUuid, 1);
+        $c2 = $this->createCollectionCard($collectionUuid, 2);
+        $c3 = $this->createCollectionCard($collectionUuid, 3);
+
+        // get models
+        $folder     = Folder::uuid($folderUuid);
+        $collection = Collection::uuid($collectionUuid);
+
+        //########## Collection 2 ##########//
+        // create collection in folder
+        $folderCollection2  = $this->createCollectionInFolder();
+        $collection2Uuid    = $folderCollection2['collection_uuid'];
+        $folder2Uuid        = $folderCollection2['folder_uuid'];
+
+        // add cards to collection
+        $c4 = $this->createCollectionCard($collection2Uuid, 1);
+        $c5 = $this->createCollectionCard($collection2Uuid, 2);
+        $c6 = $this->createCollectionCard($collection2Uuid, 3);
+
+        // get models
+        $folder2        = Folder::uuid($folder2Uuid);
+        $collection2    = Collection::uuid($collection2Uuid);
+
+        //########## Initial State ##########//
+        // get state
+        $f1st1  = $this->getFolderSummary($folder);
+        $f2st1  = $this->getFolderSummary($folder2);
+        $cards1 = $collection->cardSummaries->sum('price_when_added');
+        $cards2 = $collection2->cardSummaries->sum('price_when_added');
+
+        // assert quantity
+        $this->assertEquals(3, $f1st1['total_cards']);
+        $this->assertEquals(3, $f2st1['total_cards']);
+
+        //########## Move Cards ##########//
+        // delete cards
+        $cardsToMove = $collection->cardSummaries()
+            ->whereIn('card_uuid', [$c2, $c3])
+            ->get();
+
+        $moveCardsValue = $cardsToMove->sum('price_when_added');
+
+        (new MoveCollectionCards)(
+            $collectionUuid, $collection2Uuid, $cardsToMove->toArray()
+        );
+
+        //########## Second State ##########//
+        // get state
+        $f1st2  = $this->getFolderSummary($folder);
+        $f2st2  = $this->getFolderSummary($folder2);
+
+        // assert quantity changed
+        $this->assertEquals(1, $f1st2['total_cards']);
+        $this->assertEquals(5, $f2st2['total_cards']);
+
+        // assert price changed
+        $f1UpdatedPrice = $cards1 - $moveCardsValue;
+        $f2UpdatedPrice = $cards2 + $moveCardsValue;
+
+        $this->assertEquals($f1UpdatedPrice, $f1st2['acquired_value']);
+        $this->assertEquals($f2UpdatedPrice, $f2st2['acquired_value']);
+    }
+
     public function test_folders_are_update_when_sub_folders_are_deleted()
     {
         // set user
@@ -608,7 +683,5 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(2, $state2['total_cards']);
     }
 }
-
-    // folder totals are updated when card moved to different collection
 
     // folder totals are updated when card quantities are changed
