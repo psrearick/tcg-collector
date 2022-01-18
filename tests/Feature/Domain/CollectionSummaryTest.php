@@ -194,13 +194,14 @@ class CollectionSummaryTest extends CardCollectionTestCase
             ->first();
 
         $acquiredPrice  = $card->price_when_added;
-        $half           = round($acquiredPrice * 0.5);
+        $halfFloor      = (int) floor($acquiredPrice * 0.5);
+        $halfCeil       = (int) ceil($acquiredPrice * 0.5);
 
         // update card quantity
         $this->updateCard($card->toArray(), [
             'newCondition'  => $card->condition,
             'oldCondition'  => $card->condition,
-            'newPrice'      => $half,
+            'newPrice'      => $halfFloor,
             'oldPrice'      => $acquiredPrice,
         ]);
 
@@ -208,53 +209,78 @@ class CollectionSummaryTest extends CardCollectionTestCase
         $state2 = $this->getState(null, $collection, null);
 
         // assert price updated
-        $newValue = round($state1['collection']['acquired_value'] - $half);
-        $this->assertEquals($newValue, round($state2['collection']['acquired_value']));
+        $newStateValue  = $state1['collection']['acquired_value'] - $halfCeil;
+        $newColValue    = $state2['collection']['acquired_value'];
+
+        $this->assertEquals($newStateValue, $newColValue);
     }
 
     public function test_adding_multiple_cards_updates_the_collection_summary() : void
     {
+        //set user
         $this->act();
+
+        // create collection
         $uuid = $this->createCollection();
         $this->createCollectionCard($uuid, 0, '', 2);
 
+        // get model
         $collection     = Collection::uuid($uuid);
+
+        // get state
         $collectionCard = $collection->cards->first();
         $summary        = $collection->summary;
         $cardPrice      = $collectionCard->pivot->price_when_added;
         $totalPrice     = $cardPrice * 2;
+        $cardSummaries  = $collection->cardSummaries;
 
+        // make assertions
         $this->assertEquals($totalPrice, $summary->current_value);
         $this->assertEquals(2, $summary->total_cards);
+        $this->assertEquals(1, $cardSummaries->count());
 
+        // create card
+        //      update the quantity of the existing card
+        //      results in 2 collections cards
+        //          and 1 card summary
         $this->createCollectionCard($uuid, 0, '', 3);
 
+        // get state
         $collection->refresh();
-
-        $this->assertEquals(2, $collection->cards->count());
 
         $collectionCard     = $collection->cards->last();
         $summary            = $collection->summary;
         $cardPrice          = $collectionCard->pivot->price_when_added;
         $newCardTotal       = $cardPrice * 3;
         $collectionPrice    = $totalPrice + $newCardTotal;
+        $cardSummaries2     = $collection->cardSummaries;
 
+        // make assertions
+        $this->assertEquals(2, $collection->cards->count());
         $this->assertEquals($collectionPrice, $summary->current_value);
         $this->assertEquals(5, $summary->total_cards);
+        $this->assertEquals(1, $cardSummaries2->count());
 
+        // create card
+        //      create new card
+        //      results in 3 collections cards
+        //          and 2 card summaries
         $this->createCollectionCard($uuid, 2, '', 7);
 
+        // get state
         $collection->refresh();
-
-        $this->assertEquals(3, $collection->cards->count());
 
         $collectionCard     = $collection->cards->last();
         $summary            = $collection->summary;
         $cardPrice          = $collectionCard->pivot->price_when_added;
         $newCardTotal       = $cardPrice * 7;
         $collectionPrice    = $collectionPrice + $newCardTotal;
+        $cardSummaries3     = $collection->cardSummaries;
 
+        // make assertions
+        $this->assertEquals(3, $collection->cards->count());
         $this->assertEquals($collectionPrice, $summary->current_value);
         $this->assertEquals(12, $summary->total_cards);
+        $this->assertEquals(2, $cardSummaries3->count());
     }
 }
