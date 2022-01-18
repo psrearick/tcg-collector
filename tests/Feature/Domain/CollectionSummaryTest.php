@@ -159,6 +159,59 @@ class CollectionSummaryTest extends CardCollectionTestCase
         $this->assertEquals($totalPrice2, $summary2->current_value);
     }
 
+    public function test_a_collections_summary_is_updated_when_a_card_updates_acquired_price() : void
+    {
+        // set user
+        $user = $this->act();
+        $user->settings()->create([
+            'tracks_price'     => true,
+            'tracks_condition' => false,
+        ]);
+
+        // create collection in folder
+        $folderCollection   = $this->createCollectionInFolder();
+        $collectionUuid     = $folderCollection['collection_uuid'];
+        $folderUuid         = $folderCollection['folder_uuid'];
+
+        // add cards to collection
+        $c1 = $this->createCollectionCard($collectionUuid, 1);
+        $c2 = $this->createCollectionCard($collectionUuid, 2);
+        $c3 = $this->createCollectionCard($collectionUuid, 3);
+
+        // get models
+        $collection = Collection::uuid($collectionUuid);
+
+        // get state
+        $state1 = $this->getState(null, $collection, null);
+
+        // assert quantity
+        $this->assertEquals(3, $state1['collection']['total_cards']);
+        $this->assertGreaterThan(0, $state1['collection']['acquired_value']);
+
+        // get current card
+        $card = $collection->cardSummaries()
+            ->where('card_uuid', '=', $c1)
+            ->first();
+
+        $acquiredPrice  = $card->price_when_added;
+        $half           = round($acquiredPrice * 0.5);
+
+        // update card quantity
+        $this->updateCard($card->toArray(), [
+            'newCondition'  => $card->condition,
+            'oldCondition'  => $card->condition,
+            'newPrice'      => $half,
+            'oldPrice'      => $acquiredPrice,
+        ]);
+
+        // get state
+        $state2 = $this->getState(null, $collection, null);
+
+        // assert price updated
+        $newValue = round($state1['collection']['acquired_value'] - $half);
+        $this->assertEquals($newValue, round($state2['collection']['acquired_value']));
+    }
+
     public function test_adding_multiple_cards_updates_the_collection_summary() : void
     {
         $this->act();
