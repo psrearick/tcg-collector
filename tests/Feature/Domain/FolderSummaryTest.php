@@ -420,7 +420,7 @@ class FolderSummaryTest extends CardCollectionTestCase
         // assert price updated
         $newValue = round($state1['folder']['acquired_value'] - $half);
         $this->assertEquals($state2['collection']['acquired_value'], $state2['folder']['acquired_value']);
-        $this->assertEquals($newValue, $state2['folder']['acquired_value']);
+        $this->assertEquals($newValue, round($state2['folder']['acquired_value']));
     }
 
     public function test_folders_are_update_when_cards_are_deleted() : void
