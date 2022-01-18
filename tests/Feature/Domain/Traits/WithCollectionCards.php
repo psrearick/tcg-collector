@@ -49,9 +49,9 @@ trait WithCollectionCards
         return (new UpdateCollectionCard)($data)['uuid'];
     }
 
-    public function createCollectionInFolder() : array
+    public function createCollectionInFolder(string $name = 'folder 01') : array
     {
-        $folderUuid         = $this->createFolder();
+        $folderUuid         = $this->createFolder($name);
         $collectionUuid     = $this->createCollection($folderUuid);
 
         return [
@@ -69,20 +69,44 @@ trait WithCollectionCards
         return (new CreateFolder)($params);
     }
 
-    public function getState(Card $card, Collection $collection, ?Folder $folder = null) : array
+    public function getState(?Card $card = null, ?Collection $collection = null, ?Folder $folder = null) : array
     {
         $collection->refresh();
-        $card->refresh();
-        $collectionCards = $collection->cards->where('uuid', '=', $card->uuid);
-        $pivot           = $collectionCards->last()->pivot;
+        $cards = $collection->cards()->get()->map(fn ($card) => $card->pivot);
 
-        $response = [];
+        $response           = [];
+        $collectionCards    = [];
+        $pivot              = [];
+        if ($card) {
+            $collectionCards    = $collection->cards->where('uuid', '=', $card->uuid);
+            $pivot              = $collectionCards->last()->pivot;
+            $card->refresh();
+        }
 
         $response['identity'] = [
-            'card_uuid'       => $card->uuid,
+            'card_uuid'       => $card->uuid ?? null,
             'collection_uuid' => $collection->uuid,
             'folder_uuid'     => $folder->uuid ?? null,
         ];
+
+        $response['total_collection_cards'] = [
+            'quantity'  => 0,
+            'price'     => 0,
+            'cards'     => 0,
+        ];
+
+        if ($cards) {
+            $totals = $cards->reduce(function ($carry, $card) {
+                return [
+                    'quantity'  => $carry['quantity'] + $card->quantity,
+                    'price'     => $carry['price'] +
+                        ($card->quantity * $card->price_when_added),
+                    'cards'     => $carry['cards'] + 1,
+                ];
+            }, $response['total_collection_cards']);
+
+            $response['total_collection_cards'] = $totals;
+        }
 
         if ($collectionCards) {
             $response['collection_cards'] = [

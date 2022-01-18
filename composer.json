@@ -24,6 +24,7 @@
         "pcrov/jsonreader": "^1.0",
         "predis/predis": "~1.0",
         "spatie/laravel-event-sourcing": "^6.0",
+        "spatie/laravel-ray": "^1.29",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
