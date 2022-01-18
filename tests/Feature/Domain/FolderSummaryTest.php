@@ -404,13 +404,14 @@ class FolderSummaryTest extends CardCollectionTestCase
             ->first();
 
         $acquiredPrice  = $card->price_when_added;
-        $half           = round($acquiredPrice * 0.5);
+        $halfFloor      = (int) floor($acquiredPrice * 0.5);
+        $halfCeil       = (int) ceil($acquiredPrice * 0.5);
 
         // update card quantity
         $this->updateCard($card->toArray(), [
             'newCondition'  => $card->condition,
             'oldCondition'  => $card->condition,
-            'newPrice'      => $half,
+            'newPrice'      => $halfFloor,
             'oldPrice'      => $acquiredPrice,
         ]);
 
@@ -418,7 +419,7 @@ class FolderSummaryTest extends CardCollectionTestCase
         $state2 = $this->getState(null, $collection, $folder);
 
         // assert price updated
-        $newValue = round($state1['folder']['acquired_value'] - $half);
+        $newValue = round($state1['folder']['acquired_value'] - $halfCeil);
         $this->assertEquals($state2['collection']['acquired_value'], $state2['folder']['acquired_value']);
         $this->assertEquals($newValue, round($state2['folder']['acquired_value']));
     }
