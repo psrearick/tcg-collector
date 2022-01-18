@@ -64,10 +64,6 @@ class UpdateCollectionCard
         $proposedQuantity = $quantity + $requestedChange;
         $actualChange     = $requestedChange;
         $finalQuantity    = $proposedQuantity;
-        if ($proposedQuantity < 0) {
-            $actualChange  = $proposedQuantity;
-            $finalQuantity = 0;
-        }
 
         $searchData = new CollectionCardSearchParameterData([
             'uuid'      => $this->uuid,

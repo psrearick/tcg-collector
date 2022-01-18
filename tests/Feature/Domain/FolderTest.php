@@ -14,11 +14,6 @@ class FolderTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_a_folder_can_be_created()
     {
         $this->actingAs(User::factory()->withPersonalTeam()->create());
