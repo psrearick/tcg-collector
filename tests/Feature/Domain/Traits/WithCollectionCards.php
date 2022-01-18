@@ -4,6 +4,7 @@ namespace Tests\Feature\Domain\Traits;
 
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\DeleteCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
@@ -73,7 +74,16 @@ trait WithCollectionCards
         return (new CreateFolder)($params);
     }
 
-    public function getFolderSummary(Folder $folder)
+    /**
+     * @param string $collection the uuid of the collection to delete from
+     * @param array $cards an array of collection cardSummaries to delete
+     */
+    public function deleteCards(string $collection, array $cards) : void
+    {
+        (new DeleteCollectionCards)($collection, $cards);
+    }
+
+    public function getFolderSummary(Folder $folder) : array
     {
         $folder->refresh();
         $summary = $folder->summary;

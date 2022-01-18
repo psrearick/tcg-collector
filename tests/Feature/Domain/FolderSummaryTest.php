@@ -366,7 +366,45 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(6, $p2st3['total_cards']);
     }
 
-    // folder totals are update when cards are deleted
+    public function test_folders_are_update_when_cards_are_deleted()
+    {
+        // set user
+        $user = $this->act();
+
+        // create collection in folder 01
+        $folderCollection   = $this->createCollectionInFolder();
+        $collectionUuid     = $folderCollection['collection_uuid'];
+        $folderUuid         = $folderCollection['folder_uuid'];
+
+        // add cards to collection
+        $c1 = $this->createCollectionCard($collectionUuid, 1);
+        $c2 = $this->createCollectionCard($collectionUuid, 2);
+        $c3 = $this->createCollectionCard($collectionUuid, 3);
+
+        // get models
+        $folder     = Folder::uuid($folderUuid);
+        $collection = Collection::uuid($collectionUuid);
+
+        // get state
+        $state1 = $this->getFolderSummary($folder);
+
+        // assert quantity
+        $this->assertEquals(3, $state1['total_cards']);
+
+        // delete cards
+        $cardsToDelete = $collection->cardSummaries()
+            ->whereIn('card_uuid', [$c2, $c3])
+            ->get()
+            ->toArray();
+
+        $this->deleteCards($collectionUuid, $cardsToDelete);
+
+        // get state
+        $state2 = $this->getFolderSummary($folder);
+
+        // assert quantity changed
+        $this->assertEquals(1, $state2['total_cards']);
+    }
 
     // folder totals are updated when sub-collections are deleted
 
