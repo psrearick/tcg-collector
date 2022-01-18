@@ -60,13 +60,35 @@ trait WithCollectionCards
         ];
     }
 
-    public function createFolder(string $name = 'folder 01') : string
+    public function createFolder(string $name = 'folder 01', ?string $parent = null) : string
     {
         $params = [
             'name' => $name,
         ];
 
+        if ($parent) {
+            $params['parent_uuid'] = $parent;
+        }
+
         return (new CreateFolder)($params);
+    }
+
+    public function getFolderSummary(Folder $folder)
+    {
+        $folder->refresh();
+        $summary = $folder->summary;
+
+        if ($summary) {
+            return [
+                'total_cards'       => $summary->total_cards,
+                'current_value'     => $summary->current_value,
+                'acquired_value'    => $summary->acquired_value,
+                'gain_loss'         => $summary->gain_loss,
+                'gain_loss_percent' => $summary->gain_loss_percent,
+            ];
+        }
+
+        return [];
     }
 
     public function getState(?Card $card = null, ?Collection $collection = null, ?Folder $folder = null) : array
@@ -159,18 +181,7 @@ trait WithCollectionCards
         ];
 
         if ($folder) {
-            $folder->refresh();
-            $summary            = $folder->summary;
-
-            if ($summary) {
-                $response['folder'] = [
-                    'total_cards'       => $summary->total_cards,
-                    'current_value'     => $summary->current_value,
-                    'acquired_value'    => $summary->acquired_value,
-                    'gain_loss'         => $summary->gain_loss,
-                    'gain_loss_percent' => $summary->gain_loss_percent,
-                ];
-            }
+            $response['folder'] = $this->getFolderSummary($folder);
         }
 
         return $response;

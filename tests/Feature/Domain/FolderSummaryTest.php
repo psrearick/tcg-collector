@@ -5,6 +5,7 @@ namespace Tests\Feature\Domain;
 use App\Domain\Collections\Aggregate\Actions\MoveCollection;
 use App\Domain\Collections\Aggregate\Actions\MoveCollectionCards;
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Folders\Aggregate\Actions\MoveFolder;
 use App\Domain\Folders\Models\Folder;
 
 class FolderSummaryTest extends CardCollectionTestCase
@@ -239,6 +240,131 @@ class FolderSummaryTest extends CardCollectionTestCase
     }
 
     // folder totals are updated when folders are moved
+    public function test_folder_totals_are_updated_when_folders_are_moved() : void
+    {
+        // set user
+        $user = $this->act();
+        $uid  = $user->id;
+
+        //########## Folders ##########\\
+        // create parent folders
+        $p1 = $this->createFolder('p1');
+        $p2 = $this->createFolder('p2');
+
+        // create p1 children
+        $p1f1 = $this->createFolder('p1f1', $p1);
+        $p1f2 = $this->createFolder('p1f2', $p1);
+
+        // create p2 children
+        $p2f1 = $this->createFolder('p2f1', $p2);
+        $p2f2 = $this->createFolder('p2f2', $p2);
+
+        //########## Collections ##########\\
+        // create p1 collections
+        $p1c1   = $this->createCollection($p1);
+        $p1f1c1 = $this->createCollection($p1f1);
+        $p1f1c2 = $this->createCollection($p1f1);
+        $p1f2c1 = $this->createCollection($p1f2);
+        $p1f2c2 = $this->createCollection($p1f2);
+
+        // create p2 collections
+        $p2c1   = $this->createCollection($p2);
+        $p2f1c1 = $this->createCollection($p2f1);
+        $p2f1c2 = $this->createCollection($p2f1);
+        $p2f2c1 = $this->createCollection($p2f2);
+        $p2f2c2 = $this->createCollection($p2f2);
+
+        //########## Cards ##########\\
+        // create p1 cards
+        $p1c1a1    = $this->createCollectionCard($p1c1, 0, '', 2);
+        $p1f1c1a1  = $this->createCollectionCard($p1f1c1, 1, '', 2);
+        $p1f1c2a1  = $this->createCollectionCard($p1f1c2, 2, '', 2);
+        $p1f2c1a1  = $this->createCollectionCard($p1f2c1, 3, '', 2);
+        $p1f2c2a1  = $this->createCollectionCard($p1f2c2, 4, '', 2);
+
+        // create p2 cards
+        $p2c1a1    = $this->createCollectionCard($p2c1, 5, '', 2);
+        $p2f1c1a1  = $this->createCollectionCard($p2f1c1, 6, '', 2);
+        $p2f1c2a1  = $this->createCollectionCard($p2f1c2, 7, '', 2);
+        $p2f2c1a1  = $this->createCollectionCard($p2f2c1, 8, '', 2);
+        $p2f2c2a1  = $this->createCollectionCard($p2f2c2, 9, '', 2);
+
+        // Folders-Collections
+        // p1 -> p1c1
+        // p1 -> p1f1 -> p1f1c1, p1f1c2
+        // p1 -> p1f2 -> p1f1c1, p1f2c2
+
+        // p2 -> p2c1
+        // p2 -> p2f1 -> p2f1c1, p2f1c1
+        // p2 -> p2f2 -> p2f2c1, p2f2c2
+
+        //########## Models ##########\\
+        // get parent models
+        $p1Mod = Folder::uuid($p1);
+        $p2Mod = Folder::uuid($p2);
+
+        //########## Initial State ##########\\
+        // parent checks
+        $p1st1 = $this->getFolderSummary($p1Mod);
+        $p2st1 = $this->getFolderSummary($p2Mod);
+
+        // assertions
+        $this->assertEquals(10, $p1st1['total_cards']);
+        $this->assertEquals(10, $p2st1['total_cards']);
+
+        //########## Move Folders - P1 -> P2 ##########\\
+        (new MoveFolder)($p1f1, $p2, $uid);
+
+        // Folders-Collections
+        // p1 -> p1c1
+        // p1 -> p1f2 -> p1f1c1, p1f2c2
+
+        // p2 -> p2c1
+        // p2 -> p1f1 -> p1f1c1, p1f1c2
+        // p2 -> p2f1 -> p2f1c1, p2f1c1
+        // p2 -> p2f2 -> p2f2c1, p2f2c2
+
+        // get state
+        $p1st2 = $this->getFolderSummary($p1Mod);
+        $p2st2 = $this->getFolderSummary($p2Mod);
+
+        // calculations
+        // p1 loss, p2 gain
+        $p1loss = $p1st1['current_value'] - $p1st2['current_value'];
+        $p2gain = $p2st2['current_value'] - $p2st1['current_value'];
+
+        // assertions
+        $this->assertEquals($p1loss, $p2gain);
+        $this->assertEquals(6, $p1st2['total_cards']);
+        $this->assertEquals(14, $p2st2['total_cards']);
+
+        //########## Move Folders - P2 -> P1 ##########\\
+        (new MoveFolder)($p1f1, $p1, $uid);
+        (new MoveFolder)($p2f2, $p1, $uid);
+
+        // Folders-Collections
+        // p1 -> p1c1
+        // p2 -> p1f1 -> p1f1c1, p1f1c2
+        // p1 -> p1f2 -> p1f1c1, p1f2c2
+        // p2 -> p2f2 -> p2f2c1, p2f2c2
+
+        // p2 -> p2c1
+        // p2 -> p2f1 -> p2f1c1, p2f1c1
+
+        // get state
+        $p1st3 = $this->getFolderSummary($p1Mod);
+        $p2st3 = $this->getFolderSummary($p2Mod);
+
+        // calculations
+        // p1 gain, p2 loss
+        $p1gain = $p1st3['current_value'] - $p1st2['current_value'];
+        $p2loss = $p2st2['current_value'] - $p2st3['current_value'];
+
+        // assertions
+        $this->assertEquals($p2loss, $p1gain);
+        $this->assertEquals(14, $p1st3['total_cards']);
+        $this->assertEquals(6, $p2st3['total_cards']);
+    }
 
     // folder totals are update when cards are deleted
 
