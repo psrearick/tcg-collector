@@ -406,6 +406,113 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(1, $state2['total_cards']);
     }
 
+    public function test_folders_are_update_when_sub_folders_are_deleted()
+    {
+        // set user
+        $user = $this->act();
+
+        //########## Folders ##########\\
+        // create parent folders
+        $p1 = $this->createFolder('p1');
+        $p2 = $this->createFolder('p2');
+
+        // create p1 children
+        $p1f1 = $this->createFolder('p1f1', $p1);
+        $p1f2 = $this->createFolder('p1f2', $p1);
+
+        // create p2 children
+        $p2f1     = $this->createFolder('p2f1', $p2);
+        $p2f2     = $this->createFolder('p2f2', $p2);
+        $p2f2f1   = $this->createFolder('p2f2f1', $p2f2);
+
+        //########## Collections ##########\\
+        // create p1 collections
+        $p1c1   = $this->createCollection($p1);
+        $p1f1c1 = $this->createCollection($p1f1);
+        $p1f1c2 = $this->createCollection($p1f1);
+        $p1f2c1 = $this->createCollection($p1f2);
+        $p1f2c2 = $this->createCollection($p1f2);
+
+        // create p2 collections
+        $p2c1       = $this->createCollection($p2);
+        $p2f1c1     = $this->createCollection($p2f1);
+        $p2f1c2     = $this->createCollection($p2f1);
+        $p2f2c1     = $this->createCollection($p2f2);
+        $p2f2f1c1   = $this->createCollection($p2f2f1);
+
+        //########## Cards ##########\\
+        // create p1 cards
+        $p1c1a1    = $this->createCollectionCard($p1c1, 0, '', 2);
+        $p1f1c1a1  = $this->createCollectionCard($p1f1c1, 1, '', 2);
+        $p1f1c2a1  = $this->createCollectionCard($p1f1c2, 2, '', 2);
+        $p1f2c1a1  = $this->createCollectionCard($p1f2c1, 3, '', 2);
+        $p1f2c2a1  = $this->createCollectionCard($p1f2c2, 4, '', 2);
+
+        // create p2 cards
+        $p2c1a1     = $this->createCollectionCard($p2c1, 5, '', 2);
+        $p2f1c1a1   = $this->createCollectionCard($p2f1c1, 6, '', 2);
+        $p2f1c2a1   = $this->createCollectionCard($p2f1c2, 7, '', 2);
+        $p2f2c1a1   = $this->createCollectionCard($p2f2c1, 8, '', 2);
+        $p2f2f1c1a1 = $this->createCollectionCard($p2f2f1c1, 9, '', 2);
+
+        // Folders-Collections
+        // p1 -> p1c1
+        // p1 -> p1f1 -> p1f1c1, p1f1c2
+        // p1 -> p1f2 -> p1f1c1, p1f2c2
+
+        // p2 -> p2c1
+        // p2 -> p2f1 -> p2f1c1, p2f1c1
+        // p2 -> p2f2 -> p2f2c1
+        //            -> p2f2f1 -> p2f2f1c1
+
+        //########## Models ##########\\
+        // get parent models
+        $p1Mod      = Folder::uuid($p1);
+        $p2Mod      = Folder::uuid($p2);
+        $p2f2Mod    = Folder::uuid($p2f2);
+        $p2f2f1Mod  = Folder::uuid($p2f2f1);
+
+        //########## Initial State ##########\\
+        // parent checks
+        $p1st1      = $this->getFolderSummary($p1Mod);
+        $p2st1      = $this->getFolderSummary($p2Mod);
+        $p2f2st1    = $this->getFolderSummary($p2f2Mod);
+        $p2f2f1st1  = $this->getFolderSummary($p2f2f1Mod);
+
+        // assertions
+        $this->assertEquals(10, $p1st1['total_cards']);
+        $this->assertEquals(10, $p2st1['total_cards']);
+        $this->assertEquals(4, $p2f2st1['total_cards']);
+        $this->assertEquals(2, $p2f2f1st1['total_cards']);
+
+        //########## Delete Folder ##########\\
+        $this->deletefolder($p2f2f1);
+
+        //########## State 2 ##########\\
+        // parent checks
+        $p1st2      = $this->getFolderSummary($p1Mod);
+        $p2st2      = $this->getFolderSummary($p2Mod);
+        $p2f2st2    = $this->getFolderSummary($p2f2Mod);
+
+        // assertions
+        $this->assertEquals(10, $p1st2['total_cards']);
+        $this->assertEquals(8, $p2st2['total_cards']);
+        $this->assertEquals(2, $p2f2st2['total_cards']);
+
+        //########## Delete Folder ##########\\
+        $this->deletefolder($p2f2);
+        $this->deletefolder($p1f1);
+
+        //########## Initial State ##########\\
+        // parent checks
+        $p1st3      = $this->getFolderSummary($p1Mod);
+        $p2st3      = $this->getFolderSummary($p2Mod);
+
+        // assertions
+        $this->assertEquals(6, $p1st3['total_cards']);
+        $this->assertEquals(6, $p2st3['total_cards']);
+    }
+
     public function test_folders_are_updated_when_sub_collections_are_deleted()
     {
         // set user
@@ -443,12 +550,10 @@ class FolderSummaryTest extends CardCollectionTestCase
         // assert quantity changed
         $this->assertEquals(2, $state2['total_cards']);
     }
-
-    // folder totals are updated when sub-folders are deleted
+}
 
     // folder totals are updated when card moved to different collection
 
     // folder totals are updated when card quantities are changed
 
     // folder totals are updated when card acquired prices change
-}

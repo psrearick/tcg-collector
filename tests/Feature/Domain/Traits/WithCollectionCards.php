@@ -9,6 +9,7 @@ use App\Domain\Collections\Aggregate\Actions\DeleteCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
+use App\Domain\Folders\Aggregate\Actions\DeleteFolder;
 use App\Domain\Folders\Models\Folder;
 
 trait WithCollectionCards
@@ -90,6 +91,14 @@ trait WithCollectionCards
     public function deleteCollection(string $uuid) : void
     {
         (new DeleteCollection)($uuid);
+    }
+
+    /**
+     * @param string $uuid the uuid of the folder to delete
+     */
+    public function deletefolder(string $uuid) : void
+    {
+        (new DeleteFolder)($uuid);
     }
 
     public function getCollectionSummary(Collection $collection) : array
