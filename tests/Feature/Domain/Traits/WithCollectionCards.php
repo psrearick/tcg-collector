@@ -4,6 +4,7 @@ namespace Tests\Feature\Domain\Traits;
 
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
+use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
 use App\Domain\Collections\Aggregate\Actions\DeleteCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use App\Domain\Collections\Models\Collection;
@@ -75,12 +76,20 @@ trait WithCollectionCards
     }
 
     /**
-     * @param string $collection the uuid of the collection to delete from
+     * @param string $uuid the uuid of the collection to delete from
      * @param array $cards an array of collection cardSummaries to delete
      */
-    public function deleteCards(string $collection, array $cards) : void
+    public function deleteCards(string $uuid, array $cards) : void
     {
-        (new DeleteCollectionCards)($collection, $cards);
+        (new DeleteCollectionCards)($uuid, $cards);
+    }
+
+    /**
+     * @param string $uuid the uuid of the collection to delete
+     */
+    public function deleteCollection(string $uuid) : void
+    {
+        (new DeleteCollection)($uuid);
     }
 
     public function getCollectionSummary(Collection $collection) : array
