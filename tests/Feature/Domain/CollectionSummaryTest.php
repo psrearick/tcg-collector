@@ -46,6 +46,45 @@ class CollectionSummaryTest extends CardCollectionTestCase
         $this->assertEquals(5, $summary->total_cards);
     }
 
+    public function test_a_collections_summary_is_updated_when_a_card_is_deleted() : void
+    {
+        // set user
+        $this->act();
+
+        // create collection in folder
+        $folderCollection   = $this->createCollectionInFolder();
+        $collectionUuid     = $folderCollection['collection_uuid'];
+        $folderUuid         = $folderCollection['folder_uuid'];
+
+        // add cards to collection
+        $c1 = $this->createCollectionCard($collectionUuid, 1);
+        $c2 = $this->createCollectionCard($collectionUuid, 2);
+        $c3 = $this->createCollectionCard($collectionUuid, 3);
+
+        // get model
+        $collection = Collection::uuid($collectionUuid);
+
+        // get state
+        $state1 = $this->getCollectionSummary($collection);
+
+        // assert quantity
+        $this->assertEquals(3, $state1['total_cards']);
+
+        // delete cards
+        $cardsToDelete = $collection->cardSummaries()
+            ->whereIn('card_uuid', [$c2, $c3])
+            ->get()
+            ->toArray();
+
+        $this->deleteCards($collectionUuid, $cardsToDelete);
+
+        // get state
+        $state2 = $this->getCollectionSummary($collection);
+
+        // assert quantity changed
+        $this->assertEquals(1, $state2['total_cards']);
+    }
+
     public function test_a_collections_summary_is_updated_when_a_card_is_moved() : void
     {
         // set user

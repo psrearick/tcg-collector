@@ -366,12 +366,12 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(6, $p2st3['total_cards']);
     }
 
-    public function test_folders_are_update_when_cards_are_deleted()
+    public function test_folders_are_update_when_cards_are_deleted() : void
     {
         // set user
-        $user = $this->act();
+        $this->act();
 
-        // create collection in folder 01
+        // create collection in folder
         $folderCollection   = $this->createCollectionInFolder();
         $collectionUuid     = $folderCollection['collection_uuid'];
         $folderUuid         = $folderCollection['folder_uuid'];

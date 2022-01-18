@@ -83,6 +83,24 @@ trait WithCollectionCards
         (new DeleteCollectionCards)($collection, $cards);
     }
 
+    public function getCollectionSummary(Collection $collection) : array
+    {
+        $collection->refresh();
+        $summary = $collection->summary;
+
+        if ($summary) {
+            return [
+                'total_cards'       => $summary->total_cards,
+                'current_value'     => $summary->current_value,
+                'acquired_value'    => $summary->acquired_value,
+                'gain_loss'         => $summary->gain_loss,
+                'gain_loss_percent' => $summary->gain_loss_percent,
+            ];
+        }
+
+        return [];
+    }
+
     public function getFolderSummary(Folder $folder) : array
     {
         $folder->refresh();
@@ -158,14 +176,7 @@ trait WithCollectionCards
             ];
         }
 
-        $summary                = $collection->summary;
-        $response['collection'] = [
-            'total_cards'       => $summary->total_cards,
-            'current_value'     => $summary->current_value,
-            'acquired_value'    => $summary->acquired_value,
-            'gain_loss'         => $summary->gain_loss,
-            'gain_loss_percent' => $summary->gain_loss_percent,
-        ];
+        $response['collection'] = $this->getCollectionSummary($collection);
 
         $cardSummaries = $collection->cardSummaries
             ->where('quantity', '>', 0);
