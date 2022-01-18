@@ -60,10 +60,10 @@ trait WithCollectionCards
         ];
     }
 
-    public function createFolder() : string
+    public function createFolder(string $name = 'folder 01') : string
     {
         $params = [
-            'name' => 'folder 01',
+            'name' => $name,
         ];
 
         return (new CreateFolder)($params);

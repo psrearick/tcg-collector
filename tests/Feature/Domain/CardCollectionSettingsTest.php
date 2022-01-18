@@ -91,10 +91,10 @@ class CardCollectionSettingsTest extends TestCase
         );
 
         // folder summary reflects price change
-        // $this->assertNotEquals(
-        //     $originalState['folder']['acquired_value'],
-        //     $secondState['folder']['acquired_value'],
-        // );
+        $this->assertNotEquals(
+            $originalState['folder']['acquired_value'],
+            $secondState['folder']['acquired_value'],
+        );
     }
 
     public function test_a_collection_card_can_change_acquired_price_and_condition() : void
@@ -180,10 +180,10 @@ class CardCollectionSettingsTest extends TestCase
         );
 
         // folder summary reflects price change
-        // $this->assertNotEquals(
-        //     $originalState['folder']['acquired_value'],
-        //     $secondState['folder']['acquired_value'],
-        // );
+        $this->assertNotEquals(
+            $originalState['folder']['acquired_value'],
+            $secondState['folder']['acquired_value'],
+        );
 
         // Third State Assertions
         $this->assertEquals(3, $thirdState['collection_cards']['total_cards']);

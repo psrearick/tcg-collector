@@ -6,7 +6,7 @@ use App\Domain\Base\Model;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Summary extends Model implements ShouldQueue
 {
@@ -19,14 +19,14 @@ class Summary extends Model implements ShouldQueue
 
     protected $guarded = [];
 
-    public function collections() : HasMany
+    public function collection() : HasOne
     {
-        return $this->hasMany(Collection::class, 'uuid', 'uuid');
+        return $this->hasOne(Collection::class, 'uuid', 'uuid');
     }
 
-    public function folders() : HasMany
+    public function folder() : HasOne
     {
-        return $this->hasMany(Folder::class, 'uuid', 'uuid');
+        return $this->hasOne(Folder::class, 'uuid', 'uuid');
     }
 
     public function getGainLossPercentAttribute($value) : float
