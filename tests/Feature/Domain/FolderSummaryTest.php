@@ -366,6 +366,63 @@ class FolderSummaryTest extends CardCollectionTestCase
         $this->assertEquals(6, $p2st3['total_cards']);
     }
 
+    public function test_folders_are_update_when_cards_acquired_price_change() : void
+    {
+        // set user
+        $user = $this->act();
+        $user->settings()->create([
+            'tracks_price'     => true,
+            'tracks_condition' => false,
+        ]);
+
+        // create collection in folder
+        $folderCollection   = $this->createCollectionInFolder();
+        $collectionUuid     = $folderCollection['collection_uuid'];
+        $folderUuid         = $folderCollection['folder_uuid'];
+
+        // add cards to collection
+        $c1 = $this->createCollectionCard($collectionUuid, 1);
+        $c2 = $this->createCollectionCard($collectionUuid, 2);
+        $c3 = $this->createCollectionCard($collectionUuid, 3);
+
+        // get models
+        $folder     = Folder::uuid($folderUuid);
+        $collection = Collection::uuid($collectionUuid);
+
+        // get state
+        $state1 = $this->getState(null, $collection, $folder);
+
+        // assert quantity
+        $this->assertEquals(3, $state1['collection']['total_cards']);
+        $this->assertEquals(3, $state1['folder']['total_cards']);
+        $this->assertEquals($state1['collection']['acquired_value'], $state1['folder']['acquired_value']);
+        $this->assertGreaterThan(0, $state1['collection']['acquired_value']);
+
+        // get current card
+        $card = $collection->cardSummaries()
+            ->where('card_uuid', '=', $c1)
+            ->first();
+
+        $acquiredPrice  = $card->price_when_added;
+        $half           = round($acquiredPrice * 0.5);
+
+        // update card quantity
+        $this->updateCard($card->toArray(), [
+            'newCondition'  => $card->condition,
+            'oldCondition'  => $card->condition,
+            'newPrice'      => $half,
+            'oldPrice'      => $acquiredPrice,
+        ]);
+
+        // get state
+        $state2 = $this->getState(null, $collection, $folder);
+
+        // assert price updated
+        $newValue = round($state1['folder']['acquired_value'] - $half);
+        $this->assertEquals($state2['collection']['acquired_value'], $state2['folder']['acquired_value']);
+        $this->assertEquals($newValue, $state2['folder']['acquired_value']);
+    }
+
     public function test_folders_are_update_when_cards_are_deleted() : void
     {
         // set user
@@ -555,5 +612,3 @@ class FolderSummaryTest extends CardCollectionTestCase
     // folder totals are updated when card moved to different collection
 
     // folder totals are updated when card quantities are changed
-
-    // folder totals are updated when card acquired prices change
