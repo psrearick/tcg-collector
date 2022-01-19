@@ -62,7 +62,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('collections-search', [CollectionsSearchController::class, 'store'])->name('collections-search.store');
     Route::get('collection-set-search', [SetCollectionsSearchController::class, 'index'])->name('collection-set-search.index');
     Route::patch('folders/move', [FoldersMoveController::class, 'update'])->name('folders.move');
-    Route::resource('folders', FoldersController::class)->except('index');
+    Route::resource('folders', FoldersController::class)->except('index', 'edit');
     Route::get('group/search', [GroupsSearchController::class, 'show'])->name('group-search.show');
     Route::post('group/search', [GroupsSearchController::class, 'store'])->name('group-search.store');
     Route::get('group/user/{user}', [GroupUsersController::class, 'show'])->name('group-users.show');

@@ -2,7 +2,9 @@
     "name": "psrearick/tcg-collector",
     "type": "project",
     "description": "TCG Collector App",
-    "keywords": ["tcg"],
+    "keywords": [
+        "tcg"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
@@ -33,7 +35,9 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10"
+        "phpunit/phpunit": "^9.5.10",
+        "jasonmccreary/laravel-test-assertions": "^2.0",
+        "laravel-shift/factory-generator": "dev-master"
     },
     "autoload": {
         "psr-4": {
