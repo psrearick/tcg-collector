@@ -7,6 +7,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\createPrice;
 use App\Domain\Prices\Aggregate\Actions\MatchFinish;
+use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Models\Price;
 
 class PriceTest extends CardCollectionTestCase
@@ -78,6 +79,8 @@ class PriceTest extends CardCollectionTestCase
         // // create price
         (new createPrice)($priceData);
 
+        $this->simulatePriceUpdateSummaryJob();
+
         // get state
         $state2 = $this->getState($card, $collection);
 
@@ -115,6 +118,8 @@ class PriceTest extends CardCollectionTestCase
 
         // // create price
         (new createPrice)($priceData);
+
+        $this->simulatePriceUpdateSummaryJob();
 
         // get state
         $state2 = $this->getState($card, $collection, $folder);
@@ -166,5 +171,20 @@ class PriceTest extends CardCollectionTestCase
         $this->assertNotEquals($initialPrice, $newPrice);
         $this->assertGreaterThan($initialCount, $newCount);
         $this->assertEquals($price, $newPrice);
+    }
+
+    private function simulatePriceUpdateSummaryJob() : void
+    {
+        // call command summaries:update
+        // from App\App\Console\Commands\UpdateAllSummaries
+        $collections = Collection::withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
+            ->whereNull('deleted_at')
+            ->get();
+
+        $collections->each(function ($collection) {
+            // Dispatches job
+            // From App\Jobs\UpdateCollectionSummary
+            (new UpdateCollectionAncestryTotals)($collection);
+        });
     }
 }

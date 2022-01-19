@@ -20,10 +20,18 @@ class CollectionPriceProjector extends Projector
             'current_price' => $attributes['price'],
         ]);
 
-        $summaries->each(function (CollectionCardSummary $summary, $index) use ($from) {
-            $previous = $from[$index];
-            $this->updateCard($summary, $previous);
-        });
+        // NOTE:
+        // adding this will update each collection summary every time a price
+        // is added. This makes adding prices too slow. Instead, we update the
+        // collections in bulk, once, using a job after the prices have updated.
+        // if we update prices dynamically throughout the day, we will need to find
+        // a way to update summaries as well when the price is updated from
+        // tcgplayer, but not on each night's bulk update
+
+        // $summaries->each(function (CollectionCardSummary $summary, $index) use ($from) {
+        //     $previous = $from[$index];
+        //     $this->updateCard($summary, $previous);
+        // });
     }
 
     public function updateCard(CollectionCardSummary $summary, CollectionCardSummary $previous) : void
