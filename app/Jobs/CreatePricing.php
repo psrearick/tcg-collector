@@ -56,7 +56,6 @@ class CreatePricing implements ShouldQueue
                 'card_uuid'     => $card->uuid,
                 'provider_uuid' => $provider,
                 'price'         => $price,
-                'foil'          => $type == 'usd_foil' || $type == 'usd_etched',
                 'type'          => $type,
             ];
 

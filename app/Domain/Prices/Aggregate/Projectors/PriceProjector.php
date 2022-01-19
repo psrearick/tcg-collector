@@ -16,7 +16,6 @@ class PriceProjector extends Projector
             'card_uuid'     => $attributes['card_uuid'],
             'provider_uuid' => $attributes['provider_uuid'],
             'price'         => $attributes['price'],
-            'foil'          => $attributes['foil'] ?? false,
             'type'          => $attributes['type'],
         ]);
     }
