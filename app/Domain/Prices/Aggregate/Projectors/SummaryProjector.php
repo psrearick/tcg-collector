@@ -44,10 +44,11 @@ class SummaryProjector extends Projector
         $previousValue = $startQuantity * $previousPrice;
         $updatedValue  = $endQuantity * ($acquired ?: $price);
         $valueDiff     = $updatedValue - $previousValue;
+        $priceChange   = $price - $previousPrice;
 
         // get totals
         $totalCards      = $totals['total_cards'] + $quantity;
-        $currentValue    = $totals['current_value'] + $valueChange;
+        $currentValue    = $priceChange <> 0 ? $price : ($totals['current_value'] + $valueChange);
         $acquiredValue   = $totals['acquired_value'] + $valueDiff;
 
         // calculate gain/loss
@@ -75,7 +76,6 @@ class SummaryProjector extends Projector
             $totals              = $getCollectionTotals($collection);
         }
 
-        $hasSummary = !!$collection->summary;
         $summary    = Summary::updateOrCreate([
             'uuid'              => $collection->uuid,
             'type'              => 'collection',

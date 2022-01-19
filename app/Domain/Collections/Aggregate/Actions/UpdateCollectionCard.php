@@ -81,10 +81,12 @@ class UpdateCollectionCard
         $formattedCards = (new FormatCards)($cardBuilder, $searchData);
         $formattedCard  = $formattedCards->first();
 
-        $price               = $formattedCard['prices'][$this->change['finish']] ?? 0;
-        $changeAcquiredPrice = $this->change['acquired_price'] ?? $price;
-        $acquiredPrice       = CollectionCardSettingsService::tracksPrice()
-            ? $changeAcquiredPrice : $price;
+        $price                  = $formattedCard['prices'][$this->change['finish']] ?? 0;
+        $currentPrice           = $this->change['from']['acquired_price'] ?? $price;
+        $changeAcquiredPrice    = $this->change['acquired_price'] ?? $currentPrice;
+        $acquiredPrice          = CollectionCardSettingsService::tracksPrice()
+            ? $changeAcquiredPrice
+            : $currentPrice;
 
         $changeCondition = $this->change['condition'] ?? '';
         $condition       = CollectionCardSettingsService::tracksCondition()

@@ -52,6 +52,9 @@ trait WithCollectionCards
         return (new UpdateCollectionCard)($data)['uuid'];
     }
 
+    /**
+     * @return array [string folder_uuid, string collection_uuid]
+     */
     public function createCollectionInFolder(string $name = 'folder 01') : array
     {
         $folderUuid         = $this->createFolder($name);
@@ -217,6 +220,7 @@ trait WithCollectionCards
             'condition'         => $collectionCardSummary->condition ?? null,
             'quantity'          => $collectionCardSummary->quantity ?? null,
             'finish'            => $collectionCardSummary->finish ?? null,
+            'current_price'     => $collectionCardSummary->current_price ?? null,
         ];
 
         if ($folder) {
@@ -233,6 +237,7 @@ trait WithCollectionCards
         $newPrice           = $change['newPrice'] ?? round($oldPrice * 0.8);
         $newCondition       = $change['newCondition'] ?? 'LP';
         $oldCondition       = $change['oldCondition'] ?? $pivot['condition'];
+        $currentPrice       = $change['currentPrice'] ?? $newPrice;
 
         $data = [
             'acquired_price'    => $newPrice,
@@ -240,7 +245,7 @@ trait WithCollectionCards
             'condition'         => $newCondition,
             'finish'            => $pivot['finish'],
             'id'                => $pivot['card_uuid'],
-            'price'             => $newPrice,
+            'price'             => $currentPrice,
             'quantity'          => $pivot['quantity'] + $quantityChange,
             'from'              => [
                 'condition'         => $oldCondition,
