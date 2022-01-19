@@ -37,8 +37,22 @@ trait WithCollectionCards
         string $condition = 'NM',
         ?int $acquired_price = null,
     ) : string {
+        $data = $this->createCollectionCardRequest(
+            $uuid, $index, $finish, $quantity, $condition, $acquired_price
+        );
+        return (new UpdateCollectionCard)($data)['uuid'];
+    }
+
+    public function createCollectionCardRequest(
+        string $uuid = '',
+        int $index = 0,
+        string $finish = '',
+        int $quantity = 1,
+        string $condition = 'NM',
+        ?int $acquired_price = null,
+    ) : array {
         $card = Card::all()->get($index);
-        $data = [
+        return [
             'uuid'      => $uuid ?: $this->createCollection(),
             'change'    => [
                 'id'                => $card->uuid,
@@ -48,8 +62,6 @@ trait WithCollectionCards
                 'acquired_price'    => $acquired_price,
             ],
         ];
-
-        return (new UpdateCollectionCard)($data)['uuid'];
     }
 
     /**

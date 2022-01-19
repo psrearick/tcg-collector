@@ -11,6 +11,7 @@ use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterDa
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Collections\Services\CollectionCardSettingsService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,10 +28,16 @@ class UpdateCollectionCard
         try {
             $lock->block(15);
 
-            $uuid         = $data['uuid'];
-            $this->uuid   = $uuid;
-            $this->change = $data['change'];
-            $updated      = $this->updateQuantity();
+            try {
+                $uuid         = $data['uuid'];
+                $this->uuid   = $uuid;
+                $this->change = $data['change'];
+                $updated = $this->updateQuantity();
+            } catch (Exception $e) {
+                Cache::restoreLock('saving-collection-card', $lock)->release();
+                throw $e;
+            }
+
             $eventData    = [
                 'uuid'          => $uuid,
                 'change'        => $data['change'],
@@ -80,6 +87,17 @@ class UpdateCollectionCard
         $cardBuilder    = Card::where('uuid', '=', $this->change['id']);
         $formattedCards = (new FormatCards)($cardBuilder, $searchData);
         $formattedCard  = $formattedCards->first();
+        if (!$formattedCard) {
+            throw new Exception("no card found with that uuid");
+        }
+
+        if (!in_array($this->change['finish'], $formattedCard['finishes'])) {
+            throw new Exception("invalid finish");
+        }
+
+        if (!$formattedCard['quantities'] && $this->change['change'] < 0) {
+            throw new Exception('invalid quantity');
+        }
 
         $price                  = $formattedCard['prices'][$this->change['finish']] ?? 0;
         $currentPrice           = $this->change['from']['acquired_price'] ?? $price;
