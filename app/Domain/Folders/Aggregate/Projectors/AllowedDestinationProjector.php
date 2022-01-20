@@ -72,7 +72,9 @@ class AllowedDestinationProjector extends Projector
 
         $parent         = $attributes['parent_uuid'] ?? null;
         $destinations   = Folder::where('user_id', '=', $userId)
-            ->where('uuid', '!=', $uuid)->get();
+            ->where('uuid', '!=', $parent)
+            ->get();
+
 
         $destinations->each(function ($destination) use ($uuid, $parent) {
             if ($this->validDestinationForFolder($uuid, $destination->uuid, $parent)) {

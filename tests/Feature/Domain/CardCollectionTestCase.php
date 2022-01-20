@@ -17,6 +17,7 @@ abstract class CardCollectionTestCase extends TestCase
     {
         parent::setUp();
         $this->seed(CardsSeeder::class);
+        $this->act();
     }
 
     protected function act(?User $user = null) : User
