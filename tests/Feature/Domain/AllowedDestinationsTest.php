@@ -2,26 +2,56 @@
 
 namespace Tests\Feature\Domain;
 
-use App\Domain\Collections\Aggregate\Actions\MoveCollection;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
-use App\Domain\Folders\Models\Folder;
 
 class AllowedDestinationsTest extends CardCollectionTestCase
 {
+    public function test_a_collection_can_move_to_into_a_parallel_tree()
+    {
+        $root = new CollectionTestData();
+        $root->init()->addFolders(2);
+        $root->folders->each(fn ($folder) => $folder->addFolders(2));
+
+        $subjectFolder      = $root->followTree([0, 0]);
+        $destination        = $root->followTree([1, 0]);
+        $destinationUuid    = $destination->folder->uuid;
+
+        $subjectFolder->addCollections();
+
+        $subject = $subjectFolder->getCollection();
+
+        $this->assertContains(
+            $destinationUuid,
+            $subject->allowedDestinations->pluck('destination')
+        );
+
+        $subjectFolder->MoveCollection($subject->uuid, $destinationUuid);
+        $subject->refresh();
+
+        $this->assertNotContains(
+            $destinationUuid,
+            $subject->allowedDestinations->pluck('destination')
+        );
+
+        $this->assertEquals($destinationUuid, $subject->folder->uuid);
+    }
+
     public function test_a_collection_can_move_to_root() : void
     {
         $root = new CollectionTestData();
         $root->init()->addCollections();
 
-        $collection = $root->collections->first();
+        $collection = $root->getCollection();
 
-        $this->assertEquals($root->folder->uuid, $collection->folder_uuid);
+        $this->assertModelExists($collection->folder);
 
-        (new MoveCollection)($collection->uuid, '', $this->user->id);
+        $root->MoveCollection();
 
         $collection->refresh();
+        $root->refresh();
 
-        $this->assertEmpty($collection->folder_uuid);
+        $this->assertEmpty($root->collections);
+        $this->assertEmpty($collection->folder);
     }
 
     public function test_a_folder_can_move_to_a_folder_in_the_root()
@@ -48,21 +78,88 @@ class AllowedDestinationsTest extends CardCollectionTestCase
         $this->assertNotEmpty($root->folder->parent);
     }
 
+    public function test_a_folder_can_move_to_an_ancestor_folder()
+    {
+        $root = new CollectionTestData();
+        $root->init()->addFolders(2);
+        $root->folders->each(fn ($folder) => $folder->addFolders(2));
+        $root->refresh();
+
+        /**
+         * @var CollectionTestData $subFolder
+         */
+        $subFolder = $root->folders->first()->folders->first();
+
+        $this->assertContains(
+            $root->uuid(),
+            $subFolder->folder->allowedDestinations->pluck('destination')
+        );
+
+        $subFolder->move($root->uuid());
+
+        $subFolder->refresh();
+
+        $this->assertEquals($root->uuid(), $subFolder->folder->parent->uuid);
+        $this->assertEquals($root->uuid(), $subFolder->parent->uuid());
+        $this->assertNotContains(
+            $root->uuid(),
+            $subFolder->folder->allowedDestinations->pluck('destination')
+        );
+    }
+
+    public function test_a_folder_can_move_to_into_a_parallel_tree()
+    {
+        $root = new CollectionTestData();
+        $root->init()->addFolders(2);
+        $root->folders->each(fn ($folder) => $folder->addFolders(2));
+
+        $subject            = $root->followTree([0, 0]);
+        $destination        = $root->followTree([1, 0]);
+        $destinationUuid    = $destination->folder->uuid;
+
+        $this->assertContains(
+            $destinationUuid,
+            $subject->folder->allowedDestinations->pluck('destination')
+        );
+
+        $subject->move($destinationUuid);
+        $subject->refresh();
+
+        $this->assertNotContains(
+            $destinationUuid,
+            $subject->folder->allowedDestinations->pluck('destination')
+        );
+
+        $this->assertEquals($destinationUuid, $subject->folder->parent->uuid);
+    }
+
     public function test_a_folder_can_move_to_root() : void
     {
         $root = new CollectionTestData();
         $root->init()->addFolders(2);
         $root->folders->each(fn ($folder) => $folder->addFolders(2));
 
-        $firstFolderToMove = $root->folders->last()->folders->last();
+        /**
+         * @var CollectionTestData $folderToMove
+         */
+        $folderToMove       = $root->folders->last()->folders->last();
+        $parentUuid         = $folderToMove->folder->parent_uuid;
 
-        $this->assertNotEmpty($firstFolderToMove->folder->parent_uuid);
+        $this->assertNotEmpty($parentUuid);
+        $this->assertNotContains(
+            $parentUuid,
+            $folderToMove->folder->allowedDestinations->pluck('destination')
+        );
 
-        (new MoveFolder)($firstFolderToMove->folder->uuid, '', $this->user->id);
+        (new MoveFolder)($folderToMove->folder->uuid, '', $this->user->id);
 
-        $firstFolderToMove->refresh();
+        $folderToMove->refresh();
 
-        $this->assertEmpty($firstFolderToMove->folder->parent_uuid);
+        $this->assertEmpty($folderToMove->folder->parent_uuid);
+        $this->assertContains(
+            $parentUuid,
+            $folderToMove->folder->allowedDestinations->pluck('destination')
+        );
     }
 
     public function test_a_folder_cannot_move_into_its_descendants() : void
@@ -97,6 +194,51 @@ class AllowedDestinationsTest extends CardCollectionTestCase
         $this->assertNotEmpty($root->folder->uuid);
         $this->assertEquals($root->folder->uuid, $collection->folder_uuid);
         $this->assertEmpty($destinations);
+    }
+
+    public function test_a_moved_folder_is_a_valid_destination()
+    {
+        $root = new CollectionTestData();
+        $root->init()->addFolders(2);
+        $root->folders->each(fn ($folder) => $folder->addFolders(2));
+
+        $subject            = $root->followTree([0, 0]);
+        $subjectUuid        = $subject->folder->uuid;
+        $destination        = $root->followTree([1, 0]);
+        $destinationUuid    = $destination->folder->uuid;
+        $check              = $root->followTree([0]);
+
+        $this->assertNotContains(
+            $subject->folder->uuid,
+            $check->folder->allowedDestinations->pluck('destination')
+        );
+
+        $subject->move($destinationUuid);
+        $root->refresh()->rebuildTree([1, 0]);
+
+        $this->assertContains(
+            $subjectUuid,
+            $check->folder->allowedDestinations->pluck('destination')
+        );
+
+        $check->move($subjectUuid);
+        $root->refresh()->rebuildFolder($root);
+        $check->refresh();
+
+        $this->assertNotContains(
+            $subjectUuid,
+            $check->folder->allowedDestinations->pluck('destination')
+        );
+
+        $checkBack  = $root->followTree([0, 0, 0]); // subject
+        $checkBack->move($root->folder->uuid);
+        $root->refresh()->rebuildFolder($root);
+        $checkBack->refresh();
+
+        $this->assertNotContains(
+            $root->folder->uuid,
+            $checkBack->folder->allowedDestinations->pluck('destination')
+        );
     }
 
     public function test_a_new_collection_among_folders_has_destinations() : void
@@ -151,22 +293,4 @@ class AllowedDestinationsTest extends CardCollectionTestCase
 
         $this->assertEmpty($root->folder->allowedDestinations);
     }
-
-    // public function test_a_collection_can_move_to_root_folder() : void
-    // {}
-
-    // public function test_a_folder_can_move_to_an_ancestor_folder()
-    // {}
-
-    // public function test_a_folder_can_move_to_into_a_parallel_tree()
-    // {}
-
-    // public function test_a_collection_can_move_to_into_a_parallel_tree()
-    // {}
-
-    // public function test_a_moved_folder_is_a_valid_destination()
-    // {}
-
-    // public function test_a_moved_folders_descendants_are_valid_destinations()
-    // {}
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Domain;
 
+use App\Domain\Collections\Aggregate\Actions\MoveCollection;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
 use App\Domain\Folders\Models\Folder;
@@ -59,6 +60,22 @@ class CollectionTestData
         return $this;
     }
 
+    public function followTree(array $tree) : ?self
+    {
+        $key = array_shift($tree);
+
+        /**
+         * @var self $record
+         */
+        $record = $this->folders->get($key);
+
+        if (!$tree) {
+            return $record;
+        }
+
+        return $record->followTree($tree);
+    }
+
     public function getCollection() : Collection
     {
         return $this->collections->first();
@@ -83,30 +100,34 @@ class CollectionTestData
             return $this;
         }
 
-        if (!$userId) {
-            $userId = optional($this->user)->id;
-        }
-
-        if (!$userId) {
-            $userId = $this->folder->user->id;
-        }
-
-        if (!$userId) {
+        if (!$userId = $this->moveUserId($userId)) {
             return $this;
         }
 
         (new MoveFolder)($this->folder->uuid, $uuid, $userId);
 
-        $remove = null;
-        if ($this->parent) {
-            $remove = $this->parent->folders->filter(
-                fn ($folder) => $folder->folder->uuid = $this->folder->uuid
-            )->keys()->first();
+        $this->removeFromParentFolders();
+
+        $this->moveToNewParent($uuid);
+
+        $this->updateNewParentWithFolder();
+
+        return $this;
+    }
+
+    public function MoveCollection(string $uuid = '', string $destination = '', ?int $userId = null) : self
+    {
+        if (!$uuid = $this->moveUuid($uuid)) {
+            return $this;
         }
 
-        if ($remove !== null) {
-            $this->parent->folders->forget($remove);
+        if (!$userId = $this->moveUserId($userId)) {
+            return $this;
         }
+
+        (new MoveCollection)($uuid, $destination, $userId);
+
+        $this->removeCollectionFromCollections($uuid);
 
         return $this;
     }
@@ -114,6 +135,41 @@ class CollectionTestData
     public function new() : CollectionTestData
     {
         return new self;
+    }
+
+    public function rebuildFolder(CollectionTestData $data) : CollectionTestData
+    {
+        $folder         = $data->folder;
+        $parent         = $folder->parent;
+        $children       = $folder->children;
+        $collections    = $folder->collections;
+
+        $data->parent       = new CollectionTestData($parent);
+        $data->collections  = $collections;
+        $data->folders      = $this->rebuildFolders($children);
+
+        return $data;
+    }
+
+    public function rebuildFolders(SupportCollection $folders) : SupportCollection
+    {
+        $folderCollection = new SupportCollection();
+
+        $folders->each(function (Folder $folder) use (&$folderCollection) {
+            $data = new CollectionTestData($folder);
+            $folderCollection->push($this->rebuildFolder($data));
+        });
+
+        return $folderCollection;
+    }
+
+    public function rebuildTree(array $tree) : self
+    {
+        $toUpdate   = $this->followTree($tree);
+
+        $this->rebuildFolder($toUpdate);
+
+        return $this;
     }
 
     public function refresh() : self
@@ -129,5 +185,85 @@ class CollectionTestData
         }
 
         return $this;
+    }
+
+    public function uuid() : string
+    {
+        if (!$this->folder) {
+            return '';
+        }
+
+        return $this->folder->uuid;
+    }
+
+    protected function moveToNewParent(?string $uuid = null) : void
+    {
+        $newParent  = $uuid ? Folder::uuid($uuid) : null;
+        $parentData = new CollectionTestData($newParent);
+
+        $this->init($parentData);
+    }
+
+    protected function moveUserId(?int $userId = null) : ?int
+    {
+        if (!$userId) {
+            $userId = optional($this->user)->id;
+        }
+
+        if (!$userId) {
+            $userId = $this->folder->user->id;
+        }
+
+        if (!$userId) {
+            return null;
+        }
+
+        return $userId;
+    }
+
+    protected function moveUuid(?string $uuid = null) : ?string
+    {
+        $uuid = $uuid ?: optional($this->getCollection())->uuid;
+
+        if (!$uuid) {
+            return null;
+        }
+
+        return $uuid;
+    }
+
+    protected function removeCollectionFromCollections(string $uuid) : void
+    {
+        $remove = $this->collections
+            ->filter(fn ($collection) => $collection->uuid == $uuid)
+            ->keys()
+            ->first();
+
+        if ($remove !== null) {
+            $this->collections->forget($remove);
+        }
+    }
+
+    protected function removeFromParentFolders() : void
+    {
+        $remove = null;
+        if ($this->parent) {
+            $remove = $this->parent->folders->filter(
+                fn ($folder) => $folder->folder->uuid = $this->folder->uuid
+            )->keys()->first();
+        }
+
+        if ($remove !== null) {
+            $this->parent->folders->forget($remove);
+        }
+    }
+
+    protected function updateNewParentWithFolder() : void
+    {
+        if (!$parent = $this->parent) {
+            return;
+        }
+
+        $parent->folders->push($this);
     }
 }
