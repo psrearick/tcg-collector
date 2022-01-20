@@ -12,7 +12,7 @@ class CollectionCardsController extends Controller
 {
     public function store(string $collection, Request $request, UpdateCollectionCard $updateCollectionCard) : Response
     {
-        try {    
+        try {
             $newCard = $updateCollectionCard(['uuid' => $collection, 'change' => $request->all()]);
         } catch (Exception $e) {
             return $request->wantsJson()

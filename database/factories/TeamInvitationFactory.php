@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\TeamInvitation;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TeamInvitationFactory extends Factory
 {
@@ -23,7 +23,7 @@ class TeamInvitationFactory extends Factory
     {
         return [
             'team_id' => \App\Models\Team::factory(),
-            'email' => $this->faker->unique()->email,
+            'email'   => $this->faker->unique()->email,
         ];
     }
 }

@@ -13,11 +13,13 @@ abstract class CardCollectionTestCase extends TestCase
 {
     use RefreshDatabase, WithCollectionCards, WithFaker;
 
+    protected $user;
+
     public function setUp() : void
     {
         parent::setUp();
         $this->seed(CardsSeeder::class);
-        $this->act();
+        $this->user = $this->act();
     }
 
     protected function act(?User $user = null) : User

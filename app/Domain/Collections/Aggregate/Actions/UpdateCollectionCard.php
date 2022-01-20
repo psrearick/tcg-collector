@@ -32,9 +32,10 @@ class UpdateCollectionCard
                 $uuid         = $data['uuid'];
                 $this->uuid   = $uuid;
                 $this->change = $data['change'];
-                $updated = $this->updateQuantity();
+                $updated      = $this->updateQuantity();
             } catch (Exception $e) {
                 Cache::restoreLock('saving-collection-card', $lock)->release();
+
                 throw $e;
             }
 
@@ -88,11 +89,11 @@ class UpdateCollectionCard
         $formattedCards = (new FormatCards)($cardBuilder, $searchData);
         $formattedCard  = $formattedCards->first();
         if (!$formattedCard) {
-            throw new Exception("no card found with that uuid");
+            throw new Exception('no card found with that uuid');
         }
 
         if (!in_array($this->change['finish'], $formattedCard['finishes'])) {
-            throw new Exception("invalid finish");
+            throw new Exception('invalid finish');
         }
 
         if (!$formattedCard['quantities'] && $this->change['change'] < 0) {

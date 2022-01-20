@@ -7,7 +7,6 @@ use App\Domain\Collections\Aggregate\Actions\MoveCollectionCards;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
 use App\Domain\Folders\Models\Folder;
-use Tests\Feature\Domain\CardCollectionTestCase;
 
 class FolderSummaryTest extends CardCollectionTestCase
 {

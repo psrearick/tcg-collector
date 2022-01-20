@@ -75,7 +75,6 @@ class AllowedDestinationProjector extends Projector
             ->where('uuid', '!=', $parent)
             ->get();
 
-
         $destinations->each(function ($destination) use ($uuid, $parent) {
             if ($this->validDestinationForFolder($uuid, $destination->uuid, $parent)) {
                 AllowedDestination::firstOrCreate([
