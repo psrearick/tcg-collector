@@ -32,7 +32,7 @@ class CardCollectionTest extends CardCollectionTestCase
         $this->assertEquals(3, $collectionCards->count());
     }
 
-    public function test_a_card_with_a_negative_cannot_be_added_to_a_collection() : void
+    public function test_a_card_with_a_negative_quantity_cannot_be_added_to_a_collection() : void
     {
         $this->act();
         $uuid = $this->createCollection();

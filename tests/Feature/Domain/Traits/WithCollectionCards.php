@@ -11,6 +11,7 @@ use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\DeleteFolder;
 use App\Domain\Folders\Models\Folder;
+use Exception;
 
 trait WithCollectionCards
 {
@@ -41,7 +42,11 @@ trait WithCollectionCards
             $uuid, $index, $finish, $quantity, $condition, $acquired_price
         );
 
-        return (new UpdateCollectionCard)($data)['uuid'];
+        try {
+            return (new UpdateCollectionCard)($data)['uuid'];
+        } catch (Exception $e) {
+            return '';
+        }
     }
 
     public function createCollectionCardRequest(
