@@ -280,4 +280,11 @@ trait WithCollectionCards
 
         return $data;
     }
+
+    public function withQuantity(Collection $collection) : Collection
+    {
+        return $collection->filter(function ($collection) {
+            return $collection->quantity > 0;
+        });
+    }
 }

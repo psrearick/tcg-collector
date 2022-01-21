@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection as SupportCollection;
 use Tests\Feature\Domain\Traits\WithCollectionCards;
+use App\Domain\Cards\Models\Card;
 
 class CollectionTestData
 {
@@ -36,6 +37,35 @@ class CollectionTestData
         }
 
         $this->setUpFaker();
+    }
+
+    public function addCard($uuid, $index) : self
+    {
+        if (!$uuid) {
+            return $this;
+        }
+
+        $this->createCollectionCard($uuid, $index);
+
+        return $this;
+    }
+
+    public function addCards($count = 1, ?string $uuid = '') : self
+    {
+        $collection = $uuid ?: optional($this->collections->first())->uuid;
+        
+        if (!$collection) {
+            return $this;
+        }
+
+        $cardCount = Card::count();
+
+        for ($c = 0; $c < $count; $c++) {
+            $index = $c < $cardCount ? $c : $cardCount - 1;
+            $this->addCard($collection, $index);
+        }
+
+        return $this;
     }
 
     public function addCollections($count = 1) : self
@@ -76,9 +106,9 @@ class CollectionTestData
         return $record->followTree($tree);
     }
 
-    public function getCollection() : Collection
+    public function getCollection($index = 0) : Collection
     {
-        return $this->collections->first();
+        return $this->collections->get($index);
     }
 
     public function init(?CollectionTestData $parent = null) : self
