@@ -34,7 +34,7 @@ class CollectionsController extends Controller
     {
         return Inertia::render('Collections/Edit',
         [
-            'collection' => new CollectionData(($getCollection($uuid))->toArray()),
+            'collection' => $getCollection($uuid),
         ]);
     }
 
