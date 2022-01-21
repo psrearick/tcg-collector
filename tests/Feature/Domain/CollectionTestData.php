@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Domain;
 
+use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\MoveCollection;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
@@ -10,7 +11,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection as SupportCollection;
 use Tests\Feature\Domain\Traits\WithCollectionCards;
-use App\Domain\Cards\Models\Card;
 
 class CollectionTestData
 {
@@ -53,7 +53,7 @@ class CollectionTestData
     public function addCards($count = 1, ?string $uuid = '') : self
     {
         $collection = $uuid ?: optional($this->collections->first())->uuid;
-        
+
         if (!$collection) {
             return $this;
         }

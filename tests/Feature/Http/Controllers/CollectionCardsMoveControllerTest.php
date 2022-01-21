@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use Illuminate\Support\Collection;
 use Tests\Feature\Domain\CardCollectionTestCase;
 use Tests\Feature\Domain\CollectionTestData;
 
