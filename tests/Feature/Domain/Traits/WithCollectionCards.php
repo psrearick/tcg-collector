@@ -12,6 +12,7 @@ use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\DeleteFolder;
 use App\Domain\Folders\Models\Folder;
 use Exception;
+use Illuminate\Support\Collection as SupportCollection;
 
 trait WithCollectionCards
 {
@@ -281,7 +282,7 @@ trait WithCollectionCards
         return $data;
     }
 
-    public function withQuantity(Collection $collection) : Collection
+    public function withQuantity(SupportCollection $collection) : SupportCollection
     {
         return $collection->filter(function ($collection) {
             return $collection->quantity > 0;
