@@ -27,7 +27,21 @@ class GetCardSearchData
 
     private function create(array $data) : void
     {
-        CardSearchDataObject::create($data);
+        $data = (object) $data;
+        CardSearchDataObject::create([
+            'card_name'              => $data->name,
+            'card_name_normalized'   => $data->name_normalized,
+            'card_uuid'              => $data->uuid,
+            'collector_number'       => $data->collector_number,
+            'features'               => $data->features,
+            'finishes'               => json_encode($data->finishes),
+            'prices'                 => json_encode($data->prices),
+            'image'                  => $data->image,
+            'set_code'               => $data->set_code,
+            'set_id'                 => $data->set_id,
+            'set_image'              => $data->set_image,
+            'set_name'               => $data->set_name,
+        ]);
     }
 
     private function getData() : array

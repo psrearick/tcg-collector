@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Actions\DownloadFileAWSAction as DownloadFileAction;
 use App\Domain\Cards\Models\Card;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -78,7 +79,11 @@ class ImportCardImages implements ShouldQueue
             'name'          => $name,
         ];
 
-        $this->downloadFile->execute($file);
+        try {
+            $this->downloadFile->execute($file);
+        } catch (Exception $e) {
+            //
+        }
         $card->imagePath = $filepath;
         $card->save();
     }
