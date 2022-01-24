@@ -20,6 +20,21 @@ class CollectionCardsControllerTest extends CardCollectionTestCase
         ];
     }
 
+    public function test_basic_store_returns_a_redirect_response() : void
+    {
+        $this->act();
+
+        $collection     = $this->createCollection();
+        $cardRequest    = $this->createBasicCollectionCardRequest($collection);
+        $change         = $cardRequest['change'];
+        $response       = $this->post(route('collection-cards.store', ['collection' => $collection]), $change);
+        $state          = $this->getState(null, Collection::uuid($collection));
+
+        $response->assertRedirect();
+
+        $this->assertEquals(1, $state['collection']['total_cards']);
+    }
+
     /**
      * @test
      * @dataProvider invalidChanges

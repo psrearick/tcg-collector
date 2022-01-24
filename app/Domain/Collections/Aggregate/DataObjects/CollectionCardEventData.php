@@ -102,6 +102,7 @@ class CollectionCardEventData implements DataObjectInterface
         return [
             'card_uuid'             => $this->card,
             'collection_uuid'       => $this->collection,
+            'finish'                => $this->finish,
             'price_when_added'      => $this->acquired,
             'price_when_updated'    => $this->updated_price,
             'current_price'         => $this->price,

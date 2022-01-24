@@ -68,12 +68,11 @@ class UpdateCollectionCard
             ->where('finish', '=', $this->change['finish'])
             ->first();
 
-        $quantity         = optional($existingCard)->quantity ?: 0;
-        $proposedQuantity = $quantity + $requestedChange;
-        $actualChange     = $requestedChange;
-        $finalQuantity    = $proposedQuantity;
-
-        $searchData = new CollectionCardSearchParameterData([
+        $quantity           = optional($existingCard)->quantity ?: 0;
+        $proposedQuantity   = $quantity + $requestedChange;
+        $actualChange       = $requestedChange;
+        $finalQuantity      = $proposedQuantity;
+        $searchData         = new CollectionCardSearchParameterData([
             'uuid'      => $this->uuid,
             'single'    => true,
             'search'    => new CardSearchData(

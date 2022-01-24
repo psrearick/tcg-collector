@@ -227,10 +227,10 @@ class UpdateCollectionCardsService
     {
         $this->summaryData = new CollectionCardEventData([
             'acquired'   => $attributes['change']['acquired_price']
-                ?: $attributes['updated']['acquired_price'],
+                ?? $attributes['updated']['acquired_price'],
             'card'          => $attributes['change']['id'],
             'collection'    => $attributes['uuid'],
-            'condition'     => $attributes['change']['condition'],
+            'condition'     => $attributes['change']['condition'] ?? 'NM',
             'date_added'    => $now ? Carbon::now() : $attributes['updated']['date_added'],
             'finish'        => $attributes['change']['finish'],
             'price'         => $attributes['updated']['price'],

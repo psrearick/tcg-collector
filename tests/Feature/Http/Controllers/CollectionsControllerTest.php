@@ -3,9 +3,8 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Domain\Collections\Models\Collection;
-use Tests\Feature\Domain\CardCollectionTestCase;
 use Inertia\Testing\Assert;
-use Tests\Feature\Domain\CollectionTestData;
+use Tests\Feature\Domain\CardCollectionTestCase;
 
 /**
  * @see \App\Http\Controllers\CollectionsController
@@ -45,7 +44,7 @@ class CollectionsControllerTest extends CardCollectionTestCase
     {
         $collection         = $this->createCollection();
         $collectionModel    = Collection::uuid($collection);
-        
+
         $response = $this->get(route('collections.edit', ['collection' => $collection]));
 
         $response->assertOk();
@@ -83,7 +82,7 @@ class CollectionsControllerTest extends CardCollectionTestCase
     {
         $collection         = $this->createCollection();
         $collectionModel    = Collection::uuid($collection);
-        
+
         $response = $this->get(route('collections.show', ['collection' => $collection]));
 
         $response->assertOk();

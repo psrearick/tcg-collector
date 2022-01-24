@@ -3,8 +3,8 @@
 use App\Domain\CardAttributes\Models\Keyword;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
 
 class CreateKeywordsTable extends Migration
 {
@@ -60,6 +60,5 @@ class CreateKeywordsTable extends Migration
         } catch (Exception $e) {
             //
         }
-
     }
 }

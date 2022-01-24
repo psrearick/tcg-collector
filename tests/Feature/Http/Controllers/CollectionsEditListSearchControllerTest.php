@@ -23,6 +23,15 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
         });
         $this->root = $root;
     }
+
+    public function invalidSearch() : array
+    {
+        return [
+            [['card'  => 'invalid']],
+            [['set' => 'invalid']],
+        ];
+    }
+
     /**
      * @test
      * @dataProvider invalidSearch
@@ -31,7 +40,7 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
     {
         $collection = $this->root->getCollection();
 
-        $response = $this->post(route('collection-edit-list-search.store', ['collection' => $collection->uuid]), 
+        $response = $this->post(route('collection-edit-list-search.store', ['collection' => $collection->uuid]),
             $request
         );
 
@@ -55,7 +64,7 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
     {
         $collection = $this->root->getCollection();
 
-        $response = $this->post(route('collection-edit-list-search.store', ['collection' => $collection->uuid]), 
+        $response = $this->post(route('collection-edit-list-search.store', ['collection' => $collection->uuid]),
             $request
         );
 
@@ -69,14 +78,6 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
         $this->assertGreaterThan(0, $responseData['totals']['total_cards']);
         $this->assertGreaterThan(0, count($responseData['list']['data']));
         $this->assertEquals($collection->uuid, $responseData['collection']['uuid']);
-    }
-
-    public function invalidSearch() : array
-    {
-        return [
-            [['card'  => 'invalid']],
-            [['set' => 'invalid']],
-        ];
     }
 
     public function validSearch() : array

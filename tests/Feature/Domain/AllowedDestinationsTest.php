@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Domain;
 
+use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\MoveFolder;
+use App\Domain\Folders\Models\AllowedDestination;
+use App\Domain\Folders\Models\Folder;
 
 class AllowedDestinationsTest extends CardCollectionTestCase
 {
@@ -85,6 +88,37 @@ class AllowedDestinationsTest extends CardCollectionTestCase
         $root->folders->each(fn ($folder) => $folder->addFolders(2));
         $root->refresh();
 
+        $a   = $root;
+        $a1  = $root->followTree([0]);
+        $a11 = $root->followTree([0, 0]);
+        $a12 = $root->followTree([0, 1]);
+        $a2  = $root->followTree([1]);
+        $a21 = $root->followTree([1, 0]);
+        $a22 = $root->followTree([1, 1]);
+
+        $destinationMap = [
+            $a->uuid()   => [],
+            $a1->uuid()  => [$a2->uuid(), $a22->uuid(), $a21->uuid()],
+            $a11->uuid() => [$a->uuid(), $a12->uuid(), $a2->uuid(), $a21->uuid(), $a22->uuid()],
+            $a12->uuid() => [$a->uuid(), $a11->uuid(), $a2->uuid(), $a21->uuid(), $a22->uuid()],
+            $a2->uuid()  => [$a1->uuid(), $a11->uuid(), $a12->uuid()],
+            $a21->uuid() => [$a->uuid(), $a11->uuid(), $a12->uuid(), $a1->uuid(), $a22->uuid()],
+            $a22->uuid() => [$a->uuid(), $a11->uuid(), $a12->uuid(), $a1->uuid(), $a21->uuid()],
+        ];
+
+        foreach ($destinationMap as $folder => $destinations) {
+            $validDestinations = AllowedDestination::where('uuid', '=', $folder)
+                ->where('type', '=', 'folder')
+                ->pluck('destination')
+                ->toArray();
+
+            $this->assertCount(count($destinations), $validDestinations);
+
+            foreach ($destinations as $destination) {
+                $this->assertContains($destination, $validDestinations);
+            }
+        }
+
         /**
          * @var CollectionTestData $subFolder
          */
@@ -101,6 +135,7 @@ class AllowedDestinationsTest extends CardCollectionTestCase
 
         $this->assertEquals($root->uuid(), $subFolder->folder->parent->uuid);
         $this->assertEquals($root->uuid(), $subFolder->parent->uuid());
+
         $this->assertNotContains(
             $root->uuid(),
             $subFolder->folder->allowedDestinations->pluck('destination')
@@ -268,6 +303,22 @@ class AllowedDestinationsTest extends CardCollectionTestCase
         $root->addFolders()->refresh();
 
         $this->assertCount(1, $collection->allowedDestinations);
+    }
+
+    public function test_a_new_folder_is_a_valid_destination_for_an_existing_collection_in_a_different_tree() : void
+    {
+        $root       = new CollectionTestData();
+        $root
+            ->addCollections()
+            ->addFolders()
+            ->getCollection();
+
+        $folder     = Folder::where('user_id', '=', $this->user->id)->first();
+        $collection = Collection::where('user_id', '=', $this->user->id)->first();
+
+        $this->assertCount(1, $collection->allowedDestinations);
+        $this->assertEquals($folder->uuid,
+            $collection->allowedDestinations->first()->destination);
     }
 
     public function test_a_new_folder_is_a_valid_destination_for_an_existing_folder() : void

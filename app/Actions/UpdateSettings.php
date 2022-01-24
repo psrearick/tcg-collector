@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class UpdateSettings
@@ -23,9 +24,17 @@ class UpdateSettings
         $user->collections->each(function ($collection) {
             DB::table('collection_card_summaries')
                 ->where('collection_uuid', '=', $collection->uuid)
+                ->orWhere(function (Builder $query) {
+                    $query->where('condition', '=', '')
+                        ->orWhereNull('condition');
+                })
                 ->update(['condition' => 'NM']);
             DB::table('card_collections')
                 ->where('collection_uuid', '=', $collection->uuid)
+                ->orWhere(function (Builder $query) {
+                    $query->where('condition', '=', '')
+                        ->orWhereNull('condition');
+                })
                 ->update(['condition' => 'NM']);
         });
     }

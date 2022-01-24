@@ -16,6 +16,41 @@ use Illuminate\Support\Collection as SupportCollection;
 
 trait WithCollectionCards
 {
+    public function createBasicCollectionCard(
+        string $uuid = '',
+        int $index = 0,
+        string $finish = '',
+        int $quantity = 1,
+    ) : string {
+        $data = $this->createBasicCollectionCardRequest(
+            $uuid, $index, $finish, $quantity
+        );
+
+        try {
+            return (new UpdateCollectionCard)($data)['uuid'];
+        } catch (Exception $e) {
+            return '';
+        }
+    }
+
+    public function createBasicCollectionCardRequest(
+        string $uuid = '',
+        int $index = 0,
+        string $finish = '',
+        int $quantity = 1,
+    ) : array {
+        $card = Card::all()->get($index);
+
+        return [
+            'uuid'      => $uuid ?: $this->createCollection(),
+            'change'    => [
+                'id'                => $card->uuid,
+                'finish'            => $finish ?: $card->finishes->first()->name,
+                'change'            => $quantity,
+            ],
+        ];
+    }
+
     public function createCollection(string $folderUuid = '', bool $isPublic = false) : string
     {
         $params = [

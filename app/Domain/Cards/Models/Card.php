@@ -16,6 +16,7 @@ use App\Domain\CardAttributes\Models\PromoType;
 use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardImage;
+use App\Domain\Collections\Models\CardCollection;
 use App\Domain\Collections\Models\Collection as ModelsCollection;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
