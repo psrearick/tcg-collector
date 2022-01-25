@@ -2,7 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\DataObjects;
 
-class PriceProviderData
+use App\App\Contracts\DataObjectInterface;
+
+class PriceProviderData implements DataObjectInterface
 {
     public string $name;
 

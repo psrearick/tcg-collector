@@ -2,7 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\DataObjects;
 
-class SummaryData
+use App\App\Contracts\DataObjectInterface;
+
+class SummaryData implements DataObjectInterface
 {
     public int $acquired_value;
 
@@ -51,7 +53,6 @@ class SummaryData
             'gain_loss'                 => $this->gain_loss,
             'current_gain_loss'         => $this->current_gain_loss,
             'gain_loss_percent'         => $this->gain_loss_percent,
-            'foil'                      => $this->foil,
         ];
     }
 }

@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
+use App\Domain\Collections\Aggregate\Actions\GetCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Folders\Aggregate\Actions\GetChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
-use GetCollection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,11 +30,11 @@ class CollectionsController extends Controller
         return redirect()->back();
     }
 
-    public function edit(string $uuid, Request $request) : Response
+    public function edit(string $uuid, GetCollection $getCollection) : Response
     {
         return Inertia::render('Collections/Edit',
         [
-            'collection' => new CollectionData(((new GetCollection)($uuid))->toArray()),
+            'collection' => $getCollection($uuid),
         ]);
     }
 

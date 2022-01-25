@@ -2,15 +2,16 @@
 
 namespace App\Actions;
 
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Base\SearchParameterData;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class PaginateSearchResults
 {
-    public function __invoke(Collection $builder, CollectionCardSearchData $collectionCardSearchData) : LengthAwarePaginator
+    public function __invoke(?Collection $builder, SearchParameterData $searchParameterData) : LengthAwarePaginator
     {
-        $search = $collectionCardSearchData->search;
+        $search  = $searchParameterData->search;
+        $builder = $builder ?: $searchParameterData->data;
 
         if ($search->paginator) {
             $page = $search->paginator;

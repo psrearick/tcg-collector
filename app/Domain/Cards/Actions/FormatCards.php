@@ -4,20 +4,21 @@ namespace App\Domain\Cards\Actions;
 
 use App\Domain\Cards\DataObjects\CardData;
 use App\Domain\Cards\DataObjects\CardSearchData;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
 use Brick\Money\Money;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 
 class FormatCards
 {
-    public function __invoke(Builder $builder, ?CollectionCardSearchData $collectionCardSearchData = null, $shouldPaginate = true)
+    public function __invoke(Builder $builder, ?CollectionCardSearchParameterData $collectionCardSearchParameterData = null, $shouldPaginate = true)
     {
-        $collection = $collectionCardSearchData->uuid;
-        $search     = $collectionCardSearchData->search;
+        $collection = $collectionCardSearchParameterData->uuid;
+        $search     = $collectionCardSearchParameterData->search;
 
         $collectionMap = [];
         if ($collection) {
@@ -36,7 +37,7 @@ class FormatCards
         return $this->getResults($builder, $collectionMap);
     }
 
-    private function getResults(Builder $builder, array $collectionMap)
+    private function getResults(Builder $builder, array $collectionMap) : Collection
     {
         return $this->transformResults($builder->get(), $collectionMap);
     }
@@ -58,7 +59,7 @@ class FormatCards
         });
     }
 
-    private function transformResults(SupportCollection $results, array $collectionMap)
+    private function transformResults(SupportCollection $results, array $collectionMap) : Collection
     {
         $prices = ((new GetLatestPrices)($results->pluck('uuid')->toArray()))->mapToGroups(function ($price) {
             $price->finish = (new MatchType)($price->type);
@@ -88,7 +89,7 @@ class FormatCards
                 'name'              => $card['name'],
                 'set_code'          => $card['set']['code'] ?? '',
                 'set_name'          => $card['set']['name'] ?? '',
-                'prices'            => $prices[$card['uuid']],
+                'prices'            => $prices[$card['uuid']] ?? [],
                 'quantities'        => $collectionMap[$card['uuid']] ?? [],
                 'features'          => $card['feature'],
                 'finishes'          => $card->finishes->pluck('name')->values()->toArray(),

@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Brick\Money\Money;
 use Illuminate\Support\Facades\DB;
 
 class UpdateSummariesTable implements ShouldQueue
@@ -34,13 +33,13 @@ class UpdateSummariesTable implements ShouldQueue
      */
     public function handle()
     {
-        $summary = $this->summary;
-        $currentValue = Money::of($summary->current_value ?: 0, 'USD');
-        $currentValueInt = $currentValue->getMinorAmount()->toInt();
-        $acquiredValue = Money::of($summary->acquired_value ?: 0, 'USD');
+        $summary          = $this->summary;
+        $currentValue     = Money::of($summary->current_value ?: 0, 'USD');
+        $currentValueInt  = $currentValue->getMinorAmount()->toInt();
+        $acquiredValue    = Money::of($summary->acquired_value ?: 0, 'USD');
         $acquiredValueInt = $acquiredValue->getMinorAmount()->toInt();
-        $gainLoss = Money::of($summary->gain_loss ?: 0, 'USD');
-        $gainLossInt = $gainLoss->getMinorAmount()->toInt();
+        $gainLoss         = Money::of($summary->gain_loss ?: 0, 'USD');
+        $gainLossInt      = $gainLoss->getMinorAmount()->toInt();
 
         DB::table('summaries')
             ->where('id', $summary->id)

@@ -6,19 +6,31 @@ use App\Domain\Base\Model;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Summary extends Model implements ShouldQueue
 {
+    protected $casts = [
+        'current_value'     => 'integer',
+        'acquired_value'    => 'integer',
+        'gain_loss'         => 'integer',
+        'total_cards'       => 'integer',
+    ];
+
     protected $guarded = [];
 
-    public function collections() : HasMany
+    public function collection() : HasOne
     {
-        return $this->hasMany(Collection::class, 'uuid', 'uuid');
+        return $this->hasOne(Collection::class, 'uuid', 'uuid');
     }
 
-    public function folders() : HasMany
+    public function folder() : HasOne
     {
-        return $this->hasMany(Folder::class, 'uuid', 'uuid');
+        return $this->hasOne(Folder::class, 'uuid', 'uuid');
+    }
+
+    public function getGainLossPercentAttribute($value) : float
+    {
+        return round($value, 4);
     }
 }

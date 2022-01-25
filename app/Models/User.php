@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
+use App\Domain\Stores\Models\Store;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -75,5 +76,12 @@ class User extends Authenticatable implements MustVerifyEmail
     public function settings() : HasMany
     {
         return $this->hasMany(Setting::class);
+    }
+
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class)
+                        ->withPivot('role')
+                        ->withTimestamps();
     }
 }

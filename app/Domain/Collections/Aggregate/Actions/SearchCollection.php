@@ -5,7 +5,7 @@ namespace App\Domain\Collections\Aggregate\Actions;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Traits\CardSearchCollection;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\Collection;
 use App\Support\Collection as SupportCollection;
 
@@ -19,11 +19,11 @@ class SearchCollection
 
     protected ?string $uuid;
 
-    public function __invoke(CollectionCardSearchData $collectionCardSearchData) : CardSearchResultsData
+    public function __invoke(CollectionCardSearchParameterData $collectionCardSearchParameterData) : CardSearchResultsData
     {
-        $this->cardSearchData = $collectionCardSearchData->search;
-        $this->cards          = $collectionCardSearchData->data;
-        $this->uuid           = $collectionCardSearchData->uuid;
+        $this->cardSearchData = $collectionCardSearchParameterData->search;
+        $this->cards          = $collectionCardSearchParameterData->data;
+        $this->uuid           = $collectionCardSearchParameterData->uuid;
 
         if (!$this->isValidCardSearch()) {
             if ($this->cards) {

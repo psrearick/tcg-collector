@@ -11,6 +11,7 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
 use App\Traits\BelongsToUser;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Collection extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToUser;
+    use HasFactory, SoftDeletes, BelongsToUser, HasUuid;
 
     const USERSCOPE = 'notShared';
 
@@ -36,6 +37,7 @@ class Collection extends Model
         return $this->belongsToMany(
             Card::class, 'card_collections', 'collection_uuid', 'card_uuid', 'uuid', 'uuid'
         )
+        ->using(CardCollection::class)
         ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'date_added', 'created_at', 'finish'])
         ->whereNull('card_collections.deleted_at')
         ->withTimestamps();
@@ -67,10 +69,5 @@ class Collection extends Model
     public function summary() : BelongsTo
     {
         return $this->belongsTo(Summary::class, 'uuid', 'uuid');
-    }
-
-    public static function uuid(string $uuid) : ?self
-    {
-        return self::where('uuid', '=', $uuid)->first();
     }
 }

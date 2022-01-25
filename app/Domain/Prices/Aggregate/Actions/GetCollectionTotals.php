@@ -19,7 +19,7 @@ class GetCollectionTotals
             $last  = $card
                 ->prices
                 ->where('type', '=', (new MatchFinish)($card->pivot->finish))
-                ->sortByDesc('created_at')
+                ->sortByDesc('id')
                 ->take(1)
                 ->first();
 

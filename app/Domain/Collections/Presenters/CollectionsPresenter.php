@@ -6,11 +6,11 @@ use App\App\Contracts\PresenterInterface;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\CalculateSummary;
 use App\Domain\Collections\Aggregate\Actions\FormatCollectionCards;
+use App\Domain\Collections\Aggregate\Actions\GetCollection;
 use App\Domain\Collections\Aggregate\Actions\GetCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\SearchCollection;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchData;
+use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
-use GetCollection;
 
 class CollectionsPresenter implements PresenterInterface
 {
@@ -31,7 +31,7 @@ class CollectionsPresenter implements PresenterInterface
     {
         $this->processRequest();
         $collectionCards = (new GetCollectionCards)($this->uuid);
-        $searchData      = new CollectionCardSearchData([
+        $searchData      = new CollectionCardSearchParameterData([
             'data'      => $collectionCards,
             'uuid'      => $this->uuid,
             'search'    => new CardSearchData($this->request),

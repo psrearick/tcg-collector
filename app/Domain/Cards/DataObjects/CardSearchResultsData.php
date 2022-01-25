@@ -2,26 +2,9 @@
 
 namespace App\Domain\Cards\DataObjects;
 
-use App\Support\Collection;
-use Illuminate\Database\Eloquent\Builder;
+use App\App\Contracts\DataObjectInterface;
+use App\Domain\Base\SearchResultsData;
 
-class CardSearchResultsData
+class CardSearchResultsData extends SearchResultsData implements DataObjectInterface
 {
-    public ?Builder $builder;
-
-    public ?Collection $collection;
-
-    public function __construct(array $data)
-    {
-        $this->builder    = $data['builder'] ?? null;
-        $this->collection = $data['collection'] ?? null;
-    }
-
-    public function toarray() : array
-    {
-        return [
-            'builder'    => $this->builder,
-            'collection' => $this->collection,
-        ];
-    }
 }

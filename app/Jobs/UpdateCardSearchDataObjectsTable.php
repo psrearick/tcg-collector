@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use Brick\Money\Money;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Brick\Money\Money;
 use Illuminate\Support\Facades\DB;
 
 class UpdateCardSearchDataObjectsTable implements ShouldQueue
@@ -16,6 +15,7 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private object $dataObject;
+
     /**
      * Create a new job instance.
      *
@@ -35,15 +35,15 @@ class UpdateCardSearchDataObjectsTable implements ShouldQueue
     {
         $dataObject = $this->dataObject;
         $dataPrices = $dataObject->prices_bak;
-        $prices = [];
+        $prices     = [];
         if (strlen($dataPrices) > 0) {
             $prices = json_decode($dataPrices);
         }
 
         $priceInts = [];
         foreach ($prices as $finish => $price) {
-            $priceValue = Money::of($price ?: 0, 'USD');
-            $priceValueInt = $priceValue->getMinorAmount()->toInt();
+            $priceValue         = Money::of($price ?: 0, 'USD');
+            $priceValueInt      = $priceValue->getMinorAmount()->toInt();
             $priceInts[$finish] = $priceValueInt;
         }
 

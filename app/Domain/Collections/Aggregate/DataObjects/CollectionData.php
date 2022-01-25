@@ -2,10 +2,11 @@
 
 namespace App\Domain\Collections\Aggregate\DataObjects;
 
+use App\App\Contracts\DataObjectInterface;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
-use App\Domains\Users\DataObjects\UserData;
+use App\Domain\Users\DataObjects\UserData;
 
-class CollectionData
+class CollectionData implements DataObjectInterface
 {
     public array $allowed;
 
@@ -31,33 +32,38 @@ class CollectionData
 
     public function __construct(array $data)
     {
-        $this->uuid         = $data['uuid'] ?? null;
-        $this->id           = $data['id'] ?? null;
-        $this->folder_uuid  = $data['folder_uuid'] ?? null;
-        $this->name         = $data['name'] ?? '';
-        $this->description  = $data['description'] ?? '';
-        $this->is_public    = $data['is_public'] ?? false;
-        $this->user_id      = $data['user_id'] ?? null;
-        $this->groups       = $data['groups'] ?? [];
-        $this->user         = $data['user'] ?? null;
-        $this->summary_data = $data['summary_data'] ?? null;
+        $summaryData = $data['summary_data'] ?? [];
+        $summaryData = is_array($summaryData)
+            ? new SummaryData($summaryData)
+            : $summaryData;
+
         $this->allowed      = $data['allowed'] ?? [];
+        $this->description  = $data['description'] ?? '';
+        $this->folder_uuid  = $data['folder_uuid'] ?? null;
+        $this->groups       = $data['groups'] ?? [];
+        $this->id           = $data['id'] ?? null;
+        $this->is_public    = $data['is_public'] ?? false;
+        $this->name         = $data['name'] ?? '';
+        $this->summary_data = $summaryData;
+        $this->user         = $data['user'] ?? null;
+        $this->user_id      = $data['user_id'] ?? null;
+        $this->uuid         = $data['uuid'] ?? null;
     }
 
     public function toArray() : array
     {
         return [
-            'uuid'          => $this->uuid,
             'allowed'       => $this->allowed,
-            'id'            => $this->id,
-            'folder_uuid'   => $this->folder_uuid,
-            'name'          => $this->name,
             'description'   => $this->description,
-            'user_id'       => $this->user_id,
-            'is_public'     => $this->is_public,
+            'folder_uuid'   => $this->folder_uuid,
             'groups'        => $this->groups,
-            'user'          => $this->user,
+            'id'            => $this->id,
+            'is_public'     => $this->is_public,
+            'name'          => $this->name,
             'summary_data'  => $this->summary_data,
+            'user'          => $this->user,
+            'user_id'       => $this->user_id,
+            'uuid'          => $this->uuid,
         ];
     }
 }

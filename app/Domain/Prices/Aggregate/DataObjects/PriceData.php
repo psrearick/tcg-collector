@@ -2,7 +2,9 @@
 
 namespace App\Domain\Prices\Aggregate\DataObjects;
 
-class PriceData
+use App\App\Contracts\DataObjectInterface;
+
+class PriceData implements DataObjectInterface
 {
     public string $card_uuid;
 
@@ -22,7 +24,6 @@ class PriceData
         $this->card_uuid        = $data['card_uuid'] ?? '';
         $this->provider_uuid    = $data['provider_uuid'] ?? '';
         $this->price            = $data['price'] ?? 0;
-        $this->foil             = $data['foil'] ?? false;
         $this->type             = $data['type'] ?? 'usd';
     }
 
@@ -33,7 +34,6 @@ class PriceData
             'card_uuid'     => $this->card_uuid,
             'provider_uuid' => $this->provider_uuid,
             'price'         => $this->price,
-            'foil'          => $this->foil,
             'type'          => $this->type,
         ];
     }

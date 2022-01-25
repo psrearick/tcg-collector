@@ -5,10 +5,13 @@ namespace App\Domain\CardAttributes\Models;
 use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Cards\Models\Token;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Keyword extends Model
 {
+    use HasFactory;
+
     /**
      * Get all cards with this keyword
      *

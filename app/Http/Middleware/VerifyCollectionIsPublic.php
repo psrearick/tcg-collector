@@ -1,6 +1,6 @@
 <?php
 
-namespace App\App\Client\Middleware;
+namespace App\Http\Middleware;
 
 use App\Domain\Collections\Models\Collection;
 use App\Providers\RouteServiceProvider;

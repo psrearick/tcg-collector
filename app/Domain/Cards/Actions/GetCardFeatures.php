@@ -48,15 +48,15 @@ class GetCardFeatures
         return Str::ucfirst($borderColor) . ' Border';
     }
 
-    public function getFoilOnly() : bool
-    {
-        return $this->card->hasFoil && !$this->card->hasNonFoil;
-    }
+    // public function getFoilOnly() : bool
+    // {
+    //     return $this->card->hasFoil && !$this->card->hasNonFoil;
+    // }
 
-    public function getFoilOnlyString() : string
-    {
-        return $this->getFoilOnly() ? 'Foil-Only' : '';
-    }
+    // public function getFoilOnlyString() : string
+    // {
+    //     return $this->getFoilOnly() ? 'Foil-Only' : '';
+    // }
 
     public function getFrameEffects() : array
     {

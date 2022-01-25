@@ -16,12 +16,16 @@ use App\Domain\CardAttributes\Models\PromoType;
 use App\Domain\CardAttributes\Models\RelatedObjects;
 use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardImage;
+use App\Domain\Collections\Models\CardCollection;
 use App\Domain\Collections\Models\Collection as ModelsCollection;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
 use App\Jobs\ImportCardImages;
+use App\Traits\HasUuid;
+use Database\Factories\CardFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -30,6 +34,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Card extends Model
 {
+    use HasFactory, HasUuid;
+
     protected $casts = [
         'number' => 'int',
     ];
@@ -47,6 +53,7 @@ class Card extends Model
         return $this->belongsToMany(
             ModelsCollection::class, 'card_collections', 'card_uuid', 'collection_uuid', 'uuid', 'uuid'
         )
+        ->using(CardCollection::class)
         ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
         ->whereNull('card_collections.deleted_at')
         ->withTimestamps();
@@ -225,6 +232,11 @@ class Card extends Model
     public function set() : BelongsTo
     {
         return $this->belongsTo(Set::class);
+    }
+
+    protected static function newFactory()
+    {
+        return CardFactory::new();
     }
 
     /*
