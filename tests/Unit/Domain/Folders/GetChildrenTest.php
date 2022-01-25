@@ -2,22 +2,22 @@
 
 namespace Tests\Unit\Domain\Folders;
 
+use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\GetChildren;
+use App\Domain\Folders\Models\Folder;
 use Tests\Feature\Domain\CardCollectionTestCase;
 use Tests\Feature\Domain\CollectionTestData;
-use App\Domain\Collections\Models\Collection;
-use App\Domain\Folders\Models\Folder;
 
 /**
  * @see GetChildren
  */
 class GetChildrenTest extends CardCollectionTestCase
 {
-    private GetChildren $getChildren;
+    private array $destinationMap;
 
     private array $folders;
 
-    private array $destinationMap;
+    private GetChildren $getChildren;
 
     public function setUp() : void
     {
@@ -47,7 +47,7 @@ class GetChildrenTest extends CardCollectionTestCase
 
             foreach ($resultFolders as $resultFolder) {
                 $childAllowed = collect($resultFolder['allowed']);
-                $allowed = $childAllowed->map(fn ($allowed) => $allowed['uuid'] ?: $allowed['name']);
+                $allowed      = $childAllowed->map(fn ($allowed) => $allowed['uuid'] ?: $allowed['name']);
                 $this->assertEqualsCanonicalizing($this->destinationMap[$resultFolder['uuid']], $allowed->toArray());
             }
 
@@ -74,15 +74,13 @@ class GetChildrenTest extends CardCollectionTestCase
     {
         $result = ($this->getChildren)(null, $this->user->id);
 
-        collect($result['folders'])->each(fn ($folder) => 
-            $this->assertEqualsCanonicalizing(
+        collect($result['folders'])->each(fn ($folder) => $this->assertEqualsCanonicalizing(
                 $this->destinationMap[$folder['uuid']],
                     collect($folder['allowed'])->pluck('uuid')->toArray()
             )
         );
 
-        collect($result['collections'])->each(fn ($collection) =>
-            $this->assertCount(6, $collection['allowed']) &&
+        collect($result['collections'])->each(fn ($collection) => $this->assertCount(6, $collection['allowed']) &&
                 $this->assertNotContains(
                     'Root', collect($collection['allowed'])->pluck('name')->toArray()
                 )
