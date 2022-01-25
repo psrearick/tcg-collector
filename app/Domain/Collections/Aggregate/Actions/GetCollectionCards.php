@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 class GetCollectionCards
 {
-    public function __invoke(string $uuid)
+    public function __invoke(string $uuid) : SupportCollection
     {
         $collectionCards = CollectionCardSummary::with('cardSearchDataObject')
             ->where('collection_uuid', '=', $uuid)
