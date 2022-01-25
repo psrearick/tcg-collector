@@ -61,10 +61,10 @@
 
             <template #content>
                 <!-- Admin Panel -->
-                <jet-dropdown-link :href="route('admin-panel.edit')">
+                <!-- <jet-dropdown-link :href="route('admin-panel.edit')">
                     {{ $page.props.auth["admin-panel"] ? "Leave" : "" }} Admin
                     Panel
-                </jet-dropdown-link>
+                </jet-dropdown-link> -->
 
                 <!-- Account Management -->
                 <div class="block px-4 py-2 text-xs text-gray-400">

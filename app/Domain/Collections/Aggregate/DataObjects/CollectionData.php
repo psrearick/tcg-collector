@@ -32,6 +32,11 @@ class CollectionData implements DataObjectInterface
 
     public function __construct(array $data)
     {
+        $summaryData = $data['summary_data'] ?? [];
+        $summaryData = is_array($summaryData)
+            ? new SummaryData($summaryData)
+            : $summaryData;
+
         $this->allowed      = $data['allowed'] ?? [];
         $this->description  = $data['description'] ?? '';
         $this->folder_uuid  = $data['folder_uuid'] ?? null;
@@ -39,7 +44,7 @@ class CollectionData implements DataObjectInterface
         $this->id           = $data['id'] ?? null;
         $this->is_public    = $data['is_public'] ?? false;
         $this->name         = $data['name'] ?? '';
-        $this->summary_data = $data['summary_data'] ?? null;
+        $this->summary_data = $summaryData;
         $this->user         = $data['user'] ?? null;
         $this->user_id      = $data['user_id'] ?? null;
         $this->uuid         = $data['uuid'] ?? null;

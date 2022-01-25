@@ -1,5 +1,5 @@
 <template>
-    <div
+    <!-- <div
         v-if="$page.props.auth['admin-panel']"
         class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
     >
@@ -15,8 +15,9 @@
         >
             Users
         </jet-nav-link>
-    </div>
-    <div v-else class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+    </div> -->
+    <!-- <div v-else class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"> -->
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
         <jet-nav-link
             :href="route('collections-search.show')"
             :active="route().current('collections-search.show')"
