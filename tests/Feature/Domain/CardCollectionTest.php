@@ -2,10 +2,24 @@
 
 namespace Tests\Feature\Domain;
 
+use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 
 class CardCollectionTest extends CardCollectionTestCase
 {
+    public function test_a_basic_card_can_be_added_to_a_new_collection() : void
+    {
+        $this->act();
+        $uuid = $this->createCollection();
+        $this->createBasicCollectionCard($uuid, 0, '', 2);
+        $collection     = Collection::uuid($uuid);
+        $collectionCard = $collection->cards->first();
+
+        $this->assertEquals(2, $collectionCard->pivot->quantity);
+        $this->assertCount(1, $collection->cards);
+        $this->assertCount(1, $collection->cardSummaries);
+    }
+
     public function test_a_card_can_be_added_to_a_new_collection() : void
     {
         $this->act();
@@ -16,6 +30,7 @@ class CardCollectionTest extends CardCollectionTestCase
 
         $this->assertEquals(2, $collectionCard->pivot->quantity);
         $this->assertEquals(1, $collection->cards->count());
+        $this->assertCount(1, $collection->cardSummaries);
     }
 
     public function test_a_card_can_be_added_to_an_existing_collection() : void
@@ -109,6 +124,98 @@ class CardCollectionTest extends CardCollectionTestCase
         // assertions
         $this->assertEquals(1, $count);
         $this->assertEquals(7, $quantity);
+    }
+
+    public function test_a_collection_card_can_decrement_quantity() : void
+    {
+        // set user
+        $this->act();
+
+        // get collection card
+        $collectionUuid = $this->createCollection();
+        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+
+        // get model
+        $collection         = Collection::uuid($collectionUuid);
+        $collectionCards    = $collection->cardSummaries;
+        $quantity           = $collectionCards->sum('quantity');
+
+        // assertions
+        $this->assertEquals(3, $quantity);
+        $this->assertCount(1, $collectionCards);
+
+        // decrement quantity by one
+        $this->createCollectionCard($collectionUuid, 5, 'foil', -1, 'NM');
+
+        // refresh state
+        $collectionCards    = $collection->cardSummaries;
+        $quantity           = $collectionCards->sum('quantity');
+        $card               = $collectionCards->first();
+
+        // assertions
+        $this->assertEquals(2, $quantity);
+        $this->assertCount(1, $collectionCards);
+        $this->assertCount(4, $collection->cards);
+
+        // remove quantity
+        $this->updateCard($card->toArray(), [
+            'change'        => -2,
+            'oldPrice'      => $card->current_price,
+            'newPrice'      => $card->current_price,
+            'oldCondition'  => $card->condition,
+            'newCondition'  => $card->condition,
+        ]);
+
+        // get state
+        $collectionCards    = $collection->cardSummaries;
+        $card               = $collectionCards->first();
+        $count              = $collectionCards->count();
+        $quantity           = $collectionCards->sum('quantity');
+
+        // assertions
+        $this->assertEquals(1, $count);
+        $this->assertEquals(0, $quantity);
+    }
+
+    public function test_a_collection_card_can_increment_quantity() : void
+    {
+        // set user
+        $this->act();
+
+        // get collection card
+        $collectionUuid = $this->createCollection();
+        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+
+        // // get model
+        $collection         = Collection::uuid($collectionUuid);
+        $collectionCards    = $collection->cardSummaries;
+        $card               = $collectionCards->first();
+        $quantity           = $collectionCards->sum('quantity');
+
+        // // assertions
+        $this->assertEquals(1, $quantity);
+        $this->assertCount(1, $collectionCards);
+
+        // increment quantity
+        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+
+        // get state
+        $collection->refresh();
+
+        $collectionCards    = $collection->cardSummaries;
+        $card               = $collectionCards->first();
+        $count              = $collectionCards->count();
+        $quantity           = $collectionCards->sum('quantity');
+        $first              = $collectionCards->first();
+        $second             = $collectionCards->find(2);
+
+        // assertions
+        $this->assertEquals(1, $count);
+        $this->assertEquals(2, $quantity);
+        $this->assertEquals('foil', $first['finish']);
+        $this->assertNull($second);
     }
 
     public function test_a_collection_card_cannot_decrease_in_quantity_beyond_zero()
