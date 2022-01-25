@@ -150,6 +150,7 @@ class CardCollectionTest extends CardCollectionTestCase
         $this->createCollectionCard($collectionUuid, 5, 'foil', -1, 'NM');
 
         // refresh state
+        $collection->refresh();
         $collectionCards    = $collection->cardSummaries;
         $quantity           = $collectionCards->sum('quantity');
         $card               = $collectionCards->first();
@@ -169,6 +170,7 @@ class CardCollectionTest extends CardCollectionTestCase
         ]);
 
         // get state
+        $collection->refresh();
         $collectionCards    = $collection->cardSummaries;
         $card               = $collectionCards->first();
         $count              = $collectionCards->count();
