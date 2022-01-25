@@ -204,7 +204,9 @@ class CollectionTestData
 
     public function refresh() : self
     {
-        $this->folder->refresh();
+        if ($this->folder) {
+            $this->folder->refresh();
+        }
 
         foreach ($this->folders as $folder) {
             $folder->refresh();

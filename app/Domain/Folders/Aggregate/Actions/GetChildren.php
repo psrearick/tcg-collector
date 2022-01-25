@@ -74,8 +74,8 @@ class GetChildren
         if ($uuid) {
             $collections = $collections->where('folder_uuid', '=', $uuid);
         } else {
-            $collections = $collections->where(function ($query) use ($uuid) {
-                $query->where('folder_uuid', '=', $uuid)
+            $collections = $collections->where(function ($query) {
+                $query->where('folder_uuid', '=', '')
                     ->orWhereNull('folder_uuid');
             });
         }
@@ -84,7 +84,7 @@ class GetChildren
             $collectionSummary = (new GetSummaryData)(collect([$collection]));
             $collectionData             = (new CollectionData($collection->toArray()));
             $collectionData->allowed  = $this
-                ->formatAllowed($collection->allowedDestinations, 'collection', empty($collection->folder_uuid));
+                ->formatAllowed($collection->allowedDestinations, !$collection->folder_uuid);
             $collectionData->groups   = $collection->groups->pluck('id')->values()->toArray();
             $collectionData->summary_data = $collectionSummary;
 
