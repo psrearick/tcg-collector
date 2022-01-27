@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('import:prices')
-            ->dailyAt('5:00');
+            ->dailyAt('4:00');
         $schedule->command('summaries:update')
             ->dailyAt('6:00');
         $schedule->command('import:cards')

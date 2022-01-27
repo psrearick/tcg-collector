@@ -2,12 +2,11 @@
 
 namespace App\App\Console\Commands;
 
-use App\Actions\CreateCardObjects as Create;
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Collections\Models\Collection;
-use App\Jobs\UpdateCollectionSummary;
 use Illuminate\Console\Command;
+use App\Jobs\UpdateAncestry;
 
 class UpdateAllSummaries extends Command
 {
@@ -42,13 +41,7 @@ class UpdateAllSummaries extends Command
      */
     public function handle()
     {
-        $collections = Collection::withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
-            ->whereNull('deleted_at')
-            ->get();
-
-        $collections->each(function ($collection) {
-            UpdateCollectionSummary::dispatch($collection);
-        });
+        UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
         return Command::SUCCESS;
     }
