@@ -21,21 +21,26 @@ class GetFolderTotalsWithoutUpdate
         ->get()
         ->each(function ($collection) use (&$totals) {
             $collectionTotals = optional($collection->summary)->toArray();
+
+            if (!$collectionTotals) {
+                return;
+            }
+
             $totals['total_cards'] += $collectionTotals['total_cards'];
             $totals['current_value'] += $collectionTotals['current_value'];
             $totals['acquired_value'] += $collectionTotals['acquired_value'];
         });
 
-        $folder->children->each(function ($descenant) use (&$totals) {
-            $descentantTotals = optional($descenant->summary)->toArray();
+        $folder->children->each(function ($descendant) use (&$totals) {
+            $descendantTotals = optional($descendant->summary)->toArray();
 
-            if (!$descentantTotals) {
+            if (!$descendantTotals) {
                 return;
             }
 
-            $totals['total_cards'] += $descentantTotals['total_cards'];
-            $totals['current_value'] += $descentantTotals['current_value'];
-            $totals['acquired_value'] += $descentantTotals['acquired_value'];
+            $totals['total_cards'] += $descendantTotals['total_cards'];
+            $totals['current_value'] += $descendantTotals['current_value'];
+            $totals['acquired_value'] += $descendantTotals['acquired_value'];
         });
 
         $gainLoss        = $totals['current_value'] - $totals['acquired_value'];

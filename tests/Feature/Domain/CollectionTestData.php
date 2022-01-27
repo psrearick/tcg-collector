@@ -39,7 +39,7 @@ class CollectionTestData
         $this->setUpFaker();
     }
 
-    public function addCard($uuid, $index) : self
+    public function addCard(string $uuid = '', ?int $index = null) : self
     {
         if (!$uuid) {
             return $this;
@@ -50,7 +50,7 @@ class CollectionTestData
         return $this;
     }
 
-    public function addCards($count = 1, ?string $uuid = '') : self
+    public function addCards(int $count = 1, ?string $uuid = '') : self
     {
         $collection = $uuid ?: optional($this->collections->first())->uuid;
 
@@ -68,7 +68,7 @@ class CollectionTestData
         return $this;
     }
 
-    public function addCollections($count = 1) : self
+    public function addCollections(int $count = 1) : self
     {
         $uuid = optional($this->folder)->uuid ?: '';
 
@@ -80,7 +80,7 @@ class CollectionTestData
         return $this;
     }
 
-    public function addFolders($count = 1) : self
+    public function addFolders(int $count = 1) : self
     {
         for ($c = 0; $c < $count; $c++) {
             $new = $this->new();
@@ -94,10 +94,8 @@ class CollectionTestData
     {
         $key = array_shift($tree);
 
-        /**
-         * @var self $record
-         */
         $record = $this->folders->get($key);
+        assert($record instanceof self);
 
         if (!$tree) {
             return $record;
@@ -106,7 +104,7 @@ class CollectionTestData
         return $record->followTree($tree);
     }
 
-    public function getCollection($index = 0) : Collection
+    public function getCollection(int $index = 0) : Collection
     {
         return $this->collections->get($index);
     }
@@ -231,6 +229,7 @@ class CollectionTestData
     protected function moveToNewParent(?string $uuid = null) : void
     {
         $newParent  = $uuid ? Folder::uuid($uuid) : null;
+        assert(($newParent instanceof Folder) || $newParent === null);
         $parentData = new CollectionTestData($newParent);
 
         $this->init($parentData);

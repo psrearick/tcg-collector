@@ -4,7 +4,6 @@ namespace App\Domain\Base;
 
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
-use App\Domain\Base\Model;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
@@ -19,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Domain\Collections\Models\CardCollection;
+use App\Domain\Collections\Models\CollectionCardSummary;
 
 class Collection extends Model
 {
@@ -59,7 +59,7 @@ class Collection extends Model
         return $this->belongsToMany(Team::class, 'collection_teams', 'collection_uuid', 'team_id', 'uuid', 'id');
     }
 
-    public function scopeInCurrentGroup($query) : Builder
+    public function scopeInCurrentGroup(Builder $query) : Builder
     {
         return $query
             ->withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])

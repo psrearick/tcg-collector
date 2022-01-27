@@ -15,8 +15,6 @@ class GetChildrenTest extends CardCollectionTestCase
 {
     private array $destinationMap;
 
-    private array $folders;
-
     private GetChildren $getChildren;
 
     public function setUp() : void
@@ -80,14 +78,15 @@ class GetChildrenTest extends CardCollectionTestCase
             )
         );
 
-        collect($result['collections'])->each(fn ($collection) => $this->assertCount(6, $collection['allowed']) &&
-                $this->assertNotContains(
-                    'Root', collect($collection['allowed'])->pluck('name')->toArray()
-                )
-        );
+        collect($result['collections'])->each(function ($collection) {
+            $this->assertCount(6, $collection['allowed']);
+            $this->assertNotContains(
+                'Root', collect($collection['allowed'])->pluck('name')->toArray()
+            );
+        });
     }
 
-    protected function initialize() : void
+    private function initialize() : void
     {
         $root = new CollectionTestData();
         $root->addFolders(2);
@@ -95,7 +94,9 @@ class GetChildrenTest extends CardCollectionTestCase
 
         $root->addCollections(3);
         $root->collections->each(
-            fn ($collection) => $root->addCards(5, $collection->uuid)
+            function ($collection) use ($root) {
+                $root->addCards(5, $collection->uuid);
+            }
         );
 
         $root->refresh();
@@ -116,7 +117,7 @@ class GetChildrenTest extends CardCollectionTestCase
             $a22->uuid() => ['Root', $a11->uuid(), $a12->uuid(), $a1->uuid(), $a21->uuid()],
         ];
 
-        $this->folders = [
+        $folders = [
             $a1->uuid()  => $a1,
             $a11->uuid() => $a11,
             $a12->uuid() => $a12,
@@ -125,13 +126,13 @@ class GetChildrenTest extends CardCollectionTestCase
             $a22->uuid() => $a22,
         ];
 
-        /** @var CollectionTestData $folder */
-        foreach ($this->folders as $folder) {
+        foreach ($folders as $folder) {
+            assert($folder instanceof CollectionTestData);
             $folder->addCollections(3);
             $folder->refresh();
 
-            /** @var Collection $collection */
             foreach ($folder->collections as $collection) {
+                assert($collection instanceof Collection);
                 $folder->addCards(5, $collection->uuid);
             }
         }

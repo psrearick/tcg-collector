@@ -7,7 +7,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0",
         "bensampo/laravel-enum": "^4.1",
         "brick/money": "^0.5.3",
         "coconutcraig/laravel-postmark": "^2.11",

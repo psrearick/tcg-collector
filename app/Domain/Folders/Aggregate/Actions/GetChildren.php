@@ -11,11 +11,11 @@ use Illuminate\Support\Collection as SupportCollection;
 
 class GetChildren
 {
-    protected int $user_id;
+    private int $user_id;
 
-    protected ?string $uuid;
+    private ?string $uuid;
 
-    public function __invoke(?string $uuid = null, ?int $user_id = null)
+    public function __invoke(?string $uuid = null, ?int $user_id = null) : array
     {
         $this->uuid    = $uuid ?: '';
         $this->user_id = $user_id ?: auth()->id();
@@ -26,7 +26,7 @@ class GetChildren
         ];
     }
 
-    protected function formatAllowed(SupportCollection $destinations, bool $isRoot) : array
+    private function formatAllowed(SupportCollection $destinations, bool $isRoot) : array
     {
         $allowed = $destinations->whereNull('deleted_at')
             ->filter(function ($destination) {
@@ -57,7 +57,7 @@ class GetChildren
         return $allowed;
     }
 
-    protected function getCollections() : SupportCollection
+    private function getCollections() : SupportCollection
     {
         $uuid        = $this->uuid;
         $collections = Collection::with(
@@ -92,7 +92,7 @@ class GetChildren
         })->sortBy('name')->values();
     }
 
-    protected function getFolders() : SupportCollection
+    private function getFolders() : SupportCollection
     {
         $uuid    = $this->uuid;
         $folders = Folder::with('summary',
