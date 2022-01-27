@@ -5,6 +5,8 @@ namespace App\Domain\Base;
 use App\App\Scopes\UserScope;
 use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Cards\Models\Card;
+use App\Domain\Collections\Models\CardCollection;
+use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
@@ -17,8 +19,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Domain\Collections\Models\CardCollection;
-use App\Domain\Collections\Models\CollectionCardSummary;
 
 class Collection extends Model
 {

@@ -2,11 +2,9 @@
 
 namespace App\App\Console\Commands;
 
-use App\App\Scopes\UserScope;
-use App\App\Scopes\UserScopeNotShared;
-use App\Domain\Collections\Models\Collection;
-use Illuminate\Console\Command;
 use App\Jobs\UpdateAncestry;
+use Illuminate\Console\Command;
+use Symfony\Component\Console\Command\Command as Response;
 
 class UpdateAllSummaries extends Command
 {
@@ -34,15 +32,10 @@ class UpdateAllSummaries extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle() : int
     {
         UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
-        return Command::SUCCESS;
+        return Response::SUCCESS;
     }
 }

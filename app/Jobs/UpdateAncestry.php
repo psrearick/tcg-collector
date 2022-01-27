@@ -2,27 +2,22 @@
 
 namespace App\Jobs;
 
+use App\Domain\Base\Collection;
 use App\Domain\Collections\Models\CollectionGeneral;
+use App\Domain\Folders\Models\Folder;
+use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
+use App\Domain\Prices\Aggregate\Actions\GetFolderTotalsWithoutUpdate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
-use App\Domain\Folders\Models\Folder;
-use App\Domain\Prices\Aggregate\Actions\GetFolderTotalsWithoutUpdate;
-use App\Domain\Base\Collection;
 
 class UpdateAncestry implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
+    public function handle() : void
     {
         $collections = CollectionGeneral::whereNull('deleted_at')->get();
 
@@ -39,7 +34,7 @@ class UpdateAncestry implements ShouldQueue
         $collectionTotals         = (new GetCollectionTotals)($collection);
         $collection->summary()->updateOrCreate([
             'uuid'  => $collection->uuid,
-            'type'  =>'collection',
+            'type'  => 'collection',
         ], $collectionTotals);
     }
 

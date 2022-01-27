@@ -4,7 +4,6 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Domain\Base\Collection;
 
-
 class GetCollectionTotals
 {
     public function __invoke(Collection $collection) : array
