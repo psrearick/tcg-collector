@@ -6,7 +6,7 @@ use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
-use App\Domain\Prices\Aggregate\Actions\GetFolderTotals;
+use App\Domain\Prices\Aggregate\Actions\GetFolderTotalsWithoutUpdate;
 use App\Domain\Prices\Models\Summary;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
@@ -105,7 +105,7 @@ class SummaryProjector extends Projector
         // get summary or data for a new one
         $totals = optional($folder->summary)->toArray();
         if (!$totals) {
-            $getFolderTotals = new GetFolderTotals;
+            $getFolderTotals = new GetFolderTotalsWithoutUpdate;
             $totals          = $getFolderTotals($folder);
         }
 

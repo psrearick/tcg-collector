@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Cache;
 
 class UpdateCollectionCard
 {
-    protected array $change;
+    private array $change;
 
-    protected string $uuid;
+    private string $uuid;
 
-    public function __invoke(array $data)
+    /**
+     * @throws LockTimeoutException
+     * @throws Exception
+     */
+    public function __invoke(array $data) : array
     {
         $lock = Cache::lock('saving-collection-card', 20);
 
@@ -34,7 +38,7 @@ class UpdateCollectionCard
                 $this->change = $data['change'];
                 $updated      = $this->updateQuantity();
             } catch (Exception $e) {
-                Cache::restoreLock('saving-collection-card', $lock)->release();
+                Cache::restoreLock('saving-collection-card', $lock->owner())->release();
 
                 throw $e;
             }

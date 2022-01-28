@@ -6,13 +6,13 @@ use App\Domain\Collections\Models\Collection;
 
 class UpdateCollectionAncestryTotals
 {
-    public function __invoke(Collection $collection)
+    public function __invoke(Collection $collection) : void
     {
         $collectionTotals         = (new GetCollectionTotals)($collection);
-        $collectionTotals['type'] = 'collection';
-        $collection->summary()->updateOrCreate(
-            ['uuid' => $collection->uuid],
-            $collectionTotals);
+        $collection->summary()->updateOrCreate([
+            'uuid'  => $collection->uuid,
+            'type'  => 'collection',
+        ], $collectionTotals);
         $collectionFolder = $collection->folder;
         if ($collectionFolder) {
             (new UpdateFolderAncestryTotals)($collectionFolder);

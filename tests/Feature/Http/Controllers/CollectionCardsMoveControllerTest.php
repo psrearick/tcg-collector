@@ -13,7 +13,7 @@ class CollectionCardsMoveControllerTest extends CardCollectionTestCase
     /**
      * @test
      */
-    public function update_returns_an_ok_response()
+    public function update_returns_an_ok_response() : void
     {
         $this->act();
 

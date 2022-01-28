@@ -2,12 +2,9 @@
 
 namespace App\App\Console\Commands;
 
-use App\Actions\CreateCardObjects as Create;
-use App\App\Scopes\UserScope;
-use App\App\Scopes\UserScopeNotShared;
-use App\Domain\Collections\Models\Collection;
-use App\Jobs\UpdateCollectionSummary;
+use App\Jobs\UpdateAncestry;
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Command\Command as Response;
 
 class UpdateAllSummaries extends Command
 {
@@ -35,21 +32,10 @@ class UpdateAllSummaries extends Command
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle() : int
     {
-        $collections = Collection::withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
-            ->whereNull('deleted_at')
-            ->get();
+        UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
-        $collections->each(function ($collection) {
-            UpdateCollectionSummary::dispatch($collection);
-        });
-
-        return Command::SUCCESS;
+        return Response::SUCCESS;
     }
 }
