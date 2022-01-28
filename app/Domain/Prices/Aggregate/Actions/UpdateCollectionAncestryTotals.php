@@ -11,7 +11,7 @@ class UpdateCollectionAncestryTotals
         $collectionTotals         = (new GetCollectionTotals)($collection);
         $collection->summary()->updateOrCreate([
             'uuid'  => $collection->uuid,
-            'type'  => 'collection,'
+            'type'  => 'collection',
         ], $collectionTotals);
         $collectionFolder = $collection->folder;
         if ($collectionFolder) {

@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Schema;
 class CreateJobBatchesTable extends Migration
 {
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down() : void
+    {
+        Schema::dropIfExists('job_batches');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -25,15 +35,5 @@ class CreateJobBatchesTable extends Migration
             $table->integer('created_at');
             $table->integer('finished_at')->nullable();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down() : void
-    {
-        Schema::dropIfExists('job_batches');
     }
 }
