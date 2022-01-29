@@ -2,13 +2,19 @@
 
 namespace Tests\Feature\Domain;
 
+use App\App\Scopes\UserScope;
+use App\App\Scopes\UserScopeNotShared;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\createPrice;
 use App\Domain\Prices\Aggregate\Actions\MatchFinish;
-use App\Domain\Prices\Aggregate\Actions\UpdateCollectionAncestryTotals;
 use App\Domain\Prices\Models\Price;
+use App\Jobs\UpdateAncestry;
+use App\Jobs\UpdateCollectionTotals;
+use App\Jobs\UpdateFolderAncestry;
+use App\Jobs\UpdateFolderTotals;
+use Brick\Money\Money;
 
 class PriceTest extends CardCollectionTestCase
 {
@@ -36,7 +42,8 @@ class PriceTest extends CardCollectionTestCase
 
         // state
         // stored
-        $price      = $priceData['price'];
+        $price = Money::of($priceData['price'], 'USD')
+            ->getMinorAmount()->toInt();
 
         // previous
         $acquired   = $cardSummary->price_when_added;
@@ -66,6 +73,7 @@ class PriceTest extends CardCollectionTestCase
         // get models
         $card           = Card::uuid($cardUuid);
         $collection     = Collection::uuid($collectionUuid);
+        assert($collection instanceof Collection);
 
         // get state
         $state = $this->getState($card, $collection);
@@ -79,16 +87,19 @@ class PriceTest extends CardCollectionTestCase
         // // create price
         (new createPrice)($priceData);
 
+        $price = Money::of($priceData['price'], 'USD')
+            ->getMinorAmount()->toInt();
+
         $this->simulatePriceUpdateSummaryJob();
 
         // get state
         $state2 = $this->getState($card, $collection);
 
         // assertions
-        $this->assertEquals($priceData['price'], $state2['collection']['current_value']);
-        $this->assertNotEquals($priceData['price'], $state2['collection']['acquired_value']);
-        $this->assertNotEquals($priceData['price'], $state['collection']['acquired_value']);
-        $this->assertNotEquals($priceData['price'], $state['collection']['acquired_value']);
+        $this->assertEquals($price, $state2['collection']['current_value']);
+        $this->assertNotEquals($price, $state2['collection']['acquired_value']);
+        $this->assertNotEquals($price, $state['collection']['acquired_value']);
+        $this->assertNotEquals($price, $state['collection']['acquired_value']);
     }
 
     public function test_a_parent_folder_summary_is_updated_when_a_child_price_is_updated() : void
@@ -121,14 +132,18 @@ class PriceTest extends CardCollectionTestCase
 
         $this->simulatePriceUpdateSummaryJob();
 
+        $price = Money::of($priceData['price'], 'USD')
+            ->getMinorAmount()->toInt();
+
         // get state
+        assert($folder instanceof Folder);
         $state2 = $this->getState($card, $collection, $folder);
 
         // assertions
-        $this->assertEquals($priceData['price'], $state2['folder']['current_value']);
-        $this->assertNotEquals($priceData['price'], $state2['folder']['acquired_value']);
-        $this->assertNotEquals($priceData['price'], $state['folder']['acquired_value']);
-        $this->assertNotEquals($priceData['price'], $state['folder']['acquired_value']);
+        $this->assertEquals($price, $state2['folder']['current_value']);
+        $this->assertNotEquals($price, $state2['folder']['acquired_value']);
+        $this->assertNotEquals($price, $state['folder']['acquired_value']);
+        $this->assertNotEquals($price, $state['folder']['acquired_value']);
     }
 
     public function test_a_price_can_be_created() : void
@@ -147,10 +162,12 @@ class PriceTest extends CardCollectionTestCase
             'card_uuid' => $card->uuid,
         ])->toArray();
         $type       = $priceData['type'];
-        $price      = $priceData['price'];
 
         // create price
         (new createPrice)($priceData);
+
+        $price      = Money::of($priceData['price'], 'USD')
+            ->getMinorAmount()->toInt();
 
         // refresh card data
         $card->refresh();
@@ -173,18 +190,44 @@ class PriceTest extends CardCollectionTestCase
         $this->assertEquals($price, $newPrice);
     }
 
-    private function simulatePriceUpdateSummaryJob() : void
+    private function simulateCollectionUpdateJob() : void
     {
         // call command summaries:update
-        // from App\App\Console\Commands\UpdateAllSummaries
         $collections = Collection::withoutGlobalScopes([UserScope::class, UserScopeNotShared::class])
             ->whereNull('deleted_at')
             ->get();
 
-        $collections->each(function ($collection) {
-            // Dispatches job
-            // From App\Jobs\UpdateCollectionSummary
-            (new UpdateCollectionAncestryTotals)($collection);
+        $collections->each(function (Collection $collection) {
+            (new UpdateCollectionTotals($collection))->handle();
         });
+    }
+
+    /** @see UpdateFolderAncestry */
+    private function simulateFolderUpdateJob() : void
+    {
+        Folder::withDepth()
+            ->groupBy('id')
+            ->having('depth', '=', 0)
+            ->get()
+            ->each(fn ($folder) => $this->updateFolderDescendants($folder));
+    }
+
+    /**
+     * @see UpdateAllSummaries
+     * @see UpdateAncestry
+     */
+    private function simulatePriceUpdateSummaryJob() : void
+    {
+        $this->simulateCollectionUpdateJob();
+        $this->simulateFolderUpdateJob();
+    }
+
+    private function updateFolderDescendants(Folder $folder) : void
+    {
+        $folder->children->each(function ($child) {
+            $this->updateFolderDescendants($child);
+        });
+
+        (new UpdateFolderTotals($folder))->handle();
     }
 }
