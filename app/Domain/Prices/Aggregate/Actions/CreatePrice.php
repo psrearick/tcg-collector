@@ -12,7 +12,7 @@ class CreatePrice
     public function __invoke(array $price) : string
     {
         $newUuid        = Str::uuid();
-        $price['price'] = Money::of($price['price'], 'USD')
+        $price['price'] = Money::of($price['price'] ?? 0, 'USD')
             ->getMinorAmount()->toInt();
 
         $data     = (new PriceData($price))->toArray();
