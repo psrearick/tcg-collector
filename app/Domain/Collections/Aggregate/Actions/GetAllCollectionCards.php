@@ -5,12 +5,11 @@ namespace App\Domain\Collections\Aggregate\Actions;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Collections\Models\CollectionCardSummary;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as SupportCollection;
 
 class GetAllCollectionCards
 {
-    public function __invoke(?SupportCollection $collection = null) : SupportCollection
+    public function __invoke(?SupportCollection $collection = null)
     {
         if ($collection !== null) {
             return $collection->mapToGroups(function ($summary) {
@@ -23,11 +22,9 @@ class GetAllCollectionCards
         $collections        = Collection::with(['user'])->get();
         $collectionUuids    = $collections->pluck('uuid')->toArray();
 
-        return CollectionCardSummary::whereHas('collection', function (Builder $builder) use ($collectionUuids) {
-            $builder->whereIn('collection_uuid', $collectionUuids);
-        })
-            ->with(['collection', 'card'])
-            ->get();
+        return CollectionCardSummary::whereIn('collection_uuid', $collectionUuids)
+            ->where('quantity', '>', 0)
+            ->whereNull('deleted_at');
     }
 
     private function formatCollectionCards(SupportCollection $collectionCards) : Card
@@ -37,6 +34,7 @@ class GetAllCollectionCards
                 $carry = $collectionCard->card;
             }
 
+            $carry->cardSearchDataObject = $collectionCard->cardSearchDataObject;
             $quantity   = $collectionCard->quantity;
             $finish     = $collectionCard->finish;
             $current    = $collectionCard->current_price;

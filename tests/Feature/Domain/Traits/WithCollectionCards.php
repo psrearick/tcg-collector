@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Domain\Traits;
 
+use App\Domain\Base\Collection;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
 use App\Domain\Collections\Aggregate\Actions\DeleteCollectionCards;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
-use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Aggregate\Actions\CreateFolder;
 use App\Domain\Folders\Aggregate\Actions\DeleteFolder;
 use App\Domain\Folders\Models\Folder;

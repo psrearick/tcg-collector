@@ -33,8 +33,8 @@ class SettingsControllerTest extends CardCollectionTestCase
         $user = $this->act();
 
         $response = $this->patch(route('settings.update-settings'), [
-            'user_id' => $user->id,
-            'tracks_price' => true,
+            'user_id'          => $user->id,
+            'tracks_price'     => true,
             'tracks_condition' => true,
         ]);
 

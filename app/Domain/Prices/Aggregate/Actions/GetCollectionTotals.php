@@ -2,7 +2,7 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
-use App\Domain\Collections\Models\Collection;
+use App\Domain\Base\Collection;
 
 class GetCollectionTotals
 {

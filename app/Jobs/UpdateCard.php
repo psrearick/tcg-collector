@@ -10,7 +10,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UpdateCard implements ShouldQueue
@@ -32,14 +31,8 @@ class UpdateCard implements ShouldQueue
         $this->options  = $options;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
+    public function handle() : void
     {
-        Log::info($this->options);
         $card = $this->options['cards']
             ? $this->updateCard($this->cardData)
             : null;

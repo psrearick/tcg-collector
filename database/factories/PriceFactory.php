@@ -15,7 +15,7 @@ class PriceFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition() : array
     {
         $types = [
             'usd',
@@ -26,7 +26,7 @@ class PriceFactory extends Factory
         return [
             'card_uuid'     => '',
             'provider_uuid' => PriceProvider::where('name', '=', 'scryfall')->first()->uuid,
-            'price'         => $this->faker->numberBetween(5, 5000),
+            'price'         => $this->faker->randomFloat(2, 0.01, 1000.00),
             'type'          => $types[$this->faker->numberBetween(0, 2)],
         ];
     }
