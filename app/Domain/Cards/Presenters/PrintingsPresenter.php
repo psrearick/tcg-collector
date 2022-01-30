@@ -22,12 +22,14 @@ class PrintingsPresenter implements PresenterInterface
     {
         return (new GetPrintings)($this->oracleId)
             ->load('set', 'finishes')
+            ->filter(fn ($card) => (bool)$card->set)
             ->map(function (Card $card) {
                 $cardBuild = (new BuildCard($card))
                     ->add('feature')
                     ->add('image_url')
                     ->add('set_image_url')
                     ->get();
+
                 $printing                   = (object) $card->only(['rarity', 'id', 'uuid']);
                 $printing->prices           = (new GetLatestPricesByFinish)($card->uuid);
                 $printing->set_name         = $card->set->name;
