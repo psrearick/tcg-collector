@@ -8,6 +8,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "barryvdh/laravel-ide-helper": "^2.12",
         "bensampo/laravel-enum": "^4.1",
         "brick/money": "^0.5.3",
         "coconutcraig/laravel-postmark": "^2.11",
@@ -30,14 +31,15 @@
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-latest",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
+        "jasonmccreary/laravel-test-assertions": "^2.0",
+        "laravel-shift/factory-generator": "dev-master",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
-        "phpunit/phpunit": "^9.5.10",
-        "jasonmccreary/laravel-test-assertions": "^2.0",
-        "laravel-shift/factory-generator": "dev-master"
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {

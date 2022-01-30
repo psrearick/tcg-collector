@@ -10,6 +10,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
+/**
+ * App\Domain\CardAttributes\Models\Color
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|Card[] $cards
+ * @property-read int|null $cards_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Symbol[] $symbols
+ * @property-read int|null $symbols_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Color newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Color newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Color query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Color whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Color whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Color whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Color whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Color extends Model
 {
     use HasFactory;

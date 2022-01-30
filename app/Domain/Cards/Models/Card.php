@@ -32,6 +32,184 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * App\Domain\Cards\Models\Card
+ *
+ * @property int $id
+ * @property string|null $uuid
+ * @property string $name
+ * @property string $name_normalized
+ * @property string $cardId
+ * @property string|null $arenaId
+ * @property string|null $languageCode
+ * @property int|null $mtgoId
+ * @property int|null $mtgoFoilId
+ * @property int|null $tcgplayerId
+ * @property int|null $cardmarketId
+ * @property string|null $oracleId
+ * @property string|null $printsSearchUri
+ * @property string|null $rulingsUri
+ * @property string|null $scryfallUri
+ * @property string|null $scryfallApiUri
+ * @property string|null $artist
+ * @property int|null $booster
+ * @property string|null $borderColor
+ * @property string|null $cardBackId
+ * @property string|null $collectorNumber
+ * @property int|null $hasContentWarning
+ * @property int|null $isOnlineOnly
+ * @property string|null $frameVersion
+ * @property int|null $isFullArt
+ * @property int|null $isHighresImage
+ * @property string|null $illustrationId
+ * @property string|null $imageStatus
+ * @property string|null $printedName
+ * @property string|null $printedText
+ * @property string|null $printedTypeLine
+ * @property int|null $isPromo
+ * @property string|null $rarity
+ * @property string|null $releaseDate
+ * @property int|null $isReprint
+ * @property string|null $scryfallSetId
+ * @property string|null $scryfallSetUri
+ * @property int $set_id
+ * @property int|null $isStorySpotlight
+ * @property int|null $isTextless
+ * @property int|null $isVariation
+ * @property string|null $variationOf
+ * @property string|null $watermark
+ * @property float|null $convertedManaCost
+ * @property int|null $edhrecRank
+ * @property int|null $hasFoil
+ * @property int|null $hasNonFoil
+ * @property string|null $layout
+ * @property string|null $handModifier
+ * @property string|null $lifeModifier
+ * @property string|null $loyalty
+ * @property string|null $manaCost
+ * @property string|null $oracleText
+ * @property int|null $isOversized
+ * @property string|null $power
+ * @property int|null $isReserved
+ * @property string|null $toughness
+ * @property string|null $typeLine
+ * @property string|null $imagePath
+ * @property string|null $imagePngUri
+ * @property string|null $imageBorderCropUri
+ * @property string|null $imageArtCropUri
+ * @property string|null $imageLargeUri
+ * @property string|null $imageNormalUri
+ * @property string|null $imageSmallUri
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|ApiMappings[] $apiMappings
+ * @property-read int|null $api_mappings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ModelsCollection[] $collections
+ * @property-read int|null $collections_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Color[] $colors
+ * @property-read int|null $colors_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Face[] $faces
+ * @property-read int|null $faces_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Finish[] $finishes
+ * @property-read int|null $finishes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|ForeignData[] $foreignData
+ * @property-read int|null $foreign_data_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|FrameEffect[] $frameEffects
+ * @property-read int|null $frame_effects_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Game[] $games
+ * @property-read int|null $games_count
+ * @property-read string $image_url
+ * @property-read \Illuminate\Database\Eloquent\Collection|Keyword[] $keywords
+ * @property-read int|null $keywords_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|LeadershipSkill[] $leadershipSkills
+ * @property-read int|null $leadership_skills_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Legality[] $legalities
+ * @property-read int|null $legalities_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Domain\Cards\Models\MultiverseId[] $multiverseIds
+ * @property-read int|null $multiverse_ids_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Price[] $prices
+ * @property-read int|null $prices_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|PromoType[] $promoTypes
+ * @property-read int|null $promo_types_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|RelatedObjects[] $relatedObjects
+ * @property-read int|null $related_objects_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Ruling[] $rulings
+ * @property-read int|null $rulings_count
+ * @property-read Set|null $set
+ * @method static \Database\Factories\CardFactory factory(...$parameters)
+ * @method static Builder|Card newModelQuery()
+ * @method static Builder|Card newQuery()
+ * @method static Builder|Card notOnlineOnly()
+ * @method static Builder|Card query()
+ * @method static Builder|Card whereArenaId($value)
+ * @method static Builder|Card whereArtist($value)
+ * @method static Builder|Card whereBooster($value)
+ * @method static Builder|Card whereBorderColor($value)
+ * @method static Builder|Card whereCardBackId($value)
+ * @method static Builder|Card whereCardId($value)
+ * @method static Builder|Card whereCardmarketId($value)
+ * @method static Builder|Card whereCollectorNumber($value)
+ * @method static Builder|Card whereConvertedManaCost($value)
+ * @method static Builder|Card whereCreatedAt($value)
+ * @method static Builder|Card whereEdhrecRank($value)
+ * @method static Builder|Card whereFrameVersion($value)
+ * @method static Builder|Card whereHandModifier($value)
+ * @method static Builder|Card whereHasContentWarning($value)
+ * @method static Builder|Card whereHasFoil($value)
+ * @method static Builder|Card whereHasNonFoil($value)
+ * @method static Builder|Card whereId($value)
+ * @method static Builder|Card whereIllustrationId($value)
+ * @method static Builder|Card whereImageArtCropUri($value)
+ * @method static Builder|Card whereImageBorderCropUri($value)
+ * @method static Builder|Card whereImageLargeUri($value)
+ * @method static Builder|Card whereImageNormalUri($value)
+ * @method static Builder|Card whereImagePath($value)
+ * @method static Builder|Card whereImagePngUri($value)
+ * @method static Builder|Card whereImageSmallUri($value)
+ * @method static Builder|Card whereImageStatus($value)
+ * @method static Builder|Card whereIsFullArt($value)
+ * @method static Builder|Card whereIsHighresImage($value)
+ * @method static Builder|Card whereIsOnlineOnly($value)
+ * @method static Builder|Card whereIsOversized($value)
+ * @method static Builder|Card whereIsPromo($value)
+ * @method static Builder|Card whereIsReprint($value)
+ * @method static Builder|Card whereIsReserved($value)
+ * @method static Builder|Card whereIsStorySpotlight($value)
+ * @method static Builder|Card whereIsTextless($value)
+ * @method static Builder|Card whereIsVariation($value)
+ * @method static Builder|Card whereLanguageCode($value)
+ * @method static Builder|Card whereLayout($value)
+ * @method static Builder|Card whereLifeModifier($value)
+ * @method static Builder|Card whereLoyalty($value)
+ * @method static Builder|Card whereManaCost($value)
+ * @method static Builder|Card whereMtgoFoilId($value)
+ * @method static Builder|Card whereMtgoId($value)
+ * @method static Builder|Card whereName($value)
+ * @method static Builder|Card whereNameNormalized($value)
+ * @method static Builder|Card whereOracleId($value)
+ * @method static Builder|Card whereOracleText($value)
+ * @method static Builder|Card wherePower($value)
+ * @method static Builder|Card wherePrintedName($value)
+ * @method static Builder|Card wherePrintedText($value)
+ * @method static Builder|Card wherePrintedTypeLine($value)
+ * @method static Builder|Card wherePrintsSearchUri($value)
+ * @method static Builder|Card whereRarity($value)
+ * @method static Builder|Card whereReleaseDate($value)
+ * @method static Builder|Card whereRulingsUri($value)
+ * @method static Builder|Card whereScryfallApiUri($value)
+ * @method static Builder|Card whereScryfallSetId($value)
+ * @method static Builder|Card whereScryfallSetUri($value)
+ * @method static Builder|Card whereScryfallUri($value)
+ * @method static Builder|Card whereSetId($value)
+ * @method static Builder|Card whereTcgplayerId($value)
+ * @method static Builder|Card whereToughness($value)
+ * @method static Builder|Card whereTypeLine($value)
+ * @method static Builder|Card whereUpdatedAt($value)
+ * @method static Builder|Card whereUuid($value)
+ * @method static Builder|Card whereVariationOf($value)
+ * @method static Builder|Card whereWatermark($value)
+ * @mixin \Eloquent
+ */
 class Card extends Model
 {
     use HasFactory, HasUuid;
