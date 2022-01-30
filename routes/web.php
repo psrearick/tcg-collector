@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminPanelController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CollectionCardsController;
 use App\Http\Controllers\CollectionCardsDeleteController;
 use App\Http\Controllers\CollectionCardsMoveController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\SetCollectionsController;
 use App\Http\Controllers\SetCollectionsSearchController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StoresController;
+use App\Http\Controllers\SymbolsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +52,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect(route('collections.index'));
     })->name('dashboard');
 
+    Route::get('cards/{card}', [CardController::class, 'show'])->name('cards/show');
     Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections-move.update');
     Route::post('collections/{collection}/cards/move', [CollectionCardsMoveController::class, 'update'])->name('collection-cards-move.update');
@@ -74,6 +77,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
     Route::get('user/settings', [SettingsController::class, 'show'])->name('settings.show');
     Route::patch('user/update-settings', [SettingsController::class, 'update'])->name('settings.update-settings');
+
+    Route::post('api/brace-content', [SymbolsController::class, 'show'])->name('symbols.show');
 
     // Admin Routes
     Route::get('admin-panel/edit', [AdminPanelController::class, 'edit'])->name('admin-panel.edit');

@@ -1,369 +1,139 @@
 <template>
-    <div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <app-layout :title="card.name">
+        <template #header>
             <div>
-                <div>
-                    <img
-                        :src="card.image_url"
-                        :alt="card.name"
-                        class="max-w-xs mb-8 mx-auto"
-                    />
-                    <p
+                <h2
+                    class="
+                        font-semibold
+                        text-xl text-gray-800
+                        leading-tight
+                        py-2
+                    "
+                >
+                    {{ card.name }}
+                </h2>
+                <p class="text-sm text-gray-500">
+                    {{ card.set_name }}
+                </p>
+            </div>
+        </template>
+        <div class="grid md:grid-cols-3 gap-4">
+            <div>
+                <div class="bg-primary-500 sm:rounded-lg pt-2 mb-4">
+                    <div class="bg-gray-100 rounded-lg border shadow-md">
+                        <div
+                            v-for="(price, finish) in card.prices"
+                            :key="finish"
+                            class="text-center"
+                        >
+                            <definition-list-item :title="finish">
+                                <p class="text-sm text-gray-500">{{ price }}</p>
+                            </definition-list-item>
+                        </div>
+                    </div>
+                </div>
+                <img
+                    class="max-w-xs mx-auto"
+                    :src="card.image"
+                    :alt="card.name"
+                />
+            </div>
+            <div>
+                <card-list max-cols="2">
+                    <card-list-card
+                        v-for="(legality, format) in card.legalities"
+                        :key="format"
+                        :status="status(legality)"
+                    >
+                        <p class="text-sm font-medium text-gray-900 truncate">
+                            {{ format }}
+                        </p>
+                        <p class="text-sm text-gray-500 truncate">
+                            {{ legality }}
+                        </p>
+                    </card-list-card>
+                </card-list>
+            </div>
+            <div class="bg-primary-500 sm:rounded-lg pt-2">
+                <div
+                    class="
+                        bg-white
+                        shadow
+                        overflow-hidden
+                        sm:rounded-lg
+                        md:col-span-2
+                        lg:col-span-1
+                        mt-8
+                        lg:mt-0
+                        h-full
+                    "
+                >
+                    <div
                         class="
-                            text-sm
-                            font-medium
-                            text-gray-500
-                            truncate
-                            text-center
+                            grid
+                            md:grid-cols-2
+                            bg-gray-100
+                            py-2
+                            border border-b-2
                         "
                     >
-                        {{ card.set.name }}
-                    </p>
-                </div>
-            </div>
-            <div class="px-4">
-                <div>
-                    <div class="mb-8">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Current Prices
-                        </h3>
-                        <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                        <div class="w-12 mx-auto">
+                            <img :src="card.set_image" :alt="card.set_name" />
+                        </div>
+                        <div class="my-auto">
+                            <p>
+                                {{ card.set_name }} ({{
+                                    card.set_code.toUpperCase()
+                                }})
+                            </p>
+                        </div>
+                    </div>
+
+                    <dl class="mt-4">
+                        <definition-list-item
+                            title="Collector Number"
+                            :value="card.collector_number"
+                            border=""
+                        />
+                        <definition-list-item
+                            title="Rarity"
+                            :value="card.rarity"
+                        />
+                        <definition-list-item title="Type" :value="card.type" />
+                        <definition-list-item title="Mana Cost">
+                            <div v-html="manaCost" />
+                        </definition-list-item>
+                        <definition-list-item title="Oracle Text">
                             <div
-                                v-for="(price, finish) in card.allFinishPrices"
-                                :key="finish"
-                                class="
-                                    px-4
-                                    py-5
-                                    bg-white
-                                    shadow
-                                    rounded-lg
-                                    overflow-hidden
-                                    sm:p-6
-                                "
-                            >
-                                <dt
-                                    class="
-                                        text-sm
-                                        font-medium
-                                        text-gray-500
-                                        truncate
-                                    "
-                                >
-                                    {{ finish }}
-                                </dt>
-                                <dd
-                                    class="
-                                        mt-1
-                                        text-3xl
-                                        font-semibold
-                                        text-gray-900
-                                    "
-                                >
-                                    {{ format(price) }}
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-                    <div>
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Legalities
-                        </h3>
-                        <CardList class="pt-4" max-cols="2">
-                            <CardListCard
-                                v-for="(legality, index) in card.legalities"
-                                :key="index"
-                                :status="status(legality.status)"
-                            >
-                                <p class="text-sm font-medium text-gray-900">
-                                    {{
-                                        legality.status
-                                            .replace(/_/g, " ")
-                                            .toUpperCase()
-                                    }}
-                                </p>
-                                <p class="text-sm text-gray-500 truncate">
-                                    {{ legality.format.toLowerCase() }}
-                                </p>
-                            </CardListCard>
-                        </CardList>
-                    </div>
-                </div>
-            </div>
-            <div
-                class="
-                    bg-white
-                    shadow
-                    overflow-hidden
-                    sm:rounded-lg
-                    md:col-span-2
-                    lg:col-span-1
-                    mt-8
-                    lg:mt-0
-                "
-            >
-                <div class="px-4 py-5 sm:px-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Card Details
-                    </h3>
-                    <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                        Information about {{ card.name }}
-                        <span v-if="card.feature">({{ card.feature }})</span>
-                    </p>
-                </div>
-                <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-                    <dl class="sm:divide-y sm:divide-gray-200">
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Rarity
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                {{ capitalize(card.rarity.toLowerCase()) }}
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Mana Cost
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                <span v-if="card.manaCost" v-html="manaCost" />
-                                (CMC: {{ card.convertedManaCost }})
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Set
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900 text-center
-                                    sm:mt-0
-                                    sm:col-span-2
-                                    flex
-                                    md:block
-                                    justify-start
-                                "
-                            >
-                                <img
-                                    :src="card.set_image_url"
-                                    :alt="card.set.name"
-                                    class="w-12 md:mb-4 mr-4 md:mx-auto"
-                                />
-                                {{ card.set.name }}
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Type
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                {{ card.typeLine }}
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Keywords
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                {{ keywordList }}
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Text
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                                v-html="text"
+                                class="text-sm"
+                                v-html="`<span> ${text} </span>`"
                             />
-                        </div>
-                        <div
-                            v-if="card.flavorText"
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Flavor Text
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                                v-html="card.flavorText"
-                            />
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Artist
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                {{ card.artist }}
-                            </dd>
-                        </div>
-                        <div
-                            class="
-                                py-4
-                                sm:py-5
-                                sm:grid sm:grid-cols-3
-                                sm:gap-4
-                                sm:px-6
-                            "
-                        >
-                            <dt class="text-sm font-medium text-gray-500">
-                                Language
-                            </dt>
-                            <dd
-                                class="
-                                    mt-1
-                                    text-sm text-gray-900
-                                    sm:mt-0
-                                    sm:col-span-2
-                                "
-                            >
-                                {{ card.languageCode.toUpperCase() }}
-                            </dd>
-                        </div>
+                        </definition-list-item>
+                        <definition-list-item
+                            title="Language"
+                            :value="card.language"
+                        />
+                        <definition-list-item
+                            title="Artist"
+                            :value="card.artist"
+                        />
                     </dl>
                 </div>
             </div>
         </div>
-        <div>
-            <h3
-                class="text-lg leading-6 font-medium text-gray-900 mt-8 lg:mt-0"
-            >
-                Other Printings
-            </h3>
-            <DataGrid
-                :data="printingsTable.data"
-                :fields="printingsTable.fields"
-                :show-search="false"
-                :show-pagination="false"
-            />
-        </div>
-    </div>
+    </app-layout>
 </template>
 
 <script>
-import Layout from "@/Layouts/Authenticated";
-import {
-    formatCurrency,
-    capitalizeFirstLetter,
-    replaceSymbol,
-} from "@/Shared/api/ConvertValue";
-import CardList from "@/Components/CardLists/CardList";
-import CardListCard from "@/Components/CardLists/CardListCard";
-import DataGrid from "@/Components/DataGrid/DataGrid";
-
+import { Link } from "@inertiajs/inertia-vue3";
+import AppLayout from "../../Layouts/AppLayout.vue";
+import CardList from "../../Components/CardLists/CardList";
+import CardListCard from "../../Components/CardLists/CardListCard";
+import DefinitionListItem from "./Partials/DefinitionListItem";
 export default {
     name: "Show",
-    components: { DataGrid, CardListCard, CardList },
-    layout: Layout,
 
-    header: "",
+    components: { CardListCard, CardList, Link, AppLayout, DefinitionListItem },
 
     props: {
         card: {
@@ -374,145 +144,35 @@ export default {
 
     data() {
         return {
-            printingsTable: {
-                data: [],
-                fields: [
-                    {
-                        visible: true,
-                        type: "text",
-                        link: true,
-                        hover: true,
-                        label: "Set",
-                        key: "set_name",
-                        events: {
-                            click: "printings_table_set_name_click",
-                            hover: "printings_table_set_name_hover",
-                        },
-                        sortable: false,
-                        filterable: false,
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        link: false,
-                        label: "Rarity",
-                        key: "rarity",
-                        sortable: false,
-                        filterable: false,
-                    },
-                    {
-                        visible: true,
-                        type: "text",
-                        link: false,
-                        label: "Features",
-                        key: "feature",
-                        sortable: false,
-                        filterable: false,
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        link: false,
-                        label: "Nonfoil",
-                        key: "nonfoil",
-                        sortable: false,
-                        filterable: false,
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        link: false,
-                        label: "Foil",
-                        key: "foil",
-                        sortable: false,
-                        filterable: false,
-                    },
-                    {
-                        visible: true,
-                        type: "currency",
-                        link: false,
-                        label: "Etched",
-                        key: "etched",
-                        sortable: false,
-                        filterable: false,
-                    },
-                ],
-            },
             text: "",
             manaCost: "",
         };
     },
 
-    computed: {
-        keywordList() {
-            return _.join(
-                _.map(this.card.keywords, (keyword) => {
-                    return keyword.name;
-                }),
-                ", "
-            );
-        },
-    },
-
-    mounted() {
-        this.$store.dispatch("updateHeader", { header: this.card.name });
-        const allPrintings = [];
-        Object.keys(this.card.printings).forEach((key) => {
-            let printing = this.card.printings[key];
-            allPrintings.push({
-                id: printing.id,
-                nonfoil: printing.allPrices["nonfoil"] || 0,
-                foil: printing.allPrices["foil"] || 0,
-                etched: printing.allPrices["etched"] || 0,
-                rarity: printing.rarity,
-                set_name: printing.set.name,
-                release_date: printing.set.releaseDate,
-                feature: printing.feature,
-            });
-        });
-        this.printingsTable.data = allPrintings.sort((first, second) => {
-            if (new Date(first.releaseDate) < new Date(second.releaseDate)) {
-                return -1;
-            }
-            return 1;
-        });
-    },
-
     created() {
-        this.emitter.on("printings_table_set_name_click", (card) => {
-            this.$inertia.get(`/cards/cards/${card.id}`);
-        });
-        this.getTextWithSymbols(this.card.oracleText).then(
-            (res) => (this.text = res)
+        let oracleText = this.$convertValue.replaceLineBreak(
+            this.card.oracle_text
         );
-        this.getTextWithSymbols(this.card.manaCost).then(
+        this.replaceSymbol(oracleText).then((res) => (this.text = res));
+        this.replaceSymbol(this.card.mana_cost).then(
             (res) => (this.manaCost = res)
         );
     },
 
     methods: {
-        format(value) {
-            return value ? formatCurrency(value) : "N/A";
-        },
-        capitalize(value) {
-            return capitalizeFirstLetter(value);
-        },
-        async getTextWithSymbols(value) {
-            if (!value) {
-                return "";
-            }
-            return await replaceSymbol(value);
-        },
-        status(value) {
-            if (value === "banned") {
+        status(status) {
+            if (status === "Banned") {
                 return "danger";
             }
 
-            if (value === "legal") {
+            if (status === "Legal") {
                 return "success";
             }
 
             return "warning";
+        },
+        async replaceSymbol(text) {
+            return await this.$convertValue.replaceSymbol(text);
         },
     },
 };

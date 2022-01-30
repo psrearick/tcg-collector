@@ -81,6 +81,7 @@ export function capitalizeFirstLetter(string) {
 }
 
 export async function replaceSymbol(string) {
+    console.log(string);
     let symbols = getBraceContent(string);
     let res = await axios.post("/api/brace-content", { data: symbols });
     res.data.forEach((result) => {
@@ -98,6 +99,10 @@ export async function replaceSymbol(string) {
         );
     });
     return string;
+}
+
+export function replaceLineBreak(string) {
+    return string.replace(/\r\n|\r|\n/g, "<br>");
 }
 
 export function getBraceContent(string) {
