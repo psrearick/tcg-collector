@@ -17,9 +17,9 @@
                 </p>
             </div>
         </template>
-        <div class="grid md:grid-cols-3 gap-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8">
             <div>
-                <div class="bg-primary-500 sm:rounded-lg pt-2 mb-4">
+                <div class="bg-primary-500 rounded-lg pt-2 mb-4">
                     <div class="bg-gray-100 rounded-lg border shadow-md">
                         <div
                             v-for="(price, finish) in card.prices"
@@ -54,16 +54,15 @@
                     </card-list-card>
                 </card-list>
             </div>
-            <div class="bg-primary-500 sm:rounded-lg pt-2">
+            <div class="bg-primary-500 rounded-lg pt-2">
                 <div
                     class="
                         bg-white
                         shadow
                         overflow-hidden
-                        sm:rounded-lg
+                        rounded-lg
                         md:col-span-2
                         lg:col-span-1
-                        mt-8
                         lg:mt-0
                         h-full
                     "
@@ -93,7 +92,7 @@
                         <definition-list-item
                             title="Collector Number"
                             :value="card.collector_number"
-                            border=""
+                            border="border-t md:border-none border-gray-200"
                         />
                         <definition-list-item
                             title="Rarity"
@@ -121,6 +120,9 @@
                 </div>
             </div>
         </div>
+        <div class="mt-8">
+            <printings-data-grid :card="card" :table="table" />
+        </div>
     </app-layout>
 </template>
 
@@ -130,10 +132,21 @@ import AppLayout from "../../Layouts/AppLayout.vue";
 import CardList from "../../Components/CardLists/CardList";
 import CardListCard from "../../Components/CardLists/CardListCard";
 import DefinitionListItem from "./Partials/DefinitionListItem";
+import PrintingsDataGrid from "./Partials/PrintingsDataGrid";
+import PrintingsTableMixin from "./Mixins/PrintingsTableMixin";
 export default {
     name: "Show",
 
-    components: { CardListCard, CardList, Link, AppLayout, DefinitionListItem },
+    components: {
+        PrintingsDataGrid,
+        CardListCard,
+        CardList,
+        Link,
+        AppLayout,
+        DefinitionListItem,
+    },
+
+    mixins: [PrintingsTableMixin],
 
     props: {
         card: {

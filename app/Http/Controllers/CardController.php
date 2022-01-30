@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Domain\Cards\Presenters\CardShowPresenter;
-use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 

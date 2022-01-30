@@ -1,7 +1,7 @@
 <template>
     <div class="grid md:grid-cols-2 px-8">
-        <dt :class="border + ' py-4'">{{ title }}</dt>
-        <dd :class="border + ' py-4'">
+        <dt :class="border + ' py-4 font-bold'">{{ title }}</dt>
+        <dd :class="border + ' py-4 text-gray-500'">
             <slot>{{ value }}</slot>
         </dd>
     </div>

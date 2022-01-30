@@ -3,14 +3,15 @@
 namespace App\Domain\Cards\Presenters;
 
 use App\App\Contracts\PresenterInterface;
+use App\App\Contracts\PresentsLegalities;
+use App\App\Contracts\PresentsPrices;
+use App\App\Contracts\PresentsPrintings;
 use App\Domain\Cards\Actions\BuildCard;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Prices\Aggregate\Actions\GetLatestPrices;
-use App\Domain\Prices\Aggregate\Actions\MatchType;
-use Brick\Money\Money;
+use App\Domain\Prices\Aggregate\Actions\GetLatestPricesByFinish;
 use Illuminate\Support\Str;
 
-class CardShowPresenter implements PresenterInterface
+class CardShowPresenter implements PresenterInterface, PresentsPrices, PresentsLegalities, PresentsPrintings
 {
     private Card $card;
 
@@ -18,18 +19,6 @@ class CardShowPresenter implements PresenterInterface
     {
         $this->card = optional(Card::uuid($uuid))
             ->load('set', 'finishes');
-    }
-
-    public function getPrices() : array
-    {
-        return (new GetLatestPrices)([$this->card->uuid])
-            ->filter(fn ($price) => $price->price > 0)
-            ->mapToGroups(function ($filtered){
-                $finish = (new MatchType)($filtered->type);
-                return [Str::headline($finish) => Money::ofMinor($filtered->price, 'USD')->formatTo('en_US')];
-            })
-            ->map(fn ($group) => $group->first())
-            ->toArray();
     }
 
     public function getLegalities() : array
@@ -41,18 +30,27 @@ class CardShowPresenter implements PresenterInterface
                     'status'    => Str::headline($legality->status),
                 ];
             })
+            ->sortBy('format')
             ->keyBy('format')
             ->map(fn ($legality) => $legality['status'])
             ->toArray();
+    }
 
+    public function getPrices() : array
+    {
+        return (new GetLatestPricesByFinish)($this->card->uuid);
+    }
+
+    public function getPrintings() : array
+    {
+        return (new PrintingsPresenter($this->card->oracleId))->present();
     }
 
     public function present() : array
     {
         $prices = $this->getPrices();
 
-        $cardBuilder = new BuildCard($this->card);
-        $card = $cardBuilder
+        $card = (new BuildCard($this->card))
             ->add('feature')
             ->add('image_url')
             ->add('set_image_url')
@@ -75,6 +73,7 @@ class CardShowPresenter implements PresenterInterface
             'oracle_text'       => $card->oracleText,
             'language'          => Str::upper($card->languageCode),
             'artist'            => $card->artist,
+            'printings'         => $this->getPrintings(),
         ];
     }
 }
