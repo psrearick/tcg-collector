@@ -39,11 +39,11 @@
     </div>
 </template>
 <script>
-import CardSetSearch from "@/Pages/Cards/Partials/CardSetSearch";
-import UiGridConfigurationPanel from "@/UI/DataGrid/UIGridConfigurationPanel";
-import UiDataTable from "@/UI/DataGrid/UIDataTable";
-import CollectionSearchTableMixin from "@/Pages/Search/Partials/CollectionSearchTableMixin";
-import UiDataGridPaginationNoLink from "@/UI/DataGrid/UIDataGridPaginationNoLink";
+import CardSetSearch from "../../../Pages/Cards/Partials/CardSetSearch";
+import UiGridConfigurationPanel from "../../../UI/DataGrid/UIGridConfigurationPanel";
+import UiDataTable from "../../../UI/DataGrid/UIDataTable";
+import CollectionSearchTableMixin from "../../../Pages/Search/Partials/CollectionSearchTableMixin";
+import UiDataGridPaginationNoLink from "../../../UI/DataGrid/UIDataGridPaginationNoLink";
 
 export default {
     name: "CollectionSearch",
@@ -123,8 +123,8 @@ export default {
         });
     },
     methods: {
-        showCard() {
-            // this.$inertia.get(`/cards/cards/${id}`);
+        showCard(uuid) {
+            this.$inertia.get(`/cards/${uuid}`);
         },
         showCollection(uuid) {
             this.$inertia.get(`${this.collectionUrl}/${uuid}`);

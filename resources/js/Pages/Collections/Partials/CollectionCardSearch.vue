@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import CardSetSearch from "@/Pages/Cards/Partials/CardSetSearch";
-import CollectionCardSearchResults from "@/Pages/Collections/Partials/CollectionCardSearchResults";
+import CardSetSearch from "../../../Pages/Cards/Partials/CardSetSearch";
+import CollectionCardSearchResults from "../../../Pages/Collections/Partials/CollectionCardSearchResults";
 export default {
     name: "CollectionCardSearch",
 

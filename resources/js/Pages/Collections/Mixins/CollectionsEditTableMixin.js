@@ -9,7 +9,7 @@ export default {
                             visible: true,
                             sortable: true,
                             type: "composite-text",
-                            link: false,
+                            link: true,
                             key: "name",
                             label: "Card",
                             values: [
@@ -82,7 +82,7 @@ export default {
                     visible: true,
                     sortable: true,
                     type: "composite-text",
-                    link: false,
+                    link: true,
                     key: "name",
                     label: "Card",
                     values: [

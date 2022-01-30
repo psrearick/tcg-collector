@@ -100,6 +100,10 @@ export async function replaceSymbol(string) {
     return string;
 }
 
+export function replaceLineBreak(string) {
+    return string.replace(/\r\n|\r|\n/g, "<br>");
+}
+
 export function getBraceContent(string) {
     let found = [];
     let rxp = /{([^}]+)}/g;

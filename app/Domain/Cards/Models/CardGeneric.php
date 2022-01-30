@@ -8,6 +8,14 @@ use App\Domain\CardAttributes\Models\Supertype;
 use App\Domain\CardAttributes\Models\Type;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
+/**
+ * App\Domain\Cards\Models\CardGeneric
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|CardGeneric newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CardGeneric newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CardGeneric query()
+ * @mixin \Eloquent
+ */
 class CardGeneric extends Model
 {
 //    /**

@@ -12,6 +12,38 @@ use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 
+/**
+ * App\Models\Team
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property bool $personal_team
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|Collection[] $collections
+ * @property-read int|null $collections_count
+ * @property-read \Kalnoy\Nestedset\Collection|Folder[] $folders
+ * @property-read int|null $folders_count
+ * @property-read \App\Models\User|null $owner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Setting[] $settings
+ * @property-read int|null $settings_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TeamInvitation[] $teamInvitations
+ * @property-read int|null $team_invitations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
+ * @method static \Database\Factories\TeamFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Team newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Team query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Team whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team wherePersonalTeam($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Team whereUserId($value)
+ * @mixin \Eloquent
+ */
 class Team extends JetstreamTeam
 {
     use HasFactory;

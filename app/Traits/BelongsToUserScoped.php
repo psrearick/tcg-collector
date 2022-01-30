@@ -14,7 +14,7 @@ trait BelongsToUserScoped
      */
     protected static function bootBelongsToUser() : void
     {
-        $userScope = self::USERSCOPE;
+        $userScope = self::SCOPE;
 
         if ($userScope == 'none') {
             return;

@@ -66,7 +66,6 @@ export default {
 
     methods: {
         formattedPercentage(value) {
-            console.log();
             return formatPercentage(value, 2, true, true);
         },
     },

@@ -5,9 +5,9 @@
                 <card-list-card-with-menu
                     v-if="hasParentFolder"
                     :href="parentFolderHref"
-                    class="bg-secondary-50"
                     grid-classes="h-full"
                     main-classes="my-auto"
+                    status="success"
                 >
                     <template #main>
                         <ui-icon
@@ -25,8 +25,8 @@
                             folder: folderItem.uuid,
                         })
                     "
+                    status="primary"
                     :menu="getMenu(index, 'folder')"
-                    class="bg-primary-50"
                 >
                     <template #left>
                         <ui-icon icon="folder" />
@@ -136,13 +136,13 @@
 </template>
 
 <script>
-import CardList from "@/Components/CardLists/CardList";
-import CardListCardWithMenu from "@/Components/CardLists/CardListCardWithMenu";
-import EditCollectionPanel from "@/Components/Panels/EditCollectionPanel";
-import DeleteCollectionPanel from "@/Components/Panels/DeleteCollectionPanel";
-import MoveItemPanel from "@/Components/Panels/MoveItemPanel";
-import PublicLinkModal from "@/Components/Modals/PublicLinkModal.vue";
-import UiIcon from "@/UI/UIIcon";
+import CardList from "../../Components/CardLists/CardList";
+import CardListCardWithMenu from "../../Components/CardLists/CardListCardWithMenu";
+import EditCollectionPanel from "../../Components/Panels/EditCollectionPanel";
+import DeleteCollectionPanel from "../../Components/Panels/DeleteCollectionPanel";
+import MoveItemPanel from "../../Components/Panels/MoveItemPanel";
+import PublicLinkModal from "../../Components/Modals/PublicLinkModal.vue";
+import UiIcon from "../../UI/UIIcon";
 
 export default {
     name: "CollectionFolderIndex",

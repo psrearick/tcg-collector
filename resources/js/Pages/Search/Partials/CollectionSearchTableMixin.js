@@ -148,7 +148,7 @@ export default {
             this.collections = Object.values(card.collected);
         });
         this.emitter.on("card_name_click", (card) => {
-            this.showCard(card.id);
+            this.showCard(card.uuid);
         });
         this.emitter.on("collection_name_click", (collection) => {
             this.showCollection(collection.collection.uuid);

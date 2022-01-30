@@ -42,15 +42,15 @@ class UpdateSymbol implements ShouldQueue
     private function getSymbol() : Symbol
     {
         $symbolData = $this->symbolData;
-        echo '    Updating Symbol: ' . $symbolData['symbol'] ?? '' . PHP_EOL;
+        echo '    Updating Symbol: ' . ($symbolData['symbol'] ?? '') . PHP_EOL;
 
-        return Symbol::firstOrCreate([
+        return Symbol::updateOrCreate([
             'symbol'        => $symbolData['symbol'],
         ], [
             'svgUri'                    => $symbolData['svg_uri'] ?? null,
             'looseVariant'              => $symbolData['loose_variant'] ?? null,
             'english'                   => $symbolData['english'] ?? null,
-            'transpose'                 => $symbolData['transpose'] ?? null,
+            'transpose'                 => $symbolData['transposable'] ?? null,
             'representsMana'            => $symbolData['represents_mana'] ?? null,
             'appearsInManaCosts'        => $symbolData['appears_in_mana_costs'] ?? null,
             'cmc'                       => $symbolData['cmc'] ?? null,

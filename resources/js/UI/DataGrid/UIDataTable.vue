@@ -163,7 +163,7 @@
                                             text-blue-700
                                             hover:text-blue-900
                                         "
-                                        href="#"
+                                        href=""
                                         @click.prevent="click(item, field)"
                                     >
                                         <ui-data-table-field
@@ -201,7 +201,7 @@
                                             text-blue-700
                                             hover:text-blue-900
                                         "
-                                        href="#"
+                                        href=""
                                         @click.prevent="click(item, field)"
                                     >
                                         <ui-data-table-field
