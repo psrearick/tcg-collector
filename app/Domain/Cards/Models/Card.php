@@ -18,6 +18,7 @@ use App\Domain\CardAttributes\Models\Ruling;
 use App\Domain\Cards\Actions\GetCardImage;
 use App\Domain\Collections\Models\CardCollection;
 use App\Domain\Collections\Models\Collection as ModelsCollection;
+use App\Domain\Collections\Models\CollectionGeneral;
 use App\Domain\Mappings\Models\ApiMappings;
 use App\Domain\Prices\Models\Price;
 use App\Domain\Sets\Models\Set;
@@ -231,10 +232,19 @@ class Card extends Model
         return $this->belongsToMany(
             ModelsCollection::class, 'card_collections', 'card_uuid', 'collection_uuid', 'uuid', 'uuid'
         )
-        ->using(CardCollection::class)
-        ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
-        ->whereNull('card_collections.deleted_at')
-        ->withTimestamps();
+            ->using(CardCollection::class)
+            ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
+            ->whereNull('card_collections.deleted_at')
+            ->withTimestamps();
+    }
+
+    public function collectionsGeneral() : BelongsToMany
+    {
+        return $this->belongsToMany(CollectionGeneral::class, 'card_collections', 'card_uuid', 'collection_uuid', 'uuid', 'uuid')
+            ->using(CardCollection::class)
+            ->withPivot(['price_when_added', 'description', 'condition', 'quantity', 'finish', 'date_added', 'created_at'])
+            ->whereNull('card_collections.deleted_at')
+            ->withTimestamps();
     }
 
     /**

@@ -4,6 +4,8 @@ namespace App\Domain\Collections\Models;
 
 use App\Domain\Base\Collection as BaseCollection;
 use App\Traits\BelongsToUserScoped;
+use Eloquent;
+use Illuminate\Database\Query\Builder;
 
 /**
  * App\Domain\Collections\Models\Collection
@@ -32,7 +34,7 @@ use App\Traits\BelongsToUserScoped;
  * @method static Builder|Collection inCurrentGroup()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection newQuery()
- * @method static \Illuminate\Database\Query\Builder|Collection onlyTrashed()
+ * @method static Builder|Collection onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection query()
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereDeletedAt($value)
@@ -44,9 +46,9 @@ use App\Traits\BelongsToUserScoped;
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Collection whereUuid($value)
- * @method static \Illuminate\Database\Query\Builder|Collection withTrashed()
- * @method static \Illuminate\Database\Query\Builder|Collection withoutTrashed()
- * @mixin \Eloquent
+ * @method static Builder|Collection withTrashed()
+ * @method static Builder|Collection withoutTrashed()
+ * @mixin Eloquent
  */
 class Collection extends BaseCollection
 {

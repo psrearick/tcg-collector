@@ -80,7 +80,7 @@
                             <img :src="card.set_image" :alt="card.set_name" />
                         </div>
                         <div class="my-auto">
-                            <p>
+                            <p class="text-center md:text-left">
                                 {{ card.set_name }} ({{
                                     card.set_code.toUpperCase()
                                 }})
@@ -120,8 +120,17 @@
                 </div>
             </div>
         </div>
-        <div class="mt-8">
+        <div class="mt-12">
+            <p class="text-lg text-gray-700 mb-4">Printings</p>
             <printings-data-grid :card="card" :table="table" />
+        </div>
+        <div class="mt-12">
+            <p class="text-lg text-gray-700 mb-4">In Collections</p>
+            <in-collection-data-grid :card="card" :table="cardLocationsTable" />
+        </div>
+        <div class="mt-12">
+            <p class="text-lg text-gray-700 mb-4">In Group</p>
+            <in-group-data-grid :card="card" :table="cardLocationsTable" />
         </div>
     </app-layout>
 </template>
@@ -134,10 +143,15 @@ import CardListCard from "../../Components/CardLists/CardListCard";
 import DefinitionListItem from "./Partials/DefinitionListItem";
 import PrintingsDataGrid from "./Partials/PrintingsDataGrid";
 import PrintingsTableMixin from "./Mixins/PrintingsTableMixin";
+import CardLocationsTableMixin from "./Mixins/CardLocationsTableMixin";
+import InCollectionDataGrid from "./Partials/InCollectionDataGrid";
+import InGroupDataGrid from "./Partials/InGroupDataGrid";
 export default {
     name: "Show",
 
     components: {
+        InGroupDataGrid,
+        InCollectionDataGrid,
         PrintingsDataGrid,
         CardListCard,
         CardList,
@@ -146,7 +160,7 @@ export default {
         DefinitionListItem,
     },
 
-    mixins: [PrintingsTableMixin],
+    mixins: [PrintingsTableMixin, CardLocationsTableMixin],
 
     props: {
         card: {

@@ -1,18 +1,15 @@
 <template>
     <ui-data-table
         :fields="table.fields"
-        :grid-name="table.gridName"
-        :data="card.printings"
-        active-key-field="uuid"
-        :active-key-value="card.uuid"
-        highlight-classes="bg-gray-100 ring-2 ring-offset-2 ring-primary-500 ring-inset"
+        :grid-name="'collection-' + table.gridName"
+        :data="card.collections"
     />
 </template>
 
 <script>
 import UiDataTable from "../../../UI/DataGrid/UIDataTable";
 export default {
-    name: "PrintingsDataGrid",
+    name: "InCollectionDataGrid",
     components: { UiDataTable },
     props: {
         card: {

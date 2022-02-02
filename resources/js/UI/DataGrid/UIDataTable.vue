@@ -114,11 +114,7 @@
                         <tbody
                             v-for="(item, key) in data"
                             :key="key"
-                            :class="
-                                classes.tbody
-                                    ? classes.tbody
-                                    : 'bg-white border-b-2 border-gray-200 hover:bg-gray-50'
-                            "
+                            :class="getClasses(item)"
                         >
                             <tr
                                 :class="
@@ -275,6 +271,18 @@ export default {
             type: Boolean,
             default: false,
         },
+        activeKeyField: {
+            type: String,
+            default: "",
+        },
+        activeKeyValue: {
+            type: [String, Number],
+            default: null,
+        },
+        highlightClasses: {
+            type: String,
+            default: "",
+        },
     },
     emits: ["expand", "expandRow"],
 
@@ -384,6 +392,25 @@ export default {
             }
 
             return sort[field.key] || null;
+        },
+        getClasses(rowData) {
+            const base = this.classes.tbody
+                ? this.classes.tbody
+                : "bg-white border-b-2 border-gray-200 hover:bg-gray-50";
+
+            if (
+                !this.highlightClasses ||
+                !this.activeKeyField ||
+                !this.activeKeyValue
+            ) {
+                return base;
+            }
+
+            if (rowData[this.activeKeyField] === this.activeKeyValue) {
+                return `${base} ${this.highlightClasses}`;
+            }
+
+            return base;
         },
         checkExpanded(key) {
             let hasMaster = this.hasExpandToggle;

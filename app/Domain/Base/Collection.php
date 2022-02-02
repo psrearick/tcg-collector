@@ -13,6 +13,7 @@ use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
 use App\Traits\BelongsToUser;
 use App\Traits\HasUuid;
+use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,7 +62,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder|Collection whereUuid($value)
  * @method static \Illuminate\Database\Query\Builder|Collection withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Collection withoutTrashed()
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class Collection extends Model
 {

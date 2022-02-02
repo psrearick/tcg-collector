@@ -14,7 +14,7 @@ class GroupsController
     public function index(Request $request) : Response
     {
         $request->merge(['inGroup' => true]);
-        $presenter = (new GroupsShowPresenter($request->paginate, $request->userId))->present();
+        $presenter = (new GroupsShowPresenter($request->get('paginate'), $request->get('userId')))->present();
 
         return Inertia::render('Groups/Index', $presenter);
     }
@@ -22,7 +22,7 @@ class GroupsController
     public function show(string $uuid, Request $request, GetSummaryData $getSummaryData) : Response
     {
         $request->merge(['inGroup' => true]);
-        $collections     = (new CollectionsPresenter($request->all(), $uuid, true))->present();
+        $collections     = (new CollectionsPresenter($request->all(), $uuid))->present();
         $summary         = $getSummaryData(collect([$collections['collection']]), null, false);
 
         return Inertia::render('Groups/Show', [

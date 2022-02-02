@@ -22,7 +22,7 @@ class PrintingsPresenter implements PresenterInterface
     {
         return (new GetPrintings)($this->oracleId)
             ->load('set', 'finishes')
-            ->filter(fn ($card) => (bool)$card->set)
+            ->filter(fn ($card) => (bool) $card->set)
             ->map(function (Card $card) {
                 $cardBuild = (new BuildCard($card))
                     ->add('feature')
