@@ -152,7 +152,7 @@ class CardShowPresenter implements PresenterInterface, PresentsPrices, PresentsL
                 : $collection->user->name;
 
             return $total;
-        })->toArray();
+        })->values()->toArray();
     }
 
     private function getTotals(array $collections) : array
