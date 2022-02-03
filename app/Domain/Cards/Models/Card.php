@@ -210,6 +210,8 @@ use Illuminate\Support\Facades\Storage;
  * @method static Builder|Card whereVariationOf($value)
  * @method static Builder|Card whereWatermark($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|CollectionGeneral[] $collectionsGeneral
+ * @property-read int|null $collections_general_count
  */
 class Card extends Model
 {

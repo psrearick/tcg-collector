@@ -26,7 +26,7 @@ class PriceFactory extends Factory
         return [
             'card_uuid'     => '',
             'provider_uuid' => PriceProvider::where('name', '=', 'scryfall')->first()->uuid,
-            'price'         => $this->faker->randomFloat(2, 0.01, 1000.00),
+            'price'         => $this->faker->numberBetween(0, 9999),
             'type'          => $types[$this->faker->numberBetween(0, 2)],
         ];
     }

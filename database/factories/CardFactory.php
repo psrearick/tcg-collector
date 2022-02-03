@@ -51,8 +51,11 @@ class CardFactory extends Factory
             'bonus',
         ];
 
+        $uuid = Str::uuid()->toString();
+
         return [
-            'cardId'              => Str::uuid()->toString(),
+            'cardId'              => $uuid,
+            'uuid'                => $uuid,
             'name'                => $name,
             'name_normalized'     => (new NormalizeString)($name),
             'collectorNumber'     => $this->faker->text(5),

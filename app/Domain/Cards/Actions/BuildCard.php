@@ -110,6 +110,10 @@ class BuildCard
             return '';
         }
 
+        if (!$this->card->set->svgPath) {
+            return '';
+        }
+
         return Storage::url($this->card->set->svgPath);
     }
 

@@ -13,6 +13,7 @@ use App\Domain\Folders\Aggregate\Actions\DeleteFolder;
 use App\Domain\Folders\Models\Folder;
 use Exception;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\Log;
 
 trait WithCollectionCards
 {
@@ -81,6 +82,7 @@ trait WithCollectionCards
         try {
             return (new UpdateCollectionCard)($data)['uuid'];
         } catch (Exception $e) {
+            Log::alert($e);
             return '';
         }
     }
@@ -221,7 +223,7 @@ trait WithCollectionCards
             'cards'     => 0,
         ];
 
-        if ($cards) {
+        if (count($cards) !== 0) {
             $totals = $cards->reduce(function ($carry, $card) {
                 return [
                     'quantity'  => $carry['quantity'] + $card->quantity,
@@ -234,7 +236,7 @@ trait WithCollectionCards
             $response['total_collection_cards'] = $totals;
         }
 
-        if ($collectionCards) {
+        if (count($collectionCards) !== 0) {
             $response['collection_cards'] = [
                 'total_cards' => $collectionCards->count(),
             ];

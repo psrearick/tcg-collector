@@ -88,13 +88,6 @@ class CardShowPresenter implements PresenterInterface, PresentsPrices, PresentsL
         ];
     }
 
-    public function setPrintings() : void
-    {
-        $this->printings = (new GetPrintings)($this->card->oracleId);
-    }
-
-//    private function
-
     private function getCollections() : array
     {
         $userCollections = ModelCollection::all();
@@ -175,5 +168,10 @@ class CardShowPresenter implements PresenterInterface, PresentsPrices, PresentsL
             }, []);
 
         return $this->getCollectionsTotals(collect($matches)->values());
+    }
+
+    private function setPrintings() : void
+    {
+        $this->printings = (new GetPrintings)($this->card->oracleId);
     }
 }

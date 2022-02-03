@@ -21,7 +21,8 @@ class SetFactory extends Factory
             'setId'         => Str::uuid()->toString(),
             'name'          => $this->faker->words(3, true),
             'code'          => $this->faker->text(5),
-            'release_date'  => $this->faker->date(),
+            'releaseDate'   => $this->faker->date(),
+            'isOnlineOnly'  => false,
         ];
     }
 }
