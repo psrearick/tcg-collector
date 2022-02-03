@@ -41,6 +41,7 @@ class PrintingsPresenter implements PresenterInterface
                 $printing->collector_number = $card->collectorNumber;
                 $printing->rarity           = Str::headline($card->rarity);
                 $printing->release_date     = $card->releaseDate;
+                $printing->oracle_id        = $card->oracleId;
 
                 return $printing;
             })
