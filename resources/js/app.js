@@ -18,7 +18,7 @@ const appName =
 
 export const app = createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => require(`./Pages/${name}.vue`),
+    resolve: async (name) => (await import(`./Pages/${name}.vue`)).default,
     setup({ el, app, props, plugin }) {
         const vueApp = createApp({ render: () => h(app, props) })
             .use(plugin)
