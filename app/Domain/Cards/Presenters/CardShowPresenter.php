@@ -128,10 +128,10 @@ class CardShowPresenter implements PresenterInterface, PresentsPrices, PresentsL
 
                 return $data;
             })
-            ->values()
             ->filter(function ($total) {
                 return $total['quantities']['total'] > 0;
             })
+            ->values()
             ->toArray();
     }
 
