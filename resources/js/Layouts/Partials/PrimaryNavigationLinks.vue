@@ -34,7 +34,7 @@
         </jet-nav-link>
         <jet-nav-link
             :href="route('groups.index')"
-            :active="route().current('groups.index')"
+            :active="route().current('groups.*')"
         >
             Group
         </jet-nav-link>

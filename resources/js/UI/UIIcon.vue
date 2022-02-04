@@ -142,7 +142,9 @@
         </svg>
         <svg
             v-if="icon === 'chevron-down'"
-            class="-mr-1 ml-2 h-5 w-5"
+            :class="classes"
+            :height="size"
+            :width="size"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"

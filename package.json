@@ -35,7 +35,8 @@
         "source-map-loader": "^3.0.0",
         "tailwindcss": "^3.0.0",
         "vue": "^3.0.5",
-        "vue-loader": "^16.1.2"
+        "vue-loader": "^16.1.2",
+        "webpack": "^5.68.0"
     },
     "dependencies": {
         "currency.js": "^2.0.4",

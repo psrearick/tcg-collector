@@ -9,7 +9,7 @@
         </template>
         <template #headerRight>
             <div class="">
-                <Link :href="route('group-search.store')">
+                <Link :href="route('groups.search.store')">
                     <ui-button
                         text="Search Group"
                         button-style="primary-dark"

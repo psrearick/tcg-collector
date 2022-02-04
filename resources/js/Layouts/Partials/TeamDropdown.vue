@@ -4,7 +4,7 @@
         <jet-dropdown
             v-if="$page.props.jetstream.hasTeamFeatures"
             align="right"
-            width="60"
+            width="48"
         >
             <template #trigger>
                 <span class="inline-flex rounded-md">
@@ -22,28 +22,20 @@
                             rounded-md
                             text-gray-500
                             bg-white
-                            hover:bg-gray-50
+                            hover:bg-gray-100
                             hover:text-gray-700
                             focus:outline-none
-                            focus:bg-gray-50
-                            active:bg-gray-50
+                            focus:bg-gray-100
+                            active:bg-gray-100
                             transition
                         "
                     >
                         {{ $page.props.user.current_team.name }}
 
-                        <svg
-                            class="ml-2 -mr-0.5 h-4 w-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
+                        <UiIcon
+                            icon="chevron-down"
+                            classes="ml-2 -mr-0.5 h-4 w-4"
+                        />
                     </button>
                 </span>
             </template>
@@ -122,11 +114,13 @@
 <script>
 import JetDropdown from "@/Jetstream/Dropdown.vue";
 import JetDropdownLink from "@/Jetstream/DropdownLink.vue";
+import UiIcon from "@/UI/UIIcon";
 
 export default {
     name: "TeamDropdown",
 
     components: {
+        UiIcon,
         JetDropdown,
         JetDropdownLink,
     },

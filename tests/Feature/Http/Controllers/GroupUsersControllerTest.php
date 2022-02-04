@@ -21,7 +21,7 @@ class GroupUsersControllerTest extends TestCase
 
         $user = \App\Models\User::factory()->create();
 
-        $response = $this->get(route('group-users.show', [$user]));
+        $response = $this->get(route('groups.users.show', [$user]));
 
         $response->assertOk();
 

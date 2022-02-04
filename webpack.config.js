@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
@@ -13,7 +13,7 @@ module.exports = {
     },
     resolve: {
         alias: {
-            '@': path.resolve('resources/js'),
+            "@": path.resolve("resources/js"),
         },
     },
     plugins: [
