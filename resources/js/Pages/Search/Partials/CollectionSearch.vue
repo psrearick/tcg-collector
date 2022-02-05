@@ -1,8 +1,5 @@
 <template>
     <div>
-        <div>
-            <span class="text-lg text-gray-500">Search All Collections</span>
-        </div>
         <card-set-search
             v-model="cardSearchTerm"
             v-model:set-name="setSearchTerm"

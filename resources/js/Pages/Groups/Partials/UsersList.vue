@@ -1,25 +1,38 @@
 <template>
-    <card-list classes="lg:grid-cols-4">
-        <card-list-card
+    <card-list classes="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ui-card
             v-for="(user, userIndex) in users"
             :key="userIndex"
-            :class="filterUser === user.id ? 'bg-gray-200' : ''"
-            :link="true"
+            :active="filterUser === user.id"
+            :mode="filterUser === user.id ? 'primary' : 'default'"
+            padding="p-4"
+            class="cursor-pointer"
+            card-style="white"
             @click.prevent="filterCollections(user.id)"
         >
             <div>
-                <p
-                    class="
-                        mt-1
-                        text-center text-xl
-                        font-semibold
-                        text-gray-900
-                        p-4
-                    "
-                >
-                    {{ user.name }}
-                </p>
-                <div class="flex justify-between p-4">
+                <div class="grid grid-cols-4">
+                    <p
+                        class="
+                            mt-1
+                            text-center text-xl
+                            font-semibold
+                            text-gray-900
+                            col-span-2 col-start-2
+                        "
+                    >
+                        {{ user.name }}
+                    </p>
+                    <div class="text-right">
+                        <ui-icon
+                            v-if="filterUser === user.id"
+                            icon="solid-circle-check"
+                            class="text-primary-500 inline-block"
+                            size="1.5rem"
+                        />
+                    </div>
+                </div>
+                <div class="flex justify-between">
                     <div>
                         <p class="text-sm font-medium text-gray-500 truncate">
                             Value
@@ -38,17 +51,21 @@
                     </div>
                 </div>
             </div>
-        </card-list-card>
+        </ui-card>
     </card-list>
 </template>
 <script>
 import CardList from "@/Components/CardLists/CardList";
 import CardListCard from "@/Components/CardLists/CardListCard";
+import UiCard from "@/UI/UICard";
+import UiIcon from "@/UI/UIIcon";
 
 export default {
-    name: "UsersList",
+    name: "UsersListBackup",
 
     components: {
+        UiCard,
+        UiIcon,
         CardList,
         CardListCard,
     },
