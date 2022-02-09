@@ -21,6 +21,7 @@ class CardsSearchController extends Controller
         }
 
         $cards = (new CardSearchPresenter($searchData))->present();
+
         return response()->json($cards);
     }
 }

@@ -14,14 +14,14 @@ abstract class CardSearchBuilder
 
     public function filterOnCards() : void
     {
-        $term = preg_replace('/[^A-Za-z0-9]/', '', $this->cardSearchData->card);
+        $term        = preg_replace('/[^A-Za-z0-9]/', '', $this->cardSearchData->card);
         $this->cards = $this->cards
             ->where('cards.name_normalized', 'like', '%' . $term . '%');
     }
 
     public function filterOnSets() : void
     {
-        $sets = $this->getSetIds();
+        $sets        = $this->getSetIds();
         $this->cards = $this->cards->whereIn('cards.set_id', $sets);
     }
 

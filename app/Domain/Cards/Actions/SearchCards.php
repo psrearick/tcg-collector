@@ -2,10 +2,10 @@
 
 namespace App\Domain\Cards\Actions;
 
+use App\Domain\Cards\Base\CardSearchBuilder;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Cards\Base\CardSearchBuilder;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchCards extends CardSearchBuilder
@@ -15,7 +15,7 @@ class SearchCards extends CardSearchBuilder
         $this->cardSearchData = $cardSearchData;
 
         /** @var Builder $cards */
-        $cards = $builder ?: Card::notOnlineOnly()->with('set');
+        $cards       = $builder ?: Card::notOnlineOnly()->with('set');
         $this->cards = $cards;
 
         if ($cardSearchData->card) {

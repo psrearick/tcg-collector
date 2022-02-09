@@ -11,9 +11,9 @@ use App\Domain\Cards\DataObjects\CardSearchParameterData;
 
 class CardSearchPresenter implements PresenterInterface
 {
-    private CardSearchData $searchData;
-
     private SearchCards $searchCards;
+
+    private CardSearchData $searchData;
 
     public function __construct(CardSearchDataInterface $searchData)
     {

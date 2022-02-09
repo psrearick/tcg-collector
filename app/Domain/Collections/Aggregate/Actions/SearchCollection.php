@@ -2,8 +2,8 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
-use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Base\CardSearchCollection;
+use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\Collection;
 

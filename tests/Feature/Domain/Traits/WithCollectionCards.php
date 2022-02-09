@@ -83,6 +83,7 @@ trait WithCollectionCards
             return (new UpdateCollectionCard)($data)['uuid'];
         } catch (Exception $e) {
             Log::alert($e);
+
             return '';
         }
     }

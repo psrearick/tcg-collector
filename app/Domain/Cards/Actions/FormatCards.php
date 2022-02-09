@@ -22,7 +22,7 @@ class FormatCards
                         $collectionMap[$s->card_uuid] = [];
                     }
                     $collectionMap[$s->card_uuid][$s->finish] = $s->quantity;
-            });
+                });
         }
 
         if ($search->paginator) {
