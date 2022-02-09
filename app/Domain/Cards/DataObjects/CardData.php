@@ -2,9 +2,7 @@
 
 namespace App\Domain\Cards\DataObjects;
 
-use App\App\Contracts\DataObjectInterface;
-
-class CardData extends CoreCardData implements DataObjectInterface
+class CardData extends CoreCardData
 {
     public array $collected;
 

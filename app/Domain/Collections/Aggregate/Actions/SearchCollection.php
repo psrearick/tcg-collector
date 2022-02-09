@@ -2,42 +2,28 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
-use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
-use App\Domain\Cards\Traits\CardSearchCollection;
+use App\Domain\Cards\Base\CardSearchCollection;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\Collection;
-use App\Support\Collection as SupportCollection;
 
-class SearchCollection
+class SearchCollection extends CardSearchCollection
 {
-    use CardSearchCollection;
-
-    protected SupportCollection $cards;
-
-    protected CardSearchData $cardSearchData;
-
-    protected ?string $uuid;
-
     public function __invoke(CollectionCardSearchParameterData $collectionCardSearchParameterData) : CardSearchResultsData
     {
         $this->cardSearchData = $collectionCardSearchParameterData->search;
         $this->cards          = $collectionCardSearchParameterData->data;
         $this->uuid           = $collectionCardSearchParameterData->uuid;
 
-        if (!$this->isValidCardSearch()) {
-            if ($this->cards) {
-                return new CardSearchResultsData(['collection' => $this->cards]);
-            }
-
-            return new CardSearchResultsData([]);
+        if (count($this->cards) !== 0) {
+            return new CardSearchResultsData(['collection' => $this->cards]);
         }
 
-        if ($this->uuid && !$this->cards) {
-            $this->cards = Collection::where('uuid', '=', $this->uuid);
+        if ($this->uuid) {
+            $this->cards = Collection::where('uuid', '=', $this->uuid)->get();
         }
 
-        if (!$this->cards) {
+        if (count($this->cards) === 0) {
             return new CardSearchResultsData([]);
         }
 
@@ -58,7 +44,7 @@ class SearchCollection
         }
 
         return new CardSearchResultsData([
-            'collection'       => $this->cards->values(),
+            'collection' => $this->cards->values(),
         ]);
     }
 }

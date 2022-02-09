@@ -38,7 +38,7 @@
                 <span class="mb-4 block text-lg text-gray-500">
                     Search All Cards
                 </span>
-                <div><card-search /></div>
+                <card-search />
             </div>
         </div>
     </app-layout>
@@ -48,7 +48,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CollectionSearch from "@/Pages/Search/Partials/CollectionSearch";
 import UiRadioCardList from "@/UI/Form/UIRadioCardList";
-import CardSearch from "@/Pages/Cards/Partials/CardSearch";
+import CardSearch from "@/Pages/Search/Partials/CardSearch";
 
 export default {
     name: "Show",
