@@ -13,8 +13,8 @@ class FormatCollectionCards
     public function __invoke(Collection $builder, CollectionCardSearchParameterData $collectionCardSearchParameterData) : LengthAwarePaginator
     {
         $builder->transform(function ($card) {
-            $card->display_price = Money::ofMinor($card->price, 'USD')->formatTo('en_US');
-            $card->display_acquired_price = Money::ofMinor($card->acquired_price, 'USD')->formatTo('en_US');
+            $card->display_price = Money::ofMinor((float) $card->price, 'USD')->formatTo('en_US');
+            $card->display_acquired_price = Money::ofMinor((float) $card->acquired_price, 'USD')->formatTo('en_US');
 
             return $card;
         });

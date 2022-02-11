@@ -6,6 +6,7 @@ use App\Domain\Cards\Base\CardSearchCollection;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\Collection;
+use App\Support\Collection as SupportCollection;
 
 class SearchCollection extends CardSearchCollection
 {
@@ -15,12 +16,14 @@ class SearchCollection extends CardSearchCollection
         $this->cards          = $collectionCardSearchParameterData->data;
         $this->uuid           = $collectionCardSearchParameterData->uuid;
 
-        if (count($this->cards) !== 0) {
-            return new CardSearchResultsData(['collection' => $this->cards]);
-        }
+        // If the search is invalid and there are cards, return them
+        // we stopped checking for valid search
+//        if (count($this->cards) !== 0) {
+//            return new CardSearchResultsData(['collection' => $this->cards]);
+//        }
 
-        if ($this->uuid) {
-            $this->cards = Collection::where('uuid', '=', $this->uuid)->get();
+        if ($this->uuid && count($this->cards) === 0) {
+            $this->cards = Collection::uuid($this->uuid)->cards;
         }
 
         if (count($this->cards) === 0) {
@@ -44,7 +47,7 @@ class SearchCollection extends CardSearchCollection
         }
 
         return new CardSearchResultsData([
-            'collection' => $this->cards->values(),
+            'collection' => new SupportCollection($this->cards->values()),
         ]);
     }
 }

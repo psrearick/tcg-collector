@@ -36,7 +36,7 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
      * @test
      * @dataProvider invalidSearch
      */
-    public function store_returns_an_empty_ok_response($request)
+    public function store_returns_an_empty_response_for_an_invalid_search(array $request) : void
     {
         $collection = $this->root->getCollection();
 
@@ -52,7 +52,7 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
         }
 
         $this->assertEquals(0, $responseData['totals']['total_cards']);
-        $this->assertEquals(0, count($responseData['list']['data']));
+        $this->assertCount(0, $responseData['list']['data']);
         $this->assertEquals($collection->uuid, $responseData['collection']['uuid']);
     }
 
@@ -60,7 +60,7 @@ class CollectionsEditListSearchControllerTest extends CardCollectionTestCase
      * @test
      * @dataProvider validSearch
      */
-    public function store_returns_an_ok_response($request)
+    public function store_returns_an_ok_response(array $request) : void
     {
         $collection = $this->root->getCollection();
 

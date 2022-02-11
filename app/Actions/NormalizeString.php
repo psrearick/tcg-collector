@@ -4,14 +4,16 @@ namespace App\Actions;
 
 class NormalizeString
 {
-    public function __invoke(string $string) : string
+    public function __invoke(?string $string) : string
     {
+        $string ??= '';
+
         $replaced = preg_replace('/[^A-Za-z0-9]/', '', $string);
 
         return $this->remove_accents($replaced);
     }
 
-    protected function remove_accents($string) : string
+    private function remove_accents(string $string) : string
     {
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;

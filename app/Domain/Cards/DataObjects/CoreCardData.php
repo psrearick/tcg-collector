@@ -3,6 +3,8 @@
 namespace App\Domain\Cards\DataObjects;
 
 use App\App\Contracts\DataObjectInterface;
+use Illuminate\Support\Facades\Log;
+use JsonException;
 
 abstract class CoreCardData implements DataObjectInterface
 {
@@ -36,12 +38,12 @@ abstract class CoreCardData implements DataObjectInterface
     {
         $this->collector_number = $data['collector_number'] ?? '';
         $this->features         = $data['features'] ?? '';
-        $this->finishes         = $data['finishes'] ?? [];
+        $this->finishes         = $this->getArrayValue($data['finishes'] ?? []);
         $this->id               = $data['id'] ?? null;
         $this->image            = $data['image'] ?? '';
         $this->name             = $data['name'] ?? '';
         $this->name_normalized  = $data['name_normalized'] ?? '';
-        $this->prices           = $data['prices'] ?? [];
+        $this->prices           = $this->getArrayValue($data['prices'] ?? [], true);
         $this->set_id           = $data['set_id'] ?? '';
         $this->set_code         = strtoupper($data['set_code'] ?? '');
         $this->set_image        = $data['set_image'] ?? '';
@@ -65,5 +67,23 @@ abstract class CoreCardData implements DataObjectInterface
             'set_name'         => $this->set_name,
             'uuid'             => $this->uuid,
         ];
+    }
+
+    private function getArrayValue(mixed $value, bool $associative = false) : array
+    {
+        if (is_string($value)) {
+            try {
+                $value = json_decode($value, $associative, 512, JSON_THROW_ON_ERROR);
+            } catch (JsonException $exception) {
+                Log::alert($exception);
+                return [];
+            }
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        return [];
     }
 }

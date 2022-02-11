@@ -5,11 +5,15 @@ namespace App\Domain\Collections\Aggregate\Actions;
 use App\Domain\Prices\Aggregate\DataObjects\SummaryData;
 use Brick\Math\BigInteger;
 use Brick\Math\RoundingMode;
+use Brick\Money\Exception\UnknownCurrencyException;
 use Brick\Money\Money;
 use Illuminate\Support\Collection;
 
 class CalculateSummary
 {
+    /**
+     * @throws UnknownCurrencyException
+     */
     public function __invoke(Collection $collectionItems) : SummaryData
     {
         $totals = [
