@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\CardController;
+use App\Http\Controllers\CardsSearchController;
 use App\Http\Controllers\CollectionCardsController;
 use App\Http\Controllers\CollectionCardsDeleteController;
 use App\Http\Controllers\CollectionCardsMoveController;
@@ -53,6 +54,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('cards/{card}', [CardController::class, 'show'])->name('cards/show');
+    Route::post('cards-search', [CardsSearchController::class, 'store'])->name('cards-search.store');
     Route::get('collections/index', [CollectionsListController::class, 'index'])->name('collections-list.index');
     Route::patch('collections/move', [CollectionsMoveController::class, 'update'])->name('collections-move.update');
     Route::post('collections/{collection}/cards/move', [CollectionCardsMoveController::class, 'update'])->name('collection-cards-move.update');

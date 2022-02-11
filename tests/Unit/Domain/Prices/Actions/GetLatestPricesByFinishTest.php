@@ -25,7 +25,7 @@ class GetLatestPricesByFinishTest extends CardCollectionTestCase
 
         foreach ($card->prices as $price) {
             $finish = Str::headline((new MatchType)($price->type));
-            $value = Money::ofMinor($price->price, 'USD')->formatTo('en_US');
+            $value  = Money::ofMinor($price->price, 'USD')->formatTo('en_US');
             $this->assertEquals($value, $latest[$finish]);
         }
     }

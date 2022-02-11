@@ -32,12 +32,14 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <jet-button
+                <ui-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    button-style="primary-dark"
+                    type="submit"
                 >
                     Email Password Reset Link
-                </jet-button>
+                </ui-button>
             </div>
         </form>
     </jet-authentication-card>
@@ -48,17 +50,17 @@ import { defineComponent } from "vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import JetAuthenticationCard from "@/Jetstream/AuthenticationCard.vue";
 import JetAuthenticationCardLogo from "@/Jetstream/AuthenticationCardLogo.vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import JetValidationErrors from "@/Jetstream/ValidationErrors.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
+        UiButton,
         Head,
         JetAuthenticationCard,
         JetAuthenticationCardLogo,
-        JetButton,
         JetInput,
         JetLabel,
         JetValidationErrors,

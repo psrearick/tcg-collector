@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
+use RuntimeException;
 
 class UpdateCollectionCard
 {
@@ -27,42 +28,34 @@ class UpdateCollectionCard
      */
     public function __invoke(array $data) : array
     {
+        $uuid         = $data['uuid'];
+        $this->uuid   = $uuid;
+        $this->change = $data['change'];
+        $updated      = $this->updateQuantity();
+        $eventData    = [
+            'uuid'          => $uuid,
+            'change'        => $data['change'],
+            'updated'       => $updated['collected'],
+            'quantity_diff' => $updated['quantity_diff'],
+            'from'          => $data['change']['from'] ?? [],
+        ];
+
         $lock = Cache::lock('saving-collection-card', 20);
 
-        try {
-            $lock->block(15);
-
-            try {
-                $uuid         = $data['uuid'];
-                $this->uuid   = $uuid;
-                $this->change = $data['change'];
-                $updated      = $this->updateQuantity();
-            } catch (Exception $e) {
-                Cache::restoreLock('saving-collection-card', $lock->owner())->release();
-
-                throw $e;
-            }
-
-            $eventData    = [
-                'uuid'          => $uuid,
-                'change'        => $data['change'],
-                'updated'       => $updated['collected'],
-                'quantity_diff' => $updated['quantity_diff'],
-                'from'          => $data['change']['from'] ?? [],
-                'lock'          => $lock->owner(),
-            ];
-
+        $lock->block(15, function () use ($uuid, $eventData, $lock) {
+            $eventData['lock'] = $lock->owner();
             CollectionAggregateRoot::retrieve($uuid)
                 ->updateCollectionCard($eventData)
                 ->persist();
-        } catch (LockTimeoutException $e) {
-            throw $e;
-        }
+        });
 
         return $updated['card'];
     }
 
-    protected function updateQuantity() : array
+    /**
+     * @throws Exception
+     */
+    private function updateQuantity() : array
     {
         $requestedChange = $this->change['change'];
         $collectionUuid  = $this->uuid;
@@ -89,18 +82,17 @@ class UpdateCollectionCard
         ]);
 
         $cardBuilder    = Card::where('uuid', '=', $this->change['id']);
-        $formattedCards = (new FormatCards)($cardBuilder, $searchData);
-        $formattedCard  = $formattedCards->first();
+        $formattedCard  = (new FormatCards())($cardBuilder, $searchData)->first();
         if (!$formattedCard) {
-            throw new Exception('no card found with that uuid');
+            throw new RuntimeException('no card found with that uuid');
         }
 
-        if (!in_array($this->change['finish'], $formattedCard['finishes'])) {
-            throw new Exception('invalid finish');
+        if (!in_array($this->change['finish'], $formattedCard['finishes'], true)) {
+            throw new RuntimeException('invalid finish');
         }
 
         if (!$formattedCard['quantities'] && $this->change['change'] < 0) {
-            throw new Exception('invalid quantity');
+            throw new RuntimeException('invalid quantity');
         }
 
         $price                  = $formattedCard['prices'][$this->change['finish']] ?? 0;

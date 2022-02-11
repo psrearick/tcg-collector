@@ -48,12 +48,14 @@
                 Saved.
             </jet-action-message>
 
-            <jet-button
+            <ui-button
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                button-style="primary-dark"
+                type="submit"
             >
                 Save
-            </jet-button>
+            </ui-button>
         </template>
     </jet-form-section>
 </template>
@@ -61,16 +63,16 @@
 <script>
 import { defineComponent } from "vue";
 import JetActionMessage from "@/Jetstream/ActionMessage";
-import JetButton from "@/Jetstream/Button";
 import JetFormSection from "@/Jetstream/FormSection";
 import JetInput from "@/Jetstream/Input";
 import JetInputError from "@/Jetstream/InputError";
 import JetLabel from "@/Jetstream/Label";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
+        UiButton,
         JetActionMessage,
-        JetButton,
         JetFormSection,
         JetInput,
         JetInputError,

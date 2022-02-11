@@ -22,12 +22,14 @@
 
         <form @submit.prevent="submit">
             <div class="mt-4 flex items-center justify-between">
-                <jet-button
+                <ui-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    button-style="primary-dark"
+                    type="submit"
                 >
                     Resend Verification Email
-                </jet-button>
+                </ui-button>
 
                 <Link
                     :href="route('logout')"
@@ -45,20 +47,23 @@
 import { defineComponent } from "vue";
 import JetAuthenticationCard from "@/Jetstream/AuthenticationCard.vue";
 import JetAuthenticationCardLogo from "@/Jetstream/AuthenticationCardLogo.vue";
-import JetButton from "@/Jetstream/Button.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
+        UiButton,
         Head,
         JetAuthenticationCard,
         JetAuthenticationCardLogo,
-        JetButton,
         Link,
     },
 
     props: {
-        status: String,
+        status: {
+            type: String,
+            default: "",
+        },
     },
 
     data() {

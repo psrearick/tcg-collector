@@ -3,9 +3,9 @@
         <div class="w-full flex">
             <div :class="containerClasses">
                 <div v-if="cardSearch" :class="cardContainerClasses">
-                    <label class="ml-3 text-xs text-gray-500" for="searchCard"
-                        >Card</label
-                    >
+                    <label class="ml-3 text-xs text-gray-500" for="searchCard">
+                        Card
+                    </label>
                     <div class="relative">
                         <div :class="iconClass">
                             <ui-icon icon="search" />
