@@ -2,6 +2,7 @@
 
 namespace App\Domain\Folders\Models;
 
+use App\Domain\Base\Collection as BaseCollection;
 use App\Domain\Base\Model;
 use App\Domain\Collections\Models\Collection;
 use App\Models\User;
@@ -32,6 +33,11 @@ class FolderRoot extends Model
     public const SCOPE = 'notShared';
 
     protected $guarded = [];
+
+    public function baseCollections() : HasMany
+    {
+        return $this->hasMany(BaseCollection::class, 'folder_uuid', 'uuid');
+    }
 
     public function collections() : HasMany
     {

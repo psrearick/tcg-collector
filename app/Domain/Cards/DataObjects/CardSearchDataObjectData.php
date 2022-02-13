@@ -11,6 +11,5 @@ class CardSearchDataObjectData extends CoreCardData
         $this->name             = $data['card_name'] ?? '';
         $this->name_normalized  = $data['card_name_normalized'] ?? '';
         $this->uuid             = $data['card_uuid'] ?? '';
-
     }
 }

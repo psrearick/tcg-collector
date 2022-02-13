@@ -76,6 +76,7 @@ abstract class CoreCardData implements DataObjectInterface
                 $value = json_decode($value, $associative, 512, JSON_THROW_ON_ERROR);
             } catch (JsonException $exception) {
                 Log::alert($exception);
+
                 return [];
             }
         }

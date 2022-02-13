@@ -2,12 +2,18 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
-use App\App\Scopes\UserScope;
-use App\App\Scopes\UserScopeNotShared;
+use App\Actions\GetGainLossValues;
 use App\Domain\Folders\Models\Folder;
 
 class GetFolderTotals
 {
+    private GetGainLossValues $getGainLossValues;
+
+    public function __construct()
+    {
+        $this->getGainLossValues = new GetGainLossValues();
+    }
+
     public function __invoke(Folder $folder, bool $forceUpdate = false) : array
     {
         $totals = [
@@ -16,10 +22,7 @@ class GetFolderTotals
             'acquired_value'    => 0,
         ];
 
-        $folder->collections()
-        ->withoutGlobalScopes([UserScopeNotShared::class, UserScope::class])
-        ->get()
-        ->each(function ($collection) use (&$totals, $forceUpdate) {
+        $folder->baseCollections()->get()->each(function ($collection) use (&$totals, $forceUpdate) {
             $collectionTotals = optional($collection->summary)->toArray();
             if ($forceUpdate || !$collectionTotals) {
                 $getCollectionTotals = new GetCollectionTotals;
@@ -31,24 +34,22 @@ class GetFolderTotals
             $totals['acquired_value'] += $collectionTotals['acquired_value'];
         });
 
-        $folder->children->each(function ($descenant) use (&$totals, $forceUpdate) {
-            $descentantTotals = optional($descenant->summary)->toArray();
-            if ($forceUpdate || !$descentantTotals) {
+        $folder->children->each(function ($descendant) use (&$totals, $forceUpdate) {
+            $descendantTotals = optional($descendant->summary)->toArray();
+            if ($forceUpdate || !$descendantTotals) {
                 $getFolderTotals = new GetFolderTotals;
-                $descentantTotals = $getFolderTotals($descenant);
+                $descendantTotals = $getFolderTotals($descendant);
             }
 
-            $totals['total_cards'] += $descentantTotals['total_cards'];
-            $totals['current_value'] += $descentantTotals['current_value'];
-            $totals['acquired_value'] += $descentantTotals['acquired_value'];
+            $totals['total_cards'] += $descendantTotals['total_cards'];
+            $totals['current_value'] += $descendantTotals['current_value'];
+            $totals['acquired_value'] += $descendantTotals['acquired_value'];
         });
 
-        $gainLoss        = $totals['current_value'] - $totals['acquired_value'];
-        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
-        $gainLossPercent = $totals['acquired_value'] != 0 ? $gainLoss / $totals['acquired_value'] : $gainLossPercent;
+        $gainLoss = $this->getGainLossValues->handle($totals['current_value'], $totals['acquired_value']);
 
-        $totals['gain_loss']         = $gainLoss;
-        $totals['gain_loss_percent'] = $gainLossPercent;
+        $totals['gain_loss']         = $gainLoss['gain_loss'];
+        $totals['gain_loss_percent'] = $gainLoss['gain_loss_percent'];
 
         return $totals;
     }

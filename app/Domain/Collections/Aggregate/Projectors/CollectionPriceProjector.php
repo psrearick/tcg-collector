@@ -17,8 +17,8 @@ class CollectionPriceProjector extends Projector
         CollectionCardSummary::where('card_uuid', '=', $attributes['card_uuid'])
             ->where('finish', '=', (new MatchType)($attributes['type']))
             ->update([
-            'current_price' => $attributes['price'],
-        ]);
+                'current_price' => $attributes['price'],
+            ]);
 
         // NOTE:
         // adding this will update each collection summary every time a price

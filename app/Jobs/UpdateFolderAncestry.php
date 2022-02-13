@@ -19,7 +19,7 @@ class UpdateFolderAncestry implements ShouldQueue
             ->groupBy('id')
             ->having('depth', '=', 0)
             ->get()
-            ->each(fn ($folder) => $this->updateFolderDescendants($folder));
+            ->each(fn (Folder $folder) => $this->updateFolderDescendants($folder));
     }
 
     private function updateFolderDescendants(Folder $folder) : void
