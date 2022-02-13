@@ -3,18 +3,14 @@
 namespace App\App\Console\Commands;
 
 use App\Jobs\ImportScryfallData;
-use Symfony\Component\Console\Command\Command;
+use Illuminate\Console\Command;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
 class ImportPricing extends Command
 {
-    protected string $description = 'Import pricing data from scryfall';
+    protected $description = 'Import pricing data from scryfall';
 
-    protected string $signature = 'import:prices';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $signature = 'import:prices';
 
     public function handle() : int
     {
@@ -27,6 +23,6 @@ class ImportPricing extends Command
 
         ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
 
-        return Command::SUCCESS;
+        return SymfonyCommand::SUCCESS;
     }
 }
