@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Domain\Cards\Models\Card;
-use App\Domain\Prices\Aggregate\Actions\createPriceProvider;
+use App\Domain\Prices\Aggregate\Actions\CreatePriceProvider;
 use App\Domain\Prices\Models\Price;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -40,7 +40,7 @@ class CreateAndPurgePricing implements ShouldQueue
             return;
         }
 
-        $createPriceProvider = new createPriceProvider;
+        $createPriceProvider = new CreatePriceProvider;
         $provider            = $createPriceProvider(['name' => 'scryfall']);
 
         $card     = $this->card ?: Card::where('cardId', '=', $this->cardData['id'])->first();
@@ -54,7 +54,7 @@ class CreateAndPurgePricing implements ShouldQueue
                 ->where('card_uuid', '=', $card->uuid)
                 ->where('provider_uuid', '=', $provider)
                 ->where('type', '=', $type)
-                ->where(DB::raw('DATE(created_at)'), '<', Carbon::today())
+                ->whereDate('created_at', '<', Carbon::now())
                 ->delete();
         }
     }

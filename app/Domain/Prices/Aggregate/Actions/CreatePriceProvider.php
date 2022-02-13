@@ -7,7 +7,7 @@ use App\Domain\Prices\Aggregate\PriceAggregateRoot;
 use App\Domain\Prices\Models\PriceProvider;
 use Illuminate\Support\Str;
 
-class createPriceProvider
+class CreatePriceProvider
 {
     public function __invoke(array $priceProvider) : string
     {
