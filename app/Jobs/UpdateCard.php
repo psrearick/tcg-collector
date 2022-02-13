@@ -44,11 +44,18 @@ class UpdateCard implements ShouldQueue
         }
     }
 
-    private function updateCard(array $cardData) : Card
+    private function updateCard(array $cardData) : ?Card
     {
         $set = Set::where('setId', '=', $cardData['set_id'])->first();
+        if (!$set) {
+            return null;
+        }
 
-        echo '    Updating Card: ' . $set->name . ': ' . $cardData['name'] ?? '' . PHP_EOL;
+        $setName = $set->name ?? '';
+
+        echo '    Updating Card: ' . $setName . ': ' . ($cardData['name'] ?? '') . PHP_EOL;
+
+        /** @var Card $card */
         $card = $set->cards()->firstOrCreate([
             'cardId'            => $cardData['id'] ?? null,
         ], [
@@ -133,7 +140,7 @@ class UpdateCard implements ShouldQueue
 
     private function updatePricing(array $cardData, ?Card $card = null) : void
     {
-        CreatePricing::dispatch($cardData, $card);
+        CreateAndPurgePricing::dispatch($cardData, $card);
         // UpdatePricing::dispatch($cardData, $card);
     }
 

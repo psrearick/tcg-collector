@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use pcrov\JsonReader\Exception;
 use pcrov\JsonReader\InputStream\IOException;
 use pcrov\JsonReader\InvalidArgumentException;
@@ -21,7 +22,7 @@ class ImportScryfallData implements ShouldQueue
 
     private DownloadFileAction $downloadFile;
 
-    private array $options = [];
+    private array $options;
 
     /**
      * Create a new job instance.
@@ -60,6 +61,7 @@ class ImportScryfallData implements ShouldQueue
             try {
                 $this->processCardData($save_file_loc);
             } catch (InvalidArgumentException | RootException $e) {
+                Log::alert($e);
             }
         }
 
@@ -103,6 +105,7 @@ class ImportScryfallData implements ShouldQueue
         try {
             $reader->open($fileName);
         } catch (IOException | \InvalidArgumentException $e) {
+            Log::alert($e);
         }
 
         $reader->read();
@@ -111,7 +114,7 @@ class ImportScryfallData implements ShouldQueue
         while ($reader->type() === JsonReader::OBJECT) {
             $cardData = $reader->value();
 
-            if ($cardData['object'] == 'card') {
+            if ($cardData['object'] === 'card') {
                 UpdateCard::dispatch($cardData, $this->options)->onQueue('long-running-queue');
             }
 
@@ -126,8 +129,7 @@ class ImportScryfallData implements ShouldQueue
      */
     private function updateSets() : void
     {
-        $sets = Http::get('https://api.scryfall.com/sets')->json()['data'];
-        foreach ($sets as $set) {
+        foreach (Http::get('https://api.scryfall.com/sets')->json()['data'] as $set) {
             UpdateSet::dispatch($set)->onQueue('long-running-queue');
         }
     }
@@ -137,8 +139,7 @@ class ImportScryfallData implements ShouldQueue
      */
     private function updateSymbols() : void
     {
-        $symbols = Http::get('https://api.scryfall.com/symbology')->json()['data'];
-        foreach ($symbols as $symbol) {
+        foreach (Http::get('https://api.scryfall.com/symbology')->json()['data'] as $symbol) {
             UpdateSymbol::dispatch($symbol)->onQueue('long-running-queue');
         }
     }
