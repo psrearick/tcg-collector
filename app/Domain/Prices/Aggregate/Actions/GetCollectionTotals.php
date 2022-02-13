@@ -2,10 +2,18 @@
 
 namespace App\Domain\Prices\Aggregate\Actions;
 
+use App\Actions\GetGainLossValues;
 use App\Domain\Base\Collection;
 
 class GetCollectionTotals
 {
+    private GetGainLossValues $getGainLossValues;
+
+    public function __construct()
+    {
+        $this->getGainLossValues = new GetGainLossValues();
+    }
+
     public function __invoke(Collection $collection) : array
     {
         $totals = [
@@ -31,12 +39,12 @@ class GetCollectionTotals
             $totals['acquired_value'] += $count * $card->pivot->price_when_added;
         });
 
-        $gainLoss        = $totals['current_value'] - $totals['acquired_value'];
-        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
-        $gainLossPercent = $totals['acquired_value'] != 0 ? $gainLoss / $totals['acquired_value'] : $gainLossPercent;
+        $gainLoss = $this->getGainLossValues->handle($totals['current_value'], $totals['acquired_value']);
 
-        $totals['gain_loss']         = $gainLoss;
-        $totals['gain_loss_percent'] = $gainLossPercent;
+        $totals['gain_loss']         = $gainLoss['gain_loss'];
+        $totals['gain_loss_percent'] = $gainLoss['gain_loss_percent'];
+
+        ray($totals);
 
         return $totals;
     }

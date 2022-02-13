@@ -2,6 +2,7 @@
 
 namespace App\Domain\Prices\Aggregate\Projectors;
 
+use App\Actions\GetGainLossValues;
 use App\Domain\Collections\Aggregate\Events\CollectionCardUpdated;
 use App\Domain\Collections\Models\Collection;
 use App\Domain\Folders\Models\Folder;
@@ -12,6 +13,13 @@ use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class SummaryProjector extends Projector
 {
+    private GetGainLossValues $getGainLossValues;
+
+    public function __construct()
+    {
+        $this->getGainLossValues = new GetGainLossValues();
+    }
+
     public function onCollectionCardUpdated(CollectionCardUpdated $collectionCardUpdated) : void
     {
         $attributes = $collectionCardUpdated->collectionCardAttributes;
@@ -48,26 +56,27 @@ class SummaryProjector extends Projector
 
         // get totals
         $totalCards      = $totals['total_cards'] + $quantity;
-        $currentValue    = $priceChange <> 0 ? $price : ($totals['current_value'] + $valueChange);
+        $currentValue    = $priceChange !== 0 ? $price : ($totals['current_value'] + $valueChange);
         $acquiredValue   = $totals['acquired_value'] + $valueDiff;
 
         // calculate gain/loss
-        $gainLoss        = $currentValue - $acquiredValue;
-        $gainLossPercent = $gainLoss == 0 ? 0 : 1;
-        $gainLossPercent = $acquiredValue != 0 ? $gainLoss / $acquiredValue : $gainLossPercent;
+        $gainLoss = $this->getGainLossValues->handle($currentValue, $acquiredValue);
 
         return [
             'total_cards'       => $totalCards,
             'current_value'     => $currentValue,
             'acquired_value'    => $acquiredValue,
-            'gain_loss'         => $gainLoss,
-            'gain_loss_percent' => $gainLossPercent,
+            'gain_loss'         => $gainLoss['gain_loss'],
+            'gain_loss_percent' => $gainLoss['gain_loss_percent'],
         ];
     }
 
     private function updateCollectionSummary(array $attributes) : void
     {
         $collection = Collection::uuid($attributes['uuid']);
+        if (!$collection) {
+            return;
+        }
 
         // get summary or data for a new one
         $totals = optional($collection->summary)->toArray();
@@ -87,6 +96,9 @@ class SummaryProjector extends Projector
     private function updateFolderSummaries(array $attributes) : void
     {
         $collection = Collection::uuid($attributes['uuid']);
+        if (!$collection) {
+            return;
+        }
 
         if (!$folder = $collection->folder) {
             return;

@@ -6,6 +6,7 @@ use App\Domain\Collections\Aggregate\Actions\UpdateCollectionCard;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Domain\Prices\Aggregate\Actions\MatchType;
 use App\Domain\Prices\Aggregate\Events\PriceCreated;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class CollectionPriceProjector extends Projector
@@ -13,10 +14,9 @@ class CollectionPriceProjector extends Projector
     public function onPriceCreated(PriceCreated $priceCreated) : void
     {
         $attributes = $priceCreated->priceAttributes;
-        $summaries  = CollectionCardSummary::where('card_uuid', '=', $attributes['card_uuid'])
-            ->where('finish', '=', (new MatchType)($attributes['type']));
-        $from       = $summaries->get();
-        $summaries->update([
+        CollectionCardSummary::where('card_uuid', '=', $attributes['card_uuid'])
+            ->where('finish', '=', (new MatchType)($attributes['type']))
+            ->update([
             'current_price' => $attributes['price'],
         ]);
 
@@ -34,6 +34,9 @@ class CollectionPriceProjector extends Projector
         // });
     }
 
+    /**
+     * @throws LockTimeoutException
+     */
     public function updateCard(CollectionCardSummary $summary, CollectionCardSummary $previous) : void
     {
         $data = [
