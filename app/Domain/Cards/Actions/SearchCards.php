@@ -2,52 +2,45 @@
 
 namespace App\Domain\Cards\Actions;
 
+use App\Domain\Cards\Base\CardSearchBuilder;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Cards\Models\Card;
-use App\Domain\Cards\Traits\CardSearchBuilder;
 use Illuminate\Database\Eloquent\Builder;
 
-class SearchCards
+class SearchCards extends CardSearchBuilder
 {
-    use CardSearchBuilder;
-
-    protected Builder $cards;
-
-    protected CardSearchData $cardSearchData;
-
     public function __invoke(CardSearchData $cardSearchData, ?Builder $builder = null) : CardSearchResultsData
     {
         $this->cardSearchData = $cardSearchData;
-        if (!$this->isValidCardSearch()) {
-            return new CardSearchResultsData([]);
-        }
 
-        $this->cards = $builder ?: Card::with('set')->notOnlineOnly();
+        /** @var Builder $cards */
+        $cards       = $builder ?: Card::notOnlineOnly()->with('set');
+        $this->cards = $cards;
 
-        if ($this->cardSearchData->card) {
+        if ($cardSearchData->card) {
             $this->filterOnCards();
         }
 
-        if ($this->cardSearchData->set) {
+        if ($cardSearchData->set) {
             $this->filterOnSets();
         }
 
-        if ($this->cardSearchData->set_id) {
-            $this->cards->where('set_id', '=', $this->cardSearchData->set_id);
+        if ($cardSearchData->set_id) {
+            $cards->where('set_id', '=', $cardSearchData->set_id);
         }
 
-        if ($this->cardSearchData->uuid) {
-            $this->cards->where('uuid', '=', $this->cardSearchData->uuid);
+        if ($cardSearchData->uuid) {
+            $cards->where('uuid', '=', $cardSearchData->uuid);
         }
 
-        if ($this->cardSearchData->sort) {
+        if ($cardSearchData->sort) {
             $this->sort();
         }
 
         return new CardSearchResultsData([
-            'builder'   => $this->cards,
-            'search'    => $this->cardSearchData,
+            'builder'   => $cards,
+            'search'    => $cardSearchData,
         ]);
     }
 }

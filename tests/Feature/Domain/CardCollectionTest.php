@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Domain;
 
-use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;
 
 class CardCollectionTest extends CardCollectionTestCase
@@ -37,11 +36,10 @@ class CardCollectionTest extends CardCollectionTestCase
     {
         $this->act();
         $uuid = $this->createCollection();
-        $this->createCollectionCard($uuid, 0, '', 1);
+        $this->createCollectionCard($uuid);
         $this->createCollectionCard($uuid, 1, '', 4);
         $this->createCollectionCard($uuid, 2, '', 5);
-        $collection      = Collection::uuid($uuid);
-        $collectionCards = $collection->cards;
+        $collectionCards = Collection::uuid($uuid)->cards;
 
         $this->assertEquals(10, $collectionCards->sum('pivot.quantity'));
         $this->assertEquals(3, $collectionCards->count());
@@ -117,7 +115,6 @@ class CardCollectionTest extends CardCollectionTestCase
         // get state
         $collection->refresh();
         $collectionCards    = $collection->cardSummaries;
-        $card               = $collectionCards->first();
         $count              = $collectionCards->count();
         $quantity           = $collectionCards->sum('quantity');
 
@@ -133,9 +130,9 @@ class CardCollectionTest extends CardCollectionTestCase
 
         // get collection card
         $collectionUuid = $this->createCollection();
-        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
-        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
-        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil');
+        $this->createCollectionCard($collectionUuid, 5, 'foil');
+        $this->createCollectionCard($collectionUuid, 5, 'foil');
 
         // get model
         $collection         = Collection::uuid($collectionUuid);
@@ -147,7 +144,7 @@ class CardCollectionTest extends CardCollectionTestCase
         $this->assertCount(1, $collectionCards);
 
         // decrement quantity by one
-        $this->createCollectionCard($collectionUuid, 5, 'foil', -1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil', -1);
 
         // refresh state
         $collection->refresh();
@@ -172,7 +169,6 @@ class CardCollectionTest extends CardCollectionTestCase
         // get state
         $collection->refresh();
         $collectionCards    = $collection->cardSummaries;
-        $card               = $collectionCards->first();
         $count              = $collectionCards->count();
         $quantity           = $collectionCards->sum('quantity');
 
@@ -188,12 +184,11 @@ class CardCollectionTest extends CardCollectionTestCase
 
         // get collection card
         $collectionUuid = $this->createCollection();
-        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil');
 
         // // get model
         $collection         = Collection::uuid($collectionUuid);
         $collectionCards    = $collection->cardSummaries;
-        $card               = $collectionCards->first();
         $quantity           = $collectionCards->sum('quantity');
 
         // // assertions
@@ -201,13 +196,12 @@ class CardCollectionTest extends CardCollectionTestCase
         $this->assertCount(1, $collectionCards);
 
         // increment quantity
-        $this->createCollectionCard($collectionUuid, 5, 'foil', 1, 'NM');
+        $this->createCollectionCard($collectionUuid, 5, 'foil');
 
         // get state
         $collection->refresh();
 
         $collectionCards    = $collection->cardSummaries;
-        $card               = $collectionCards->first();
         $count              = $collectionCards->count();
         $quantity           = $collectionCards->sum('quantity');
         $first              = $collectionCards->first();
@@ -220,7 +214,7 @@ class CardCollectionTest extends CardCollectionTestCase
         $this->assertNull($second);
     }
 
-    public function test_a_collection_card_cannot_decrease_in_quantity_beyond_zero()
+    public function test_a_collection_card_cannot_decrease_in_quantity_beyond_zero() : void
     {
         // set user
         $this->act();
@@ -250,7 +244,6 @@ class CardCollectionTest extends CardCollectionTestCase
         // get state
         $collection->refresh();
         $collectionCards    = $collection->cardSummaries;
-        $card               = $collectionCards->first();
         $count              = $collectionCards->count();
         $quantity           = $collectionCards->sum('quantity');
 

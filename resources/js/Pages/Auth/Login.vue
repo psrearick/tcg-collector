@@ -56,13 +56,15 @@
                     Forgot your password?
                 </Link>
 
-                <jet-button
+                <ui-button
                     class="ml-4"
+                    button-style="primary-dark"
+                    type="submit"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
                     Log in
-                </jet-button>
+                </ui-button>
             </div>
         </form>
     </jet-authentication-card>
@@ -72,19 +74,19 @@
 import { defineComponent } from "vue";
 import JetAuthenticationCard from "@/Jetstream/AuthenticationCard.vue";
 import JetAuthenticationCardLogo from "@/Jetstream/AuthenticationCardLogo.vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetCheckbox from "@/Jetstream/Checkbox.vue";
 import JetLabel from "@/Jetstream/Label.vue";
 import JetValidationErrors from "@/Jetstream/ValidationErrors.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
+        UiButton,
         Head,
         JetAuthenticationCard,
         JetAuthenticationCardLogo,
-        JetButton,
         JetInput,
         JetCheckbox,
         JetLabel,

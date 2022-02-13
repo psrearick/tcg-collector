@@ -2,6 +2,7 @@
 
 namespace App\Domain\Collections\Aggregate\Actions;
 
+use App\Domain\Cards\DataObjects\CardSearchDataObjectData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardData;
 use App\Domain\Collections\Models\CollectionCardSummary;
 use App\Support\Collection as SupportCollection;
@@ -22,17 +23,17 @@ class GetCollectionCards
     public function format(Collection $collectionCards) : SupportCollection
     {
         $collectionCards->transform(function ($card) {
-            $cardData = $card->cardSearchDataObject;
-            if (!$cardData) {
+            if ($card->cardSearchDataObject) {
+                $cardData = new CardSearchDataObjectData($card->cardSearchDataObject->toArray());
+            } else {
                 $cardData = (new GetCardSearchData)($card->card_uuid, true);
             }
 
             return (new CollectionCardData([
                 'id'                => $cardData->id,
-                'uuid'              => $cardData->card_uuid ?? $cardData->uuid,
-                'name'              => $cardData->card_name ?? $cardData->name,
-                'name_normalized'   => $cardData->card_name_normalized
-                    ?? $cardData->name_normalized,
+                'uuid'              => $cardData->uuid,
+                'name'              => $cardData->name,
+                'name_normalized'   => $cardData->name_normalized,
                 'set'               => $cardData->set_code,
                 'set_name'          => $cardData->set_name,
                 'features'          => $cardData->features,

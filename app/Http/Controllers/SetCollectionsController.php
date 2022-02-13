@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Cards\Actions\FormatCards;
+use App\Domain\Cards\Actions\FormatCardsWithPagination;
 use App\Domain\Cards\DataObjects\CardSearchData;
 use App\Domain\Collections\Aggregate\Actions\SearchCollectionCards;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
@@ -14,12 +14,11 @@ use Inertia\Response;
 
 class SetCollectionsController extends Controller
 {
-    public function edit(string $collection, Request $request, SearchCollectionCards $searchCollectionCards, FormatCards $formatCards) : JsonResponse
+    public function edit(string $collection, Request $request, SearchCollectionCards $searchCollectionCards, FormatCardsWithPagination $formatCards) : JsonResponse
     {
-        $request = $request->all();
         $search  = [
-            'set_id'    => $request['set'],
-            'card'      => $request['cardSearch'],
+            'set_id'    => $request->get('set'),
+            'card'      => $request->get('cardSearch'),
             'sort'      => [
                 'collectorNumber' => 'asc',
             ],
@@ -36,7 +35,7 @@ class SetCollectionsController extends Controller
             return response()->json([]);
         }
 
-        $cards = $formatCards($builder, $searchData, false);
+        $cards = $formatCards($builder, $searchData);
 
         return response()->json($cards);
     }

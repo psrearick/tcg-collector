@@ -40,27 +40,29 @@
         </template>
 
         <template #actions>
-            <jet-button
+            <ui-button
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
+                button-style="primary-dark"
+                type="submit"
             >
                 Create
-            </jet-button>
+            </ui-button>
         </template>
     </jet-form-section>
 </template>
 
 <script>
 import { defineComponent } from "vue";
-import JetButton from "@/Jetstream/Button.vue";
 import JetFormSection from "@/Jetstream/FormSection.vue";
 import JetInput from "@/Jetstream/Input.vue";
 import JetInputError from "@/Jetstream/InputError.vue";
 import JetLabel from "@/Jetstream/Label.vue";
+import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
-        JetButton,
+        UiButton,
         JetFormSection,
         JetInput,
         JetInputError,

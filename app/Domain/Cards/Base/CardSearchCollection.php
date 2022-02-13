@@ -1,15 +1,22 @@
 <?php
 
-namespace App\Domain\Cards\Traits;
+namespace App\Domain\Cards\Base;
 
 use App\Actions\NormalizeString;
+use App\Domain\Cards\DataObjects\CardSearchData;
+use Illuminate\Support\Collection;
 
-trait CardSearchCollection
+abstract class CardSearchCollection
 {
-    protected function filter() : void
+    protected Collection $cards;
+
+    protected CardSearchData $cardSearchData;
+
+    protected ?string $uuid;
+
+    public function filter() : void
     {
-        $filters = $this->cardSearchData->filters;
-        foreach ($filters as $filter) {
+        foreach ($this->cardSearchData->filters as $filter) {
             if (!isset($filter['query_component'])) {
                 continue;
             }
@@ -20,39 +27,28 @@ trait CardSearchCollection
         }
     }
 
-    protected function filterOnCards() : void
+    public function filterOnCards() : void
     {
         $term = (new NormalizeString)($this->cardSearchData->card);
 
         $this->cards = $this->cards->filter(function ($card) use ($term) {
-            return false !== stristr($card->name_normalized, $term);
+            return stripos($card->name_normalized, $term) !== false;
         });
     }
 
-    protected function filterOnSets() : void
+    public function filterOnSets() : void
     {
         $term = (new NormalizeString)($this->cardSearchData->set);
 
         $this->cards = $this->cards->filter(function ($card) use ($term) {
             $set_name = (new NormalizeString)($card->set_name);
 
-            return (false !== stristr($card->set, $term))
-                || (false !== stristr($set_name, $term));
+            return (stripos($card->set, $term) !== false)
+                || (stripos($set_name, $term) !== false);
         });
     }
 
-    protected function isValidCardSearch() : bool
-    {
-        return true;
-
-        return
-            $this->cardSearchData->card
-            || $this->cardSearchData->set
-            || $this->cardSearchData->uuid
-            || $this->cardSearchData->sort;
-    }
-
-    protected function sort() : void
+    public function sort() : void
     {
         $sortOrder = collect($this->cardSearchData->sort_order)->sort();
         $sort      = $this->cardSearchData->sort;

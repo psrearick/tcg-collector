@@ -21,7 +21,7 @@ abstract class SearchResultsData implements DataObjectInterface
         $this->search     = $data['search'] ?? null;
     }
 
-    public function toarray() : array
+    public function toArray() : array
     {
         return [
             'builder'       => $this->builder,

@@ -95,32 +95,16 @@ export default function sortConfigurationFields(fields, gridName) {
     const moveUp = (field) => {
         let currentPosition = field.sortOrder;
         let newPosition = currentPosition - 1;
-
-        let changed = [];
-        Object.keys(sortOrder.value).forEach((key) => {
-            if (
-                sortOrder.value[key] === currentPosition &&
-                changed.indexOf(key) === -1
-            ) {
-                sortOrder.value[key] = newPosition;
-                changed.push(key);
-                return;
-            }
-            if (
-                sortOrder.value[key] === newPosition &&
-                changed.indexOf(key) === -1
-            ) {
-                sortOrder.value[key] = currentPosition;
-                changed.push(key);
-                return;
-            }
-        });
+        changePosition(currentPosition, newPosition);
     };
 
     const moveDown = (field) => {
         let currentPosition = field.sortOrder;
         let newPosition = currentPosition + 1;
+        changePosition(currentPosition, newPosition);
+    };
 
+    const changePosition = (currentPosition, newPosition) => {
         let changed = [];
         Object.keys(sortOrder.value).forEach((key) => {
             if (
@@ -137,7 +121,6 @@ export default function sortConfigurationFields(fields, gridName) {
             ) {
                 sortOrder.value[key] = currentPosition;
                 changed.push(key);
-                return;
             }
         });
     };

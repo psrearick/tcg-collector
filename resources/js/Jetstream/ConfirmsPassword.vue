@@ -46,7 +46,6 @@
 
 <script>
 import { defineComponent } from "vue";
-import JetButton from "./Button.vue";
 import JetDialogModal from "./DialogModal.vue";
 import JetInput from "./Input.vue";
 import JetInputError from "./InputError.vue";
@@ -55,7 +54,6 @@ import UiButton from "@/UI/UIButton";
 
 export default defineComponent({
     components: {
-        JetButton,
         JetDialogModal,
         JetInput,
         JetInputError,
