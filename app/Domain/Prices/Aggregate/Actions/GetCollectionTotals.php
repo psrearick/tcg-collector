@@ -44,8 +44,6 @@ class GetCollectionTotals
         $totals['gain_loss']         = $gainLoss['gain_loss'];
         $totals['gain_loss_percent'] = $gainLoss['gain_loss_percent'];
 
-        ray($totals);
-
         return $totals;
     }
 }
