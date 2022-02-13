@@ -4,6 +4,7 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 use App\Actions\GetGainLossValues;
 use App\Domain\Base\Collection;
+use App\Domain\Cards\Models\Card;
 
 class GetCollectionTotals
 {
@@ -22,7 +23,7 @@ class GetCollectionTotals
             'acquired_value'    => 0,
         ];
 
-        $collection->cards->each(function ($card) use (&$totals) {
+        $collection->cards->each(function (Card $card) use (&$totals) {
             $count = $card->pivot->quantity;
             $last  = $card
                 ->prices

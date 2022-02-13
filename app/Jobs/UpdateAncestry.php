@@ -27,7 +27,7 @@ class UpdateAncestry implements ShouldQueue
         $count          = $collections->count();
 
         $batch = Bus::batch([])
-//            ->allowFailures()
+            ->allowFailures()
             ->finally(function (Batch $batch) use ($count) {
                 if ($count !== $batch->totalJobs) {
                     return;

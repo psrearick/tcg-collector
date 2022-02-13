@@ -2,9 +2,18 @@
 
 namespace App\App\Console\Commands;
 
+use App\Domain\Base\Collection;
+use App\Domain\Collections\Models\CollectionGeneral;
 use App\Jobs\UpdateAncestry;
+use App\Jobs\UpdateCollectionTotals;
+use App\Jobs\UpdateFolderAncestry;
+use Illuminate\Bus\Batch;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\LazyCollection;
 use Symfony\Component\Console\Command\Command as Response;
+use Throwable;
 
 class UpdateAllSummaries extends Command
 {
@@ -23,19 +32,40 @@ class UpdateAllSummaries extends Command
     protected $signature = 'summaries:update';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
+     * @throws Throwable
      */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function handle() : int
     {
-        UpdateAncestry::dispatch()->onQueue('long-running-queue');
+        $collections    = CollectionGeneral::whereNull('deleted_at');
+        $count          = $collections->count();
+
+        $batch = Bus::batch([])
+            ->allowFailures()
+            ->finally(function (Batch $batch) use ($count) {
+                if ($count !== $batch->totalJobs) {
+                    return;
+                }
+
+                UpdateFolderAncestry::dispatch();
+            })
+            ->name('Update Ancestry')
+            ->dispatch();
+
+        $collections
+            ->cursor()
+            ->map(fn (Collection $collection) => $this->createUpdateJob($collection))
+            ->chunk(500)
+            ->each(function (LazyCollection $jobs) use ($batch) {
+                $batch->add($jobs);
+            });
+
+//        UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
         return Response::SUCCESS;
+    }
+
+    private function createUpdateJob(Collection $collection) : ShouldQueue
+    {
+        return new UpdateCollectionTotals($collection);
     }
 }
