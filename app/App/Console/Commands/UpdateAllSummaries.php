@@ -37,27 +37,39 @@ class UpdateAllSummaries extends Command
     public function handle() : int
     {
         $collections    = CollectionGeneral::whereNull('deleted_at');
-        $count          = $collections->count();
+//        $count          = $collections->count();
 
-        $batch = Bus::batch([])
+        $batch = $collections
+            ->get()
+            ->map(fn (Collection $collection) => new UpdateCollectionTotals($collection));
+
+        Bus::batch($batch->toArray())
             ->allowFailures()
-            ->finally(function (Batch $batch) use ($count) {
-                if ($count !== $batch->totalJobs) {
-                    return;
-                }
-
+            ->finally(function () {
                 UpdateFolderAncestry::dispatch();
             })
             ->name('Update Ancestry')
             ->dispatch();
 
-        $collections
-            ->cursor()
-            ->map(fn (Collection $collection) => $this->createUpdateJob($collection))
-            ->chunk(500)
-            ->each(function (LazyCollection $jobs) use ($batch) {
-                $batch->add($jobs);
-            });
+//        $batch = Bus::batch([])
+//            ->allowFailures()
+//            ->finally(function (Batch $batch) use ($count) {
+//                if ($count !== $batch->totalJobs) {
+//                    return;
+//                }
+//
+//                UpdateFolderAncestry::dispatch();
+//            })
+//            ->name('Update Ancestry')
+//            ->dispatch();
+
+//        $collections
+//            ->cursor()
+//            ->map(fn (Collection $collection) => $this->createUpdateJob($collection))
+//            ->chunk(500)
+//            ->each(function (LazyCollection $jobs) use ($batch) {
+//                $batch->add($jobs);
+//            });
 
 //        UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
