@@ -30,13 +30,13 @@ class UpdateCollectionTotals implements ShouldQueue
         }
 
         $collection         = $this->collection;
-        Log::alert($collection->uuid);
+        Log::alert('uuid:' . $collection->uuid);
         $collectionTotals   = (new GetCollectionTotals)($collection);
-        Log::alert($collectionTotals);
+        Log::alert(['id' => $collection->uuid, 'totals' => $collectionTotals]);
         $collection->summary()->updateOrCreate([
             'uuid'  => $collection->uuid,
             'type'  => 'collection',
         ], $collectionTotals);
-        Log::alert('updated');
+        Log::alert('updated: ' . $collection->uuid);
     }
 }
