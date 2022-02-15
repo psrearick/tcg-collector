@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdateCollectionTotals implements ShouldQueue
 {
@@ -29,10 +30,13 @@ class UpdateCollectionTotals implements ShouldQueue
         }
 
         $collection         = $this->collection;
+        Log::alert($collection->uuid);
         $collectionTotals   = (new GetCollectionTotals)($collection);
+        Log::alert($collectionTotals);
         $collection->summary()->updateOrCreate([
             'uuid'  => $collection->uuid,
             'type'  => 'collection',
         ], $collectionTotals);
+        Log::alert('updated');
     }
 }
