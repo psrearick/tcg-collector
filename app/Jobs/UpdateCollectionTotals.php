@@ -25,18 +25,20 @@ class UpdateCollectionTotals implements ShouldQueue
 
     public function handle() : void
     {
-        if ($this->batch() && $this->batch()->cancelled()) {
-            return;
-        }
 
-        $collection         = $this->collection;
-        Log::alert('uuid:' . $collection->uuid);
-        $collectionTotals   = (new GetCollectionTotals)($collection);
-        Log::alert(['id' => $collection->uuid, 'totals' => $collectionTotals]);
-        $collection->summary()->updateOrCreate([
-            'uuid'  => $collection->uuid,
-            'type'  => 'collection',
-        ], $collectionTotals);
-        Log::alert('updated: ' . $collection->uuid);
+
+//        if ($this->batch() && $this->batch()->cancelled()) {
+//            return;
+//        }
+//
+//        $collection         = $this->collection;
+//        Log::alert('uuid:' . $collection->uuid);
+//        $collectionTotals   = (new GetCollectionTotals)($collection);
+//        Log::alert(['id' => $collection->uuid, 'totals' => $collectionTotals]);
+//        $collection->summary()->updateOrCreate([
+//            'uuid'  => $collection->uuid,
+//            'type'  => 'collection',
+//        ], $collectionTotals);
+        Log::alert('updated: ' . $this->collection->uuid);
     }
 }
