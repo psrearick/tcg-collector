@@ -39,17 +39,17 @@ class UpdateAllSummaries extends Command
         $collections    = CollectionGeneral::whereNull('deleted_at');
 //        $count          = $collections->count();
 
-        $batch = $collections
-            ->get()
-            ->map(fn (Collection $collection) => new UpdateCollectionTotals($collection));
-
-        Bus::batch([$batch->toArray()])
-            ->allowFailures()
-            ->finally(function () {
-                UpdateFolderAncestry::dispatch();
-            })
-            ->name('Update Ancestry')
-            ->dispatch();
+//        $batch = $collections
+//            ->get()
+//            ->map(fn (Collection $collection) => new UpdateCollectionTotals($collection));
+//
+//        Bus::batch([$batch->toArray()])
+//            ->allowFailures()
+////            ->finally(function () {
+////                UpdateFolderAncestry::dispatch();
+////            })
+//            ->name('Update Ancestry')
+//            ->dispatch();
 
 //        $batch = Bus::batch([])
 //            ->allowFailures()
@@ -62,7 +62,6 @@ class UpdateAllSummaries extends Command
 //            })
 //            ->name('Update Ancestry')
 //            ->dispatch();
-
 //        $collections
 //            ->cursor()
 //            ->map(fn (Collection $collection) => $this->createUpdateJob($collection))
@@ -71,13 +70,21 @@ class UpdateAllSummaries extends Command
 //                $batch->add($jobs);
 //            });
 
+        $collections
+            ->cursor()
+            ->map(fn (Collection $collection) => new UpdateCollectionTotals($collection))
+            ->chunk(500)
+            ->each(function (LazyCollection $jobs) {
+                Bus::chain($jobs->toArray())->dispatch();
+            });
+
 //        UpdateAncestry::dispatch()->onQueue('long-running-queue');
 
         return Response::SUCCESS;
     }
 
-    private function createUpdateJob(Collection $collection) : ShouldQueue
-    {
-        return new UpdateCollectionTotals($collection);
-    }
+//    private function createUpdateJob(Collection $collection) : ShouldQueue
+//    {
+//        return new UpdateCollectionTotals($collection);
+//    }
 }
