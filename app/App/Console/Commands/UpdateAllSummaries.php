@@ -43,7 +43,7 @@ class UpdateAllSummaries extends Command
             ->get()
             ->map(fn (Collection $collection) => new UpdateCollectionTotals($collection));
 
-        Bus::batch($batch->toArray())
+        Bus::batch([$batch->toArray()])
             ->allowFailures()
             ->finally(function () {
                 UpdateFolderAncestry::dispatch();
