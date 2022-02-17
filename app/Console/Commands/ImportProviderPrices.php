@@ -1,25 +1,25 @@
 <?php
 
-namespace App\App\Console\Commands;
+namespace App\Console\Commands;
 
-use App\Jobs\ImportScryfallData;
+use App\Jobs\ImportCardDataPrices;
 use Illuminate\Console\Command;
 
-class ImportCards extends Command
+class ImportProviderPrices extends Command
 {
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Import card data from Scryfall';
+    protected $description = 'Import pricing data from all providers';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:cards';
+    protected $signature = 'import:providerprices';
 
     /**
      * Create a new command instance.
@@ -38,14 +38,7 @@ class ImportCards extends Command
      */
     public function handle()
     {
-        $options = [
-            'prices'    => false,
-            'symbols'   => false,
-            'cards'     => true,
-            'sets'      => false,
-        ];
-
-        ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
+        ImportCardDataPrices::dispatch()->onQueue('long-running-queue');
 
         return Command::SUCCESS;
     }

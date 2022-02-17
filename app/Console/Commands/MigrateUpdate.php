@@ -1,6 +1,6 @@
 <?php
 
-namespace App\App\Console\Commands;
+namespace App\Console\Commands;
 
 use App\Domain\Cards\Models\Card;
 use App\Domain\Collections\Models\Collection;

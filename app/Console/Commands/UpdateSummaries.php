@@ -1,6 +1,6 @@
 <?php
 
-namespace App\App\Console\Commands;
+namespace App\Console\Commands;
 
 use App\Jobs\UpdateCollectionAncestry;
 use App\Jobs\UpdateFolderAncestry;

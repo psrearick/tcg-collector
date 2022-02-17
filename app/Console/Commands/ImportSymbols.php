@@ -1,25 +1,25 @@
 <?php
 
-namespace App\App\Console\Commands;
+namespace App\Console\Commands;
 
 use App\Jobs\ImportScryfallData;
 use Illuminate\Console\Command;
 
-class ImportScryfall extends Command
+class ImportSymbols extends Command
 {
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Get scryfall card data';
+    protected $description = 'Import symbols from scryfall';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:scryfall {--P|no-prices} {--Y|no-symbols} {--C|no-cards} {--S|no-sets}';
+    protected $signature = 'import:symbols';
 
     /**
      * Create a new command instance.
@@ -39,10 +39,10 @@ class ImportScryfall extends Command
     public function handle()
     {
         $options = [
-            'prices'    => !$this->option('no-prices'),
-            'symbols'   => !$this->option('no-symbols'),
-            'cards'     => !$this->option('no-cards'),
-            'sets'      => !$this->option('no-sets'),
+            'prices'    => false,
+            'symbols'   => true,
+            'cards'     => false,
+            'sets'      => false,
         ];
 
         ImportScryfallData::dispatch($options)->onQueue('long-running-queue');
