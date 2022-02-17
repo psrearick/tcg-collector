@@ -43,6 +43,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @method static \Illuminate\Database\Eloquent\Builder|CardSearchDataObject whereSetName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CardSearchDataObject whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property mixed|null $prices_bak
+ * @method static \Illuminate\Database\Eloquent\Builder|CardSearchDataObject wherePricesBak($value)
  */
 class CardSearchDataObject extends Model
 {

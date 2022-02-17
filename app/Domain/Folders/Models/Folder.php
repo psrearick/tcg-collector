@@ -111,6 +111,8 @@ use Kalnoy\Nestedset\QueryBuilder;
  * @mixin Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Domain\Collections\Models\Collection[] $groupCollections
  * @property-read int|null $group_collections_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Domain\Base\Collection[] $baseCollections
+ * @property-read int|null $base_collections_count
  */
 class Folder extends FolderRoot
 {

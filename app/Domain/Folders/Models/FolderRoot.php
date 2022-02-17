@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|FolderRoot withTrashed()
  * @method static \Illuminate\Database\Query\Builder|FolderRoot withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|BaseCollection[] $baseCollections
+ * @property-read int|null $base_collections_count
  */
 class FolderRoot extends Model
 {
