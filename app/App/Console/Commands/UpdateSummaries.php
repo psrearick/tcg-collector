@@ -31,10 +31,12 @@ class UpdateSummaries extends Command
 
         if ($type === 'collections') {
             UpdateCollectionAncestry::dispatch();
+
             return Response::SUCCESS;
         }
 
         UpdateFolderAncestry::dispatch();
+
         return Response::SUCCESS;
     }
 }
