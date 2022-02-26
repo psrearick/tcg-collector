@@ -6,7 +6,6 @@ use App\Domain\Collections\Aggregate\Actions\CreateCollection;
 use App\Domain\Collections\Aggregate\Actions\DeleteCollection;
 use App\Domain\Collections\Aggregate\Actions\GetCollection;
 use App\Domain\Collections\Aggregate\Actions\UpdateCollection;
-use App\Domain\Collections\Aggregate\DataObjects\CollectionData;
 use App\Domain\Folders\Aggregate\Actions\GetChildren;
 use App\Domain\Prices\Aggregate\Actions\GetSummaryData;
 use Illuminate\Http\RedirectResponse;

@@ -19,9 +19,9 @@
         </template>
         <template #headerRight>
             <div class="flex space-x-4">
-<!--                <Link :href="route('folders.create')">-->
-<!--                    <ui-button text="Import" button-style="primary-dark" />-->
-<!--                </Link>-->
+                <!--                <Link :href="route('folders.create')">-->
+                <!--                    <ui-button text="Import" button-style="primary-dark" />-->
+                <!--                </Link>-->
 
                 <Link :href="route('collections.edit', collection.uuid)">
                     <ui-button text="Edit" button-style="primary-dark" />
