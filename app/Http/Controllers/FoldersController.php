@@ -38,7 +38,7 @@ class FoldersController extends Controller
         $summary        = $getSummaryData($collections, $folders, false);
 
         return Inertia::render('Folders/Show', [
-            'folder'        => $folder,
+            'folder'        => $folder->toArray(),
             'collections'   => $collections,
             'folders'       => $folders,
             'totals'        => $summary,

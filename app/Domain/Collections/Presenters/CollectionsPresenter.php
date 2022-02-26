@@ -25,7 +25,7 @@ class CollectionsPresenter implements PresenterInterface
     {
         $this->request         = $request;
         $this->uuid            = $uuid;
-        $this->collection      = (new GetCollection)($uuid);
+        $this->collection      = app(GetCollection::class)->execute($uuid);
     }
 
     /**

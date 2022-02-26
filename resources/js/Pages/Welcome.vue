@@ -50,8 +50,6 @@ export default {
         canLogin: Boolean,
         canRegister: Boolean,
         errors: { type: Object, default: () => {} },
-        laravelVersion: { type: String, default: "" },
-        phpVersion: { type: String, default: "" },
     },
 };
 </script>

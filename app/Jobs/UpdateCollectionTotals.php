@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Domain\Base\Collection;
-use App\Domain\Prices\Aggregate\Actions\GetCollectionTotals;
+use App\Domain\Collections\Models\Collection;
+use App\Domain\Prices\Aggregate\Actions\Summaries\CalculateCollectionTotals;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,17 +14,20 @@ class UpdateCollectionTotals implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private CalculateCollectionTotals $calculate;
+
     private Collection $collection;
 
     public function __construct(Collection $collection)
     {
         $this->collection = $collection;
+        $this->calculate  = app(CalculateCollectionTotals::class);
     }
 
     public function handle() : void
     {
         $collection         = $this->collection;
-        $collectionTotals   = (new GetCollectionTotals)($collection);
+        $collectionTotals   = $this->calculate->execute($collection);
         $collection->summary()->updateOrCreate([
             'uuid'  => $collection->uuid,
             'type'  => 'collection',

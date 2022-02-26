@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Domain\CardAttributes\Models\Finish;
 use App\Domain\Cards\Models\Card;
 use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 use App\Domain\Prices\Models\Price;
@@ -32,11 +33,11 @@ class CardsSeeder extends Seeder
         ]);
 
         Card::get()->each(function ($card) use ($provider) {
-            $card->finishes->each(function ($finish) use ($card, $provider) {
+            $card->finishes->each(function (Finish $finish) use ($card, $provider) {
                 Price::create([
                     'card_uuid'     => $card->uuid,
                     'provider_uuid' => $provider->uuid,
-                    'type'          => (new MatchFinish)($finish->name),
+                    'type'          => app(MatchFinish::class)->execute($finish->name),
                     'price'         => $this->faker->numberBetween(5, 5000),
                 ]);
             });

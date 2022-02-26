@@ -6,6 +6,7 @@ use App\Domain\Cards\Base\CardSearchCollection;
 use App\Domain\Cards\DataObjects\CardSearchResultsData;
 use App\Domain\Collections\Aggregate\DataObjects\CollectionCardSearchParameterData;
 use App\Domain\Collections\Models\Collection;
+use App\Domain\Collections\Models\CollectionGeneral;
 use App\Support\Collection as SupportCollection;
 
 class SearchCollection extends CardSearchCollection
@@ -23,7 +24,7 @@ class SearchCollection extends CardSearchCollection
 //        }
 
         if ($this->uuid && count($this->cards) === 0) {
-            $this->cards = Collection::uuid($this->uuid)->cards;
+            $this->cards = CollectionGeneral::uuid($this->uuid)->cards;
         }
 
         if (count($this->cards) === 0) {

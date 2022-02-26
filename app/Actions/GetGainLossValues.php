@@ -4,11 +4,11 @@ namespace App\Actions;
 
 class GetGainLossValues
 {
-    public function handle(int $currentValue, int $acquiredValue) : array
+    public function execute(int $currentValue, int $acquiredValue) : array
     {
         $gainLoss        = $currentValue - $acquiredValue;
         $gainLossPercent = $gainLoss === 0 ? 0 : 1;
-        $gainLossPercent = $acquiredValue !== 0 ? $gainLoss / $acquiredValue : $gainLossPercent;
+        $gainLossPercent = round($acquiredValue !== 0 ? $gainLoss / $acquiredValue : $gainLossPercent, 4);
 
         return [
             'gain_loss'             => $gainLoss,

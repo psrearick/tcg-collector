@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command as Response;
 class UpdateSummaries extends Command
 {
     /** @var string */
-    protected $description = 'update all ancestry totals';
+    protected $description = 'update ancestry totals';
 
     /** @var string */
     protected $signature = 'summaries:update {--collections} {--folders}';

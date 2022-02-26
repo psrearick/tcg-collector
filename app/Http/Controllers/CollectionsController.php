@@ -19,7 +19,7 @@ class CollectionsController extends Controller
     public function create(Request $request) : Response
     {
         return Inertia::render('Collections/Create', [
-            'folder' => $request->get('folder') ?? null,
+            'folder' => $request->get('folder'),
         ]);
     }
 
@@ -34,7 +34,7 @@ class CollectionsController extends Controller
     {
         return Inertia::render('Collections/Edit',
         [
-            'collection' => $getCollection($uuid),
+            'collection' => $getCollection->execute($uuid),
         ]);
     }
 
@@ -55,7 +55,7 @@ class CollectionsController extends Controller
     public function show(string $uuid) : Response
     {
         return Inertia::render('Collections/Show', [
-            'collection' => new CollectionData(((new GetCollection)($uuid))->toArray()),
+            'collection' => (app(GetCollection::class)->execute($uuid))->toArray(),
         ]);
     }
 

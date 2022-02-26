@@ -7,13 +7,14 @@ use App\Domain\Folders\Models\Folder;
 
 class GetFolder
 {
-    public function __invoke(string $uuid)
+    public function __invoke(string $uuid) : FolderData
     {
-        $folder = Folder::uuid($uuid);
-        if (!$folder) {
-            return;
+        $folderData = [];
+        $folder     = Folder::uuid($uuid);
+        if ($folder) {
+            $folderData = $folder->toArray();
         }
 
-        return new FolderData($folder->toArray());
+        return new FolderData($folderData);
     }
 }

@@ -46,7 +46,7 @@ class GetFolderTotals
             $totals['acquired_value'] += $descendantTotals['acquired_value'];
         });
 
-        $gainLoss = $this->getGainLossValues->handle($totals['current_value'], $totals['acquired_value']);
+        $gainLoss = $this->getGainLossValues->execute($totals['current_value'], $totals['acquired_value']);
 
         $totals['gain_loss']         = $gainLoss['gain_loss'];
         $totals['gain_loss_percent'] = $gainLoss['gain_loss_percent'];

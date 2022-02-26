@@ -11,6 +11,7 @@ use App\Domain\Folders\Models\AllowedDestination;
 use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Models\Summary;
 use App\Models\Team;
+use App\Models\User;
 use App\Traits\BelongsToUser;
 use App\Traits\HasUuid;
 use Eloquent;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Domain\Base\Collection
@@ -31,9 +33,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int|null $is_public
  * @property string|null $folder_uuid
  * @property int $user_id
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|AllowedDestination[] $allowedDestinations
  * @property-read int|null $allowed_destinations_count
  * @property-read \Illuminate\Database\Eloquent\Collection|CollectionCardSummary[] $cardSummaries
@@ -44,7 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|Team[] $groups
  * @property-read int|null $groups_count
  * @property-read Summary|null $summary
- * @property-read \App\Models\User|null $user
+ * @property-read User|null $user
  * @method static Builder|Collection inCurrentGroup()
  * @method static Builder|Collection newModelQuery()
  * @method static Builder|Collection newQuery()

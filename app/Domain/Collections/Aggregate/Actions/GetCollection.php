@@ -7,8 +7,10 @@ use App\Domain\Collections\Models\Collection;
 
 class GetCollection
 {
-    public function __invoke(string $uuid)
+    public function execute(string $uuid) : CollectionData
     {
-        return new CollectionData(Collection::uuid($uuid)->toArray());
+        $collection = Collection::uuid($uuid);
+
+        return new CollectionData(optional($collection)->toArray() ?: []);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Domain\Prices\Aggregate\Actions;
 
 class MatchFinish
 {
-    public function __invoke(string $finish) : string
+    public function execute(string $finish) : string
     {
         return match ($finish) {
             'nonfoil'   => 'usd',

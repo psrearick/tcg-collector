@@ -10,7 +10,6 @@ use App\Domain\Folders\Models\Folder;
 use App\Domain\Prices\Aggregate\Actions\createPrice;
 use App\Domain\Prices\Aggregate\Actions\MatchFinish;
 use App\Domain\Prices\Models\Price;
-use App\Jobs\UpdateAncestry;
 use App\Jobs\UpdateCollectionTotals;
 use App\Jobs\UpdateFolderAncestry;
 use App\Jobs\UpdateFolderTotals;
@@ -34,7 +33,7 @@ class PriceTest extends CardCollectionTestCase
         // create price data
         $priceData      = Price::factory()->make([
             'card_uuid' => $cardUuid,
-            'type'      => (new MatchFinish)($cardSummary->finish),
+            'type'      => app(MatchFinish::class)->execute($cardSummary->finish),
         ])->toArray();
 
         // create price
@@ -81,7 +80,7 @@ class PriceTest extends CardCollectionTestCase
         // create price data
         $priceData      = Price::factory()->make([
             'card_uuid' => $cardUuid,
-            'type'      => (new MatchFinish)($state['collection_card_summary']['finish']),
+            'type'      => app(MatchFinish::class)->execute($state['collection_card_summary']['finish']),
         ])->toArray();
 
         // // create price
@@ -124,7 +123,7 @@ class PriceTest extends CardCollectionTestCase
         // create price data
         $priceData      = Price::factory()->make([
             'card_uuid' => $cardUuid,
-            'type'      => (new MatchFinish)($state['collection_card_summary']['finish']),
+            'type'      => app(MatchFinish::class)->execute($state['collection_card_summary']['finish']),
         ])->toArray();
 
         // // create price
@@ -214,7 +213,6 @@ class PriceTest extends CardCollectionTestCase
 
     /**
      * @see UpdateAllSummaries
-     * @see UpdateAncestry
      */
     private function simulatePriceUpdateSummaryJob() : void
     {

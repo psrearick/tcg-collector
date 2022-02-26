@@ -66,12 +66,13 @@ class UpdateCollectionCardsService
             }
         }
 
-        $summary = CollectionCardSummary::where('card_uuid', '=', $search['card'])
+        $summary = CollectionCardSummary::query()
+            ->where('card_uuid', '=', $search['card'])
             ->where('collection_uuid', '=', $search['collection'])
             ->where('finish', '=', $toMatchOn['finish'])
             ->where('price_when_added', '=', $toMatchOn['acquired']);
 
-        if ($toMatchOn['condition'] == 'NM') {
+        if ($toMatchOn['condition'] === 'NM') {
             $summary->where(function ($query) {
                 $query->where('condition', '=', '')
                     ->orWhere('condition', '=', 'NM')

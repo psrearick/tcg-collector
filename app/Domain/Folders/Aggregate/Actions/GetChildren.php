@@ -30,7 +30,7 @@ class GetChildren
     {
         $allowed = $destinations->whereNull('deleted_at')
             ->filter(function ($destination) {
-                return !!$destination->destinationFolder;
+                return (bool) $destination->destinationFolder;
             })
             ->map(function ($destination) {
                 $folder = $destination->destinationFolder;
@@ -80,7 +80,7 @@ class GetChildren
             });
         }
 
-        return $collections->get()->map(function ($collection) {
+        return $collections->get()->map(function (Collection $collection) {
             $collectionSummary = (new GetSummaryData)(collect([$collection]));
             $collectionData             = (new CollectionData($collection->toArray()));
             $collectionData->allowed  = $this
@@ -113,7 +113,7 @@ class GetChildren
             $folders = $folders->where('parent_uuid', '=', $uuid);
         }
 
-        return $folders->get()->map(function ($folder) {
+        return $folders->get()->map(function (Folder $folder) {
             $folderSummary              = (new GetSummaryData)(null, collect([$folder]));
             $folderData                 = (new FolderData($folder->toArray()));
             $folderData->allowed        = $this

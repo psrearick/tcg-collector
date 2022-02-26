@@ -27,7 +27,7 @@ class GetCollectionTotals
             $count = $card->pivot->quantity;
             $last  = $card
                 ->prices
-                ->where('type', '=', (new MatchFinish)($card->pivot->finish))
+                ->where('type', '=', app(MatchFinish::class)->execute($card->pivot->finish))
                 ->sortByDesc('id')
                 ->take(1)
                 ->first();
@@ -40,7 +40,7 @@ class GetCollectionTotals
             $totals['acquired_value'] += $count * $card->pivot->price_when_added;
         });
 
-        $gainLoss = $this->getGainLossValues->handle($totals['current_value'], $totals['acquired_value']);
+        $gainLoss = $this->getGainLossValues->execute($totals['current_value'], $totals['acquired_value']);
 
         $totals['gain_loss']         = $gainLoss['gain_loss'];
         $totals['gain_loss_percent'] = $gainLoss['gain_loss_percent'];

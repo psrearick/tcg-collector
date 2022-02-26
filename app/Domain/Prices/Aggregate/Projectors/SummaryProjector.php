@@ -60,7 +60,7 @@ class SummaryProjector extends Projector
         $acquiredValue   = $totals['acquired_value'] + $valueDiff;
 
         // calculate gain/loss
-        $gainLoss = $this->getGainLossValues->handle($currentValue, $acquiredValue);
+        $gainLoss = $this->getGainLossValues->execute($currentValue, $acquiredValue);
 
         return [
             'total_cards'       => $totalCards,
